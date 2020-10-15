@@ -410,8 +410,8 @@ class Main(QMainWindow, Ui_MainWindow):
         # self.dateTimeEdit_2()
 
         # 打开解析LAS文件
-        self.pushButton_38.clicked.connect(self.openLasFiles)
-        self.pushButton_34.clicked.connect(self.readLasFiles)
+        self.pushButton_38.clicked.connect(self.open_las_file)
+        self.pushButton_34.clicked.connect(self.read_las_file)
 
         # 损伤评价按钮组
         self.pushButton_11.clicked.connect(self.add_line_for_tableWidget_2)
@@ -1170,12 +1170,12 @@ class Main(QMainWindow, Ui_MainWindow):
             magnetic_Declination = '-99999'
         self.lineEdit_14.setText(magnetic_Declination)
         ######################################################################## 推测油田
-        oil_Field = document.tables[0].cell(14, 2).text
+        oil_Field = document.tables[0].cell(14, 2).text.replace(' ', '')
         if '西南' in oil_Field or '四川' in oil_Field or '勘探' in oil_Field or '蜀南' in oil_Field:
             oil_Field = '西南油气田'
         self.lineEdit_17.setText(oil_Field)
         ######################################################################## 钻井单位
-        drilling_Unit = document.tables[0].cell(15, 2).text
+        drilling_Unit = document.tables[0].cell(15, 2).text.replace(' ', '')
         if drilling_Unit == '':
             drilling_Unit = '-99999'
         self.lineEdit_74.setText(drilling_Unit)
@@ -4738,13 +4738,13 @@ class Main(QMainWindow, Ui_MainWindow):
         QMessageBox.information(self, "提示", "清理完毕")
         # self.echo(reply)
 
-    def openLasFiles(self):
+    def open_las_file(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开LAS文件', './')  # 注意这里返回值是元组
         if fnames[0]:
             for fname in fnames[0]:
                 self.textEdit_7.append(fname)
 
-    def readLasFiles(self):
+    def read_las_file(self):
         fileDir = self.textEdit_7.toPlainText()
 
         # 解决中文乱码问题

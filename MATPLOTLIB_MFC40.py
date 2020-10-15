@@ -253,8 +253,8 @@ class Matplot_class_MFC40:
         plt.gcf().canvas.draw()
 
     def onselect3(self, ymin, ymax):
-        ymin = round(ymin, 2)
-        ymax = round(ymax, 2)
+        ymin = round(ymin, 3)
+        ymax = round(ymax, 3)
         if ymin != ymax:
             self.lines = []  # 清空一下
             print('井段为：', ymin, '-', ymax)
@@ -263,7 +263,7 @@ class Matplot_class_MFC40:
         elif ymin == ymax:
             print('极值深度为：', ymax)
             self.lines.append(ymax)
-            index = np.where(abs(self.log.data['DEPT'] - ymax) <= 0.02)
+            index = np.where(abs(self.log.data['DEPT'] - ymax) <= float(abs(self.log.step) - 0.001))
             index = index[0][0]
             D01_value = self.log.data['D01'][index]
             D02_value = self.log.data['D02'][index]
@@ -385,23 +385,23 @@ class Matplot_class_MFC40:
                 normal_Depth4 = float(self.lines[0]) - 0.8  # 在井段开始深度上方0.8m处取一个正常的点进行读值
                 normal_Depth5 = float(self.lines[0]) - 1.0  # 在井段开始深度上方1.0m处取一个正常的点进行读值
 
-                index1 = np.where(abs(self.log.data['DEPT'] - normal_Depth1) <= 0.02)
+                index1 = np.where(abs(self.log.data['DEPT'] - normal_Depth1) <= float(abs(self.log.step) - 0.001))
                 index1 = index1[0][0]
                 FING_value1 = self.log.data[FING_String[0:3]][index1]
 
-                index2 = np.where(abs(self.log.data['DEPT'] - normal_Depth2) <= 0.02)
+                index2 = np.where(abs(self.log.data['DEPT'] - normal_Depth2) <= float(abs(self.log.step) - 0.001))
                 index2 = index2[0][0]
                 FING_value2 = self.log.data[FING_String[0:3]][index2]
 
-                index3 = np.where(abs(self.log.data['DEPT'] - normal_Depth3) <= 0.02)
+                index3 = np.where(abs(self.log.data['DEPT'] - normal_Depth3) <= float(abs(self.log.step) - 0.001))
                 index3 = index3[0][0]
                 FING_value3 = self.log.data[FING_String[0:3]][index3]
 
-                index4 = np.where(abs(self.log.data['DEPT'] - normal_Depth4) <= 0.02)
+                index4 = np.where(abs(self.log.data['DEPT'] - normal_Depth4) <= float(abs(self.log.step) - 0.001))
                 index4 = index4[0][0]
                 FING_value4 = self.log.data[FING_String[0:3]][index4]
 
-                index5 = np.where(abs(self.log.data['DEPT'] - normal_Depth5) <= 0.02)
+                index5 = np.where(abs(self.log.data['DEPT'] - normal_Depth5) <= float(abs(self.log.step) - 0.001))
                 index5 = index5[0][0]
                 FING_value5 = self.log.data[FING_String[0:3]][index5]
 
@@ -483,23 +483,23 @@ class Matplot_class_MFC40:
                 normal_Depth4 = float(self.lines[0]) - 0.8  # 在井段开始深度上方0.8m处取一个正常的点进行读值
                 normal_Depth5 = float(self.lines[0]) - 1.0  # 在井段开始深度上方1.0m处取一个正常的点进行读值
 
-                index1 = np.where(abs(self.log.data['DEPT'] - normal_Depth1) <= 0.02)
+                index1 = np.where(abs(self.log.data['DEPT'] - normal_Depth1) <= float(abs(self.log.step) - 0.001))
                 index1 = index1[0][0]
                 FING_value1 = self.log.data[FING_String[0:3]][index1]
 
-                index2 = np.where(abs(self.log.data['DEPT'] - normal_Depth2) <= 0.02)
+                index2 = np.where(abs(self.log.data['DEPT'] - normal_Depth2) <= float(abs(self.log.step) - 0.001))
                 index2 = index2[0][0]
                 FING_value2 = self.log.data[FING_String[0:3]][index2]
 
-                index3 = np.where(abs(self.log.data['DEPT'] - normal_Depth3) <= 0.02)
+                index3 = np.where(abs(self.log.data['DEPT'] - normal_Depth3) <= float(abs(self.log.step) - 0.001))
                 index3 = index3[0][0]
                 FING_value3 = self.log.data[FING_String[0:3]][index3]
 
-                index4 = np.where(abs(self.log.data['DEPT'] - normal_Depth4) <= 0.02)
+                index4 = np.where(abs(self.log.data['DEPT'] - normal_Depth4) <= float(abs(self.log.step) - 0.001))
                 index4 = index4[0][0]
                 FING_value4 = self.log.data[FING_String[0:3]][index4]
 
-                index5 = np.where(abs(self.log.data['DEPT'] - normal_Depth5) <= 0.02)
+                index5 = np.where(abs(self.log.data['DEPT'] - normal_Depth5) <= float(abs(self.log.step) - 0.001))
                 index5 = index5[0][0]
                 FING_value5 = self.log.data[FING_String[0:3]][index5]
 
