@@ -36,6 +36,14 @@ from MATPLOTLIB_MFC40 import Matplot_class_MFC40
 from MATPLOTLIB_MIT24 import Matplot_class_MIT24
 from MATPLOTLIB_MIT60 import Matplot_class_MIT60
 
+class EmittingStr(QtCore.QObject):
+    textWritten = QtCore.pyqtSignal(str)  # 定义一个发送str的信号
+
+    def write(self, text):
+        self.textWritten.emit(str(text))
+
+    def flush(self):
+        pass
 
 class Main(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -43,12 +51,16 @@ class Main(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowOpacity(0.95)
 
+        # 将控制台输出重定向到textBrowser中
+        sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        sys.stderr = EmittingStr(textWritten=self.outputWritten)
+
         # 网络版开关
         reply = QMessageBox.question(self, '联网提示',
-                                     "请联网运行，内网环境需要运行中油测井Proxifier全局代理", QMessageBox.Yes |
+                                     "选择 Yes则网络正式版 No则非网络试用版", QMessageBox.Yes |
                                      QMessageBox.No, QMessageBox.No)
         ########### 强制选择 Yes则网络版 No则非网络版
-        reply = QMessageBox.No
+        # reply = QMessageBox.No
         ###########
         if reply == QMessageBox.Yes:
             '''
@@ -75,10 +87,13 @@ class Main(QMainWindow, Ui_MainWindow):
 
             with open('.\\resources\\延期码.txt', "r") as f:
                 license_str = f.read()
-            if 'yang' in license_str:
-                end_license_time = '2020-12-31 12:00:00'
-            else:
-                end_license_time = '2020-10-31 12:00:00'
+            if reply == QMessageBox.Yes: # 网络正式版
+                end_license_time = '3000-01-01 12:00:00'
+            elif reply == QMessageBox.No: # 非网络试用版
+                if 'yang' in license_str:
+                    end_license_time = '2020-12-31 12:00:00'
+                else:
+                    end_license_time = '2020-10-31 12:00:00'
             print(self.now() + '\n' + end_license_time)
             if self.now() > end_license_time and error == True:
                 print('模块需要升级，请联系软件开发人员')
@@ -498,6 +513,14 @@ class Main(QMainWindow, Ui_MainWindow):
         self.pushButton_33.clicked.connect(self.select_ccl_table)
         self.pushButton_39.clicked.connect(self.organize_ccl_table)
         ###################################################
+
+    # 在textBrowser中显示程序运行状态
+    def outputWritten(self, text):
+        cursor = self.textBrowser.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(text)
+        self.textBrowser.setTextCursor(cursor)
+        self.textBrowser.ensureCursorVisible()
 
     # 添加一个计时器事件
     def timerEvent(self, e):
