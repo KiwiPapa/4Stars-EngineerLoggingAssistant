@@ -106,9 +106,9 @@ class Main(QMainWindow, Ui_MainWindow):
                 QMessageBox.information(self, "提示", "模块无需升级，网络连接失败，请确认网络是否连接正常")
             elif self.now() <= end_license_time and error == False:
                 print('模块已经更新，可以正常使用')
-                self.init()
+                self.main_connection()
         else:
-            self.init()
+            self.main_connection()
             pass
 
     # 全局运行监视
@@ -350,16 +350,18 @@ class Main(QMainWindow, Ui_MainWindow):
         # 关闭服务器
         server.quit()
 
-    def init(self):
+    def main_connection(self):
         # 水泥胶结评价模块初始化
         ###################################################
-        self.pushButton.clicked.connect(self.openfiles)
+        self.pushButton.clicked.connect(self.open_file)
         self.pushButton.setToolTip('打开原始记录登记表之前请确保格式正确')
         self.pushButton_3.clicked.connect(self.generate_txt_file)
         self.pushButton_3.setToolTip('生成可导入LEAD4.0的TXT井信息文件')
         self.pushButton_4.clicked.connect(self.generate_report_thread)
         self.pushButton_4.clicked.connect(self.progressbar_action_thread)
         self.pushButton_4.setToolTip('根目录下成果表等请正确放置')
+        self.pushButton_5.clicked.connect(self.clean_report_workspace) # 清理工区目录（除了result，因为整理后的会输出到这个目录）
+        self.pushButton_31.clicked.connect(self.clean_report_workspace_all) # 清理工区目录
 
         self.comboBox_8.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
         self.comboBox_8.setCurrentText('/')
@@ -471,8 +473,14 @@ class Main(QMainWindow, Ui_MainWindow):
         ###################################################
         self.radioButton_5.toggled.connect(lambda: self.btnstate(self.radioButton_5))
         self.radioButton_6.toggled.connect(lambda: self.btnstate(self.radioButton_6))
-        self.pushButton_25.clicked.connect(self.openPicFiles)
+        self.pushButton_25.clicked.connect(self.open_picture_file)
         self.pushButton_30.clicked.connect(self.reset_add_signature)
+        ###################################################
+
+        # 图片转PDF模块初始化
+        ###################################################
+        self.pushButton_28.clicked.connect(self.open_picture_file_to_pdf)
+        self.pushButton_32.clicked.connect(self.convert_picture_to_pdf)
         ###################################################
 
         # 表格拼接和分段统计模块初始化
@@ -480,8 +488,8 @@ class Main(QMainWindow, Ui_MainWindow):
         self.radioButton.toggled.connect(lambda: self.btnstate_table(self.radioButton))
         self.radioButton_2.toggled.connect(lambda: self.btnstate_table(self.radioButton_2))
 
-        self.pushButton_9.clicked.connect(self.openfiles1)
-        self.pushButton_10.clicked.connect(self.openfiles2)
+        self.pushButton_9.clicked.connect(self.open_file1)
+        self.pushButton_10.clicked.connect(self.open_file2)
         self.pushButton_29.clicked.connect(self.reset_table_process)
         ###################################################
 
@@ -763,25 +771,33 @@ class Main(QMainWindow, Ui_MainWindow):
         sheet1 = wb1.sheets()[0]
         nrow1 = sheet1.nrows
         ncol1 = sheet1.ncols
+        delete_Row_V = []
+        delete_Row_H = []
 
         # 用openpyxl进行处理
-        Flag = ''  # 防止Layer表格中无"垂直定位"字段
         sheet1_openpyxl = wb1_openpyxl[wb1_openpyxl.sheetnames[0]]
         for row in range(nrow1):
             for col in range(ncol1):
                 if sheet1.cell_value(row, col) == '垂直定位':
-                    Flag = 1
-                    delete_Row = row
-        if Flag == 1:
-            sheet1_openpyxl.delete_rows(delete_Row + 1)
+                    delete_Row_V.append(row)
+                else:
+                    pass
+        if delete_Row_V != []:
+            for i in range(len(delete_Row_V)):
+                sheet1_openpyxl.delete_rows(delete_Row_V[i] + 1)
+                delete_Row_V = (np.array(delete_Row_V) - 1).tolist() # 所有元素减1
 
         for row in range(nrow1):
             for col in range(ncol1):
                 if sheet1.cell_value(row, col) == '水平定位':
-                    Flag = 1
-                    delete_Row = row
-        if Flag == 1:
-            sheet1_openpyxl.delete_rows(delete_Row + 1)
+                    delete_Row_H.append(row)
+                else:
+                    pass
+
+        if delete_Row_H != []:
+            for i in range(len(delete_Row_H)):
+                sheet1_openpyxl.delete_rows(delete_Row_H[i] + 1)
+                delete_Row_H = (np.array(delete_Row_H) - 1).tolist()  # 所有元素减1
 
         # deleterows(sheet1_openpyxl, delete_Row + 1)#openpyxl中数行数从1开始
         sheet1_openpyxl['C2'] = None
@@ -842,7 +858,7 @@ class Main(QMainWindow, Ui_MainWindow):
                     sheet1_openpyxl[row][col].value = '嘉三^1'
                 else:
                     pass
-        wb1_openpyxl.save('.\\WorkSpace\\分层和储层表整理工区\\Layer_New.xlsx')
+        wb1_openpyxl.save('.\\WorkSpace\\分层和储层表整理工区\\Layer_整理后.xlsx')
         QMessageBox.information(self, "提示", "整理完毕，请到目录中查看")
 
     def select_formation_table(self):
@@ -964,7 +980,7 @@ class Main(QMainWindow, Ui_MainWindow):
                 if sheet2_openpyxl[row][col - 1].value == '储层厚度':
                     delete_Col = col
                     sheet2_openpyxl.delete_cols(delete_Col)
-        wb2_openpyxl.save('.\\WorkSpace\\报告自动生成工区\\3储层表\\Result_New.xlsx')
+        wb2_openpyxl.save('.\\WorkSpace\\报告自动生成工区\\3储层表\\Result_for_report.xlsx')
 
         # insert column
         sheet2_openpyxl.insert_cols(4)
@@ -973,11 +989,26 @@ class Main(QMainWindow, Ui_MainWindow):
             sheet2_openpyxl[row][3].value = sheet2_openpyxl[row][2].value.split('--')[1]
             sheet2_openpyxl[row][2].value = sheet2_openpyxl[row][2].value.split('--')[0]
             sheet2_openpyxl[row][4].value = sheet2_openpyxl[row][5].value
-        wb2_openpyxl.save('.\\WorkSpace\\分层和储层表整理工区\\Result_New.xlsx')
+        wb2_openpyxl.save('.\\WorkSpace\\分层和储层表整理工区\\Result_整理后.xlsx')
         QMessageBox.information(self, "提示", "整理完毕，请到目录中查看")
 
     ################################################################################## 添加签名模块
-    def openPicFiles(self):
+    def open_picture_file_to_pdf(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开图片文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_57.setText(fname)
+
+    def convert_picture_to_pdf(self):
+        path = self.lineEdit_57.text()
+        img = Image.open(path)
+        # 转pdf
+        path_without_suffix = path.split('.')[0]
+        img.save(path_without_suffix + '.pdf', "PDF", resolution=300.0, save_all=True)
+        QMessageBox.information(self, "提示", "格式转换成功，请到源文件所在目录中查看")
+
+    ################################################################################## 添加签名模块
+    def open_picture_file(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开图片文件', './')  # 注意这里返回值是元组
         if fnames[0]:
             for fname in fnames[0]:
@@ -1103,7 +1134,7 @@ class Main(QMainWindow, Ui_MainWindow):
         text = datetime.toString()
         self.label_110.setText("     " + text)
 
-    def openfiles(self):
+    def open_file(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开文件', './')  # 注意这里返回值是元组
         if fnames[0]:
             for fname in fnames[0]:
@@ -2762,6 +2793,37 @@ class Main(QMainWindow, Ui_MainWindow):
         ws.write(2, 6, '结论')
         # 另存为excel文件，并将文件命名
         new_excel.save(path)
+
+    # 报告自动生成工区清理函数
+    def clean_dir(self, path):
+        list = os.listdir(path)
+        for i in range(0, len(list)):
+            path_to_clean = os.path.join(path, list[i])
+            os.remove(path_to_clean)
+
+    def clean_report_workspace(self):
+        dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
+        dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
+        dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
+        self.clean_dir(dir1_path)
+        self.clean_dir(dir2_path)
+        self.clean_dir(dir4_path)
+        self.clean_dir(dir5_path)
+        QMessageBox.information(self, "提示", "报告自动生成工区清理完毕\n（除了储层表文件夹）")
+
+    def clean_report_workspace_all(self):
+        dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
+        dir3_path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
+        dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
+        dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
+        self.clean_dir(dir1_path)
+        self.clean_dir(dir2_path)
+        self.clean_dir(dir3_path)
+        self.clean_dir(dir4_path)
+        self.clean_dir(dir5_path)
+        QMessageBox.information(self, "提示", "报告自动生成工区全部清理完毕")
         
     def generate_report_thread(self):
         generate_report = threading.Thread(target=self.generate_report)
@@ -5443,7 +5505,7 @@ class Main(QMainWindow, Ui_MainWindow):
             print('disconnected2')
 
         try:
-            self.pushButton_14.clicked.disconnect(self.run1)
+            self.pushButton_14.clicked.disconnect(self.calculate_for_first_layer)
         except:
             print('Error3')
         else:
@@ -5457,7 +5519,7 @@ class Main(QMainWindow, Ui_MainWindow):
             print('disconnected4')
 
         try:
-            self.pushButton_14.clicked.disconnect(self.run2)
+            self.pushButton_14.clicked.disconnect(self.calculate_for_second_layer)
         except:
             print('Error5')
         else:
@@ -5477,7 +5539,7 @@ class Main(QMainWindow, Ui_MainWindow):
         if btn.text() == '一界面':
             if btn.isChecked() == True:
                 print(btn.text() + " 被选中")
-                self.pushButton_14.clicked.connect(self.run1)
+                self.pushButton_14.clicked.connect(self.calculate_for_first_layer)
                 self.pushButton_27.clicked.connect(self.table_process1)
             else:
                 pass
@@ -5485,18 +5547,18 @@ class Main(QMainWindow, Ui_MainWindow):
         if btn.text() == "二界面":
             if btn.isChecked() == True:
                 print(btn.text() + " 被选中")
-                self.pushButton_14.clicked.connect(self.run2)
+                self.pushButton_14.clicked.connect(self.calculate_for_second_layer)
                 self.pushButton_27.clicked.connect(self.table_process2)
             else:
                 pass
 
-    def openfiles1(self):
+    def open_file1(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开第一个文件', './')  # 注意这里返回值是元组
         if fnames[0]:
             for fname in fnames[0]:
                 self.lineEdit_48.setText(fname)
 
-    def openfiles2(self):
+    def open_file2(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开第二个文件', './')  # 注意这里返回值是元组
         if fnames[0]:
             for fname in fnames[0]:
@@ -5518,7 +5580,7 @@ class Main(QMainWindow, Ui_MainWindow):
             self.workbook_process2(fileDir2)
         QMessageBox.information(self, "提示", "二界面表格数据整理完毕")
 
-    def run1(self):
+    def calculate_for_first_layer(self):
         splicing_Depth = float(self.lineEdit_45.text())
 
         fileDir1 = self.lineEdit_48.text()
@@ -5697,7 +5759,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
         QMessageBox.information(self, "提示", "运行完毕，请查看WorkSpace")
 
-    def run2(self):
+    def calculate_for_second_layer(self):
         splicing_Depth = float(self.lineEdit_45.text())
 
         fileDir1 = self.lineEdit_48.text()
