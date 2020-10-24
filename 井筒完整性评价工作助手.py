@@ -996,16 +996,21 @@ class Main(QMainWindow, Ui_MainWindow):
     def open_picture_file_to_pdf(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开图片文件', './')  # 注意这里返回值是元组
         if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_57.setText(fname)
+            fname = '|'.join(fnames[0])
+            self.lineEdit_57.setText(fname)
 
     def convert_picture_to_pdf(self):
-        path = self.lineEdit_57.text()
-        img = Image.open(path)
-        # 转pdf
-        path_without_suffix = path.split('.')[0]
-        img.save(path_without_suffix + '.pdf', "PDF", resolution=300.0, save_all=True)
-        QMessageBox.information(self, "提示", "格式转换成功，请到源文件所在目录中查看")
+        paths = self.lineEdit_57.text()
+        path = paths.split('|')
+        count = 0
+        for a_path in path:
+            img = Image.open(a_path)
+            # 转pdf
+            path_without_suffix = a_path.split('.')[0]
+            img.save(path_without_suffix + '.pdf', "PDF", resolution=300.0, save_all=True)
+            count += 1
+        info = ''.join(["共", str(count), "个图片格式转换成功，请到源文件所在目录中查看"])
+        QMessageBox.information(self, "提示", info)
 
     ################################################################################## 添加签名模块
     def open_picture_file(self):
