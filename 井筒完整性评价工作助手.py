@@ -2,6 +2,7 @@
 import os
 import random
 import smtplib
+import shutil
 import sys
 import threading
 import qdarkstyle
@@ -35,6 +36,8 @@ from WELL_INTEGRITY_UI import Ui_MainWindow
 from MATPLOTLIB_MFC40 import Matplot_class_MFC40
 from MATPLOTLIB_MIT24 import Matplot_class_MIT24
 from MATPLOTLIB_MIT60 import Matplot_class_MIT60
+from MATPLOTLIB_MFC24 import Matplot_class_MFC24
+
 
 class EmittingStr(QtCore.QObject):
     textWritten = QtCore.pyqtSignal(str)  # 定义一个发送str的信号
@@ -44,6 +47,7 @@ class EmittingStr(QtCore.QObject):
 
     def flush(self):
         pass
+
 
 class Main(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -56,11 +60,13 @@ class Main(QMainWindow, Ui_MainWindow):
         sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
+        '''
         reply = QMessageBox.question(self, '联网提示',
                                      "选择 Yes则网络正式版 No则非网络试用版", QMessageBox.Yes |
                                      QMessageBox.No, QMessageBox.No)
+        '''
         ########### 强制选择 Yes则网络版 No则非网络版
-        # reply = QMessageBox.No
+        reply = QMessageBox.No
         ###########
         if reply == QMessageBox.Yes:
             '''
@@ -87,11 +93,11 @@ class Main(QMainWindow, Ui_MainWindow):
 
             with open('.\\resources\\延期码.txt', "r") as f:
                 license_str = f.read()
-            if reply == QMessageBox.Yes: # 网络正式版
+            if reply == QMessageBox.Yes:  # 网络正式版
                 end_license_time = '3000-01-01 12:00:00'
-            elif reply == QMessageBox.No: # 非网络试用版
+            elif reply == QMessageBox.No:  # 非网络试用版
                 if 'yang' in license_str:
-                    end_license_time = '2020-12-31 12:00:00'
+                    end_license_time = '2021-05-01 12:00:00'
                 else:
                     end_license_time = '2020-10-31 12:00:00'
             print(self.now() + '\n' + end_license_time)
@@ -106,9 +112,9 @@ class Main(QMainWindow, Ui_MainWindow):
                 QMessageBox.information(self, "提示", "模块无需升级，网络连接失败，请确认网络是否连接正常")
             elif self.now() <= end_license_time and error == False:
                 print('模块已经更新，可以正常使用')
-                self.main_connection()
+                self.main_initialization()
         else:
-            self.main_connection()
+            self.main_initialization()
             pass
 
     # 全局运行监视
@@ -168,7 +174,7 @@ class Main(QMainWindow, Ui_MainWindow):
         random_num = str(random_num)
         msg['From'] = Header(from_addr)
         msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' ' + well_Name +' raw table info is loading')
+        msg['Subject'] = Header(random_num + ' ' + well_Name + ' raw table info is loading')
 
         # 开启发信服务，这里使用的是加密传输
         server = smtplib.SMTP_SSL('smtp.qq.com')
@@ -350,7 +356,7 @@ class Main(QMainWindow, Ui_MainWindow):
         # 关闭服务器
         server.quit()
 
-    def main_connection(self):
+    def main_initialization(self):
         # 水泥胶结评价模块初始化
         ###################################################
         self.pushButton.clicked.connect(self.open_file)
@@ -360,8 +366,9 @@ class Main(QMainWindow, Ui_MainWindow):
         self.pushButton_4.clicked.connect(self.generate_report_thread)
         self.pushButton_4.clicked.connect(self.progressbar_action_thread)
         self.pushButton_4.setToolTip('根目录下成果表等请正确放置')
-        self.pushButton_5.clicked.connect(self.clean_report_workspace) # 清理工区目录（除了result，因为整理后的会输出到这个目录）
-        self.pushButton_31.clicked.connect(self.clean_report_workspace_all) # 清理工区目录
+        self.pushButton_5.clicked.connect(self.clean_report_workspace)  # 清理报告生成工区目录（除了result，因为整理后的会输出到这个目录）
+        self.pushButton_31.clicked.connect(self.clean_report_workspace_all)  # 清理报告生成工区目录
+        self.pushButton_40.clicked.connect(self.clean_workspace_all)  # 清理所有工区目录
 
         self.comboBox_8.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
         self.comboBox_8.setCurrentText('/')
@@ -401,7 +408,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
         # 进度条
         self.step = 0
-        self.count = 0 #LCD显示的数字
+        self.count = 0  # LCD显示的数字
         self.progressBar.setRange(0, 100)
         self.progressBar.setValue(0)
         self.timer = QBasicTimer()
@@ -458,6 +465,7 @@ class Main(QMainWindow, Ui_MainWindow):
         self.checkBox_6.stateChanged.connect(self.changecb_type1)
         self.checkBox_7.stateChanged.connect(self.changecb_type2)
         self.checkBox_8.stateChanged.connect(self.changecb_type3)
+        self.checkBox_12.stateChanged.connect(self.changecb_type4)
 
         # 类型checkbox的状态
         self.checkBox_4.stateChanged.connect(self.changecb1)
@@ -554,7 +562,6 @@ class Main(QMainWindow, Ui_MainWindow):
             self.pushButton_4.setEnabled(False)
         else:
             pass
-
 
     def select_ccl_table(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开文件', './')  # 注意这里返回值是元组
@@ -700,10 +707,10 @@ class Main(QMainWindow, Ui_MainWindow):
 
         temp = PATH.split('/')[-1]
         PATH = PATH.replace(temp, '')
-        new_path = ''.join([PATH, '整理后的接箍对比表.xlsx'])
+        new_path = ''.join([PATH, '套管接箍对比表（Calculated）.xlsx'])
         workbook.save(new_path)
 
-        QMessageBox.information(self, "提示", "整理完毕，请查看接箍对比表的同级目录")
+        QMessageBox.information(self, "提示", "深度移动完毕，请查看接箍对比表的同级目录")
 
     def set_well_detail_name(self):
         well_Name = self.lineEdit.text()
@@ -785,7 +792,7 @@ class Main(QMainWindow, Ui_MainWindow):
         if delete_Row_V != []:
             for i in range(len(delete_Row_V)):
                 sheet1_openpyxl.delete_rows(delete_Row_V[i] + 1)
-                delete_Row_V = (np.array(delete_Row_V) - 1).tolist() # 所有元素减1
+                delete_Row_V = (np.array(delete_Row_V) - 1).tolist()  # 所有元素减1
 
         for row in range(nrow1):
             for col in range(ncol1):
@@ -1162,10 +1169,9 @@ class Main(QMainWindow, Ui_MainWindow):
         well_Name = well_Name_Raw.replace(' ', '').replace('井', '')
         self.lineEdit.setText(well_Name)
         if self.run_on_net == True:
-            self.load_raw_table_usage_supervisor(well_Name) # 监控加载
+            self.load_raw_table_usage_supervisor(well_Name)  # 监控加载
         else:
             pass
-
 
         ######################################################################## 井型
         well_Type = document.tables[0].cell(2, 2).text
@@ -1230,7 +1236,7 @@ class Main(QMainWindow, Ui_MainWindow):
         self.lineEdit_14.setText(magnetic_Declination)
         ######################################################################## 推测油田
         oil_Field = document.tables[0].cell(14, 2).text.replace(' ', '')
-        if '西南' in oil_Field or '四川' in oil_Field or '勘探' in oil_Field or '蜀南' in oil_Field:
+        if '西南' in oil_Field or '四川' in oil_Field or '勘探' in oil_Field or '蜀南' in oil_Field or '重庆' in oil_Field:
             oil_Field = '西南油气田'
         self.lineEdit_17.setText(oil_Field)
         ######################################################################## 钻井单位
@@ -1619,7 +1625,9 @@ class Main(QMainWindow, Ui_MainWindow):
         logging_Operator = document.tables[1].cell(16, 1).text.strip()
         self.lineEdit_44.setText(logging_Operator)
         ######################################################################## 时间cement_End_Time, logging_Start_Time, logging_End_Time
-        cement_End_Time = document.tables[1].cell(14, 4).text.strip().replace('.', '-').replace('  ', ' ').replace(': ', ':').replace(' :', ':').replace(' : ', ':')
+        cement_End_Time = document.tables[1].cell(14, 4).text.strip().replace('.', '-').replace('  ', ' ').replace(': ',
+                                                                                                                   ':').replace(
+            ' :', ':').replace(' : ', ':')
         if cement_End_Time != '':
             try:
                 cement_End_Time = datetime.strptime(cement_End_Time, '%Y-%m-%d %H:%M').strftime("%Y-%m-%d %H:%M")
@@ -1631,7 +1639,8 @@ class Main(QMainWindow, Ui_MainWindow):
         self.lineEdit_101.setText(cement_End_Time)
         self.lineEdit_22.setText(cement_End_Date)
 
-        logging_Start_Time = document.tables[1].cell(15, 4).text.strip().replace('.', '-').replace('  ', ' ').replace(': ', ':').replace(' :', ':').replace(' : ', ':')
+        logging_Start_Time = document.tables[1].cell(15, 4).text.strip().replace('.', '-').replace('  ', ' ').replace(
+            ': ', ':').replace(' :', ':').replace(' : ', ':')
         if logging_Start_Time != '':
             try:
                 logging_Start_Time = datetime.strptime(logging_Start_Time, '%Y-%m-%d %H:%M').strftime("%Y-%m-%d %H:%M")
@@ -1641,7 +1650,8 @@ class Main(QMainWindow, Ui_MainWindow):
             logging_Start_Time = '1900-01-01 00:00'
         self.lineEdit_104.setText(logging_Start_Time)
 
-        logging_End_Time = document.tables[1].cell(16, 4).text.strip().replace('.', '-').replace('  ', ' ').replace(': ', ':').replace(' :', ':').replace(' : ', ':')
+        logging_End_Time = document.tables[1].cell(16, 4).text.strip().replace('.', '-').replace('  ', ' ').replace(
+            ': ', ':').replace(' :', ':').replace(' : ', ':')
         if logging_End_Time != '':
             try:
                 logging_End_Time = datetime.strptime(logging_End_Time, '%Y-%m-%d %H:%M')  # 先不转换为str，因为后面推测测井完成时间时用得着
@@ -2212,7 +2222,7 @@ class Main(QMainWindow, Ui_MainWindow):
         geo_Position = self.lineEdit_16.text()
         stru_Position = self.lineEdit_18.text()
         completion_Date = self.lineEdit_39.text()
-        spud_Date =  self.lineEdit_20.text()
+        spud_Date = self.lineEdit_20.text()
         end_Drilling_Date = self.lineEdit_21.text()
         deepest_bit = self.lineEdit_102.text()
         drilling_Unit = self.lineEdit_74.text()
@@ -2284,6 +2294,8 @@ class Main(QMainWindow, Ui_MainWindow):
         logging_Start_Time = self.lineEdit_104.text()
         logging_Method = self.lineEdit_100.text()
 
+        if cement_Quantity == '-99999':
+            cement_Quantity = '/'
         DICT = {
             "井名": well_Name,
             "井别": well_Category,
@@ -2466,7 +2478,7 @@ class Main(QMainWindow, Ui_MainWindow):
         else:
             document = Document(TEMPLATE_PATH + '\\template-without-formation.docx')
         if self.checkBox_9.isChecked():
-            document = self.check(document) # 调用替换函数
+            document = self.check(document)  # 调用替换函数
         else:
             pass
         # 全文档表格内容居中
@@ -2548,14 +2560,14 @@ class Main(QMainWindow, Ui_MainWindow):
             df_temp.loc[:, "重计算厚度"] = df_temp.apply(self.get_thickness, axis=1)
             # 修改df_temp的最末一行
             df_temp.loc[len(df_temp) - 1, '井段(m)'] = ''.join([str(df_temp.loc[len(df_temp) - 1, '井段Start']), \
-                                                                  '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
+                                                              '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
             df_temp.loc[len(df_temp) - 1, '厚度(m)'] = df_temp.loc[len(df_temp) - 1, '重计算厚度']
         elif x > 0 and first_layer_start == formation_Start:
             df_temp.loc[len(df_temp) - 1, '井段End'] = formation_End
             df_temp.loc[:, "重计算厚度"] = df_temp.apply(self.get_thickness, axis=1)
             # 修改df_temp的最末一行
             df_temp.loc[len(df_temp) - 1, '井段(m)'] = ''.join([str(df_temp.loc[len(df_temp) - 1, '井段Start']), \
-                                                                  '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
+                                                              '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
             df_temp.loc[len(df_temp) - 1, '厚度(m)'] = df_temp.loc[len(df_temp) - 1, '重计算厚度']
         else:  # 储层包含在一个井段内的情况
             df_temp = pd.DataFrame({'井段(m)': ''.join([str(formation_Start), '-', str(formation_End)]),
@@ -2570,7 +2582,7 @@ class Main(QMainWindow, Ui_MainWindow):
             df_temp.loc[:, "重计算厚度"] = df_temp.apply(self.get_thickness, axis=1)
             # 修改df_temp的最末一行
             df_temp.loc[len(df_temp), '井段(m)'] = ''.join([str(df_temp.loc[len(df_temp), '井段Start']),
-                                                              '-', str(df_temp.loc[len(df_temp), '井段End'])])
+                                                          '-', str(df_temp.loc[len(df_temp), '井段End'])])
             df_temp.loc[len(df_temp), '厚度(m)'] = df_temp.loc[len(df_temp), '重计算厚度']
         # print(df_temp)
         ratio_Series = df_temp.groupby(by=['结论'])['重计算厚度'].sum() / df_temp['重计算厚度'].sum() * 100
@@ -2661,14 +2673,14 @@ class Main(QMainWindow, Ui_MainWindow):
             df_temp.loc[:, "重计算厚度"] = df_temp.apply(self.get_thickness, axis=1)
             # 修改df_temp的最末一行
             df_temp.loc[len(df_temp) - 1, '井段(m)'] = ''.join([str(df_temp.loc[len(df_temp) - 1, '井段Start']), \
-                                                                  '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
+                                                              '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
             df_temp.loc[len(df_temp) - 1, '厚度(m)'] = df_temp.loc[len(df_temp) - 1, '重计算厚度']
         elif x > 0 and first_layer_start == formation_Start:
             df_temp.loc[len(df_temp) - 1, '井段End'] = formation_End
             df_temp.loc[:, "重计算厚度"] = df_temp.apply(self.get_thickness, axis=1)
             # 修改df_temp的最末一行
             df_temp.loc[len(df_temp) - 1, '井段(m)'] = ''.join([str(df_temp.loc[len(df_temp) - 1, '井段Start']), \
-                                                                  '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
+                                                              '-', str(df_temp.loc[len(df_temp) - 1, '井段End'])])
             df_temp.loc[len(df_temp) - 1, '厚度(m)'] = df_temp.loc[len(df_temp) - 1, '重计算厚度']
         else:  # 储层包含在一个井段内的情况
             df_temp = pd.DataFrame({'井段(m)': ''.join([str(formation_Start), '-', str(formation_End)]),
@@ -2683,7 +2695,7 @@ class Main(QMainWindow, Ui_MainWindow):
             df_temp.loc[:, "重计算厚度"] = df_temp.apply(self.get_thickness, axis=1)
             # 修改df_temp的最末一行
             df_temp.loc[len(df_temp), '井段(m)'] = ''.join([str(df_temp.loc[len(df_temp), '井段Start']),
-                                                              '-', str(df_temp.loc[len(df_temp), '井段End'])])
+                                                          '-', str(df_temp.loc[len(df_temp), '井段End'])])
             df_temp.loc[len(df_temp), '厚度(m)'] = df_temp.loc[len(df_temp), '重计算厚度']
         # print(df_temp)
         ratio_Series = df_temp.groupby(by=['结论'])['重计算厚度'].sum() / df_temp['重计算厚度'].sum() * 100
@@ -2763,7 +2775,7 @@ class Main(QMainWindow, Ui_MainWindow):
         return ratio_Series, evaluation_of_formation
 
     ################################################################################
-    def xls_formatting_first_layer(self, path): # 用于一界面表格表头文字规范
+    def xls_formatting_first_layer(self, path):  # 用于一界面表格表头文字规范
         # 打开想要更改的excel文件
         old_excel = xlrd.open_workbook(path, formatting_info=True)
         # 将操作文件对象拷贝，变成可写的workbook对象
@@ -2780,8 +2792,8 @@ class Main(QMainWindow, Ui_MainWindow):
         ws.write(2, 6, '结论')
         # 另存为excel文件，并将文件命名
         new_excel.save(path)
-        
-    def xls_formatting_second_layer(self, path): # 用于二界面表格表头文字规范
+
+    def xls_formatting_second_layer(self, path):  # 用于二界面表格表头文字规范
         # 打开想要更改的excel文件
         old_excel = xlrd.open_workbook(path, formatting_info=True)
         # 将操作文件对象拷贝，变成可写的workbook对象
@@ -2799,22 +2811,41 @@ class Main(QMainWindow, Ui_MainWindow):
         # 另存为excel文件，并将文件命名
         new_excel.save(path)
 
-    # 报告自动生成工区清理函数
-    def clean_dir(self, path):
+    # 清理所有非空文件夹和文件
+    def clean_dir_of_all(self, path):
         list = os.listdir(path)
-        for i in range(0, len(list)):
-            path_to_clean = os.path.join(path, list[i])
-            os.remove(path_to_clean)
+        if len(list) != 0:
+            for i in range(0, len(list)):
+                path_to_clean = os.path.join(path, list[i])
+                if '.' not in list[i]:
+                    shutil.rmtree(path_to_clean)  # 清理文件夹，可非空
+                else:
+                    os.remove(path_to_clean)  # 清理文件
+        else:
+            pass
+
+    # 只清理文件，跳过文件夹
+    def clean_dir_just_files(self, path):
+        list = os.listdir(path)
+        if len(list) != 0:
+            for i in range(0, len(list)):
+                path_to_clean = os.path.join(path, list[i])
+                if '.' not in list[i]:
+                    pass
+                else:
+                    os.remove(path_to_clean)  # 清理文件
+        else:
+            pass
 
     def clean_report_workspace(self):
         dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
         dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
         dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
         dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
-        self.clean_dir(dir1_path)
-        self.clean_dir(dir2_path)
-        self.clean_dir(dir4_path)
-        self.clean_dir(dir5_path)
+        self.clean_dir_of_all(dir1_path)
+        self.clean_dir_of_all(dir2_path)
+        self.clean_dir_of_all(dir4_path)
+        self.clean_dir_of_all(dir5_path)
         QMessageBox.information(self, "提示", "报告自动生成工区清理完毕\n（除了储层表文件夹）")
 
     def clean_report_workspace_all(self):
@@ -2823,13 +2854,32 @@ class Main(QMainWindow, Ui_MainWindow):
         dir3_path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
         dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
         dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
-        self.clean_dir(dir1_path)
-        self.clean_dir(dir2_path)
-        self.clean_dir(dir3_path)
-        self.clean_dir(dir4_path)
-        self.clean_dir(dir5_path)
+        self.clean_dir_of_all(dir1_path)
+        self.clean_dir_of_all(dir2_path)
+        self.clean_dir_of_all(dir3_path)
+        self.clean_dir_of_all(dir4_path)
+        self.clean_dir_of_all(dir5_path)
         QMessageBox.information(self, "提示", "报告自动生成工区全部清理完毕")
-        
+
+    def clean_workspace_all(self):
+        dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
+        dir3_path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
+        dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
+        dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
+        dir6_path = '.\\WorkSpace\\分层和储层表整理工区'
+        dir7_path = '.\\WorkSpace\\成果表合并统计工区'
+        dir8_path = '.\\WorkSpace'
+        self.clean_dir_of_all(dir1_path)
+        self.clean_dir_of_all(dir2_path)
+        self.clean_dir_of_all(dir3_path)
+        self.clean_dir_of_all(dir4_path)
+        self.clean_dir_of_all(dir5_path)
+        self.clean_dir_of_all(dir6_path)
+        self.clean_dir_of_all(dir7_path)
+        self.clean_dir_just_files(dir8_path)
+        QMessageBox.information(self, "提示", "WorkSpace工区全部清理完毕")
+
     def generate_report_thread(self):
         generate_report = threading.Thread(target=self.generate_report)
         generate_report.start()
@@ -3044,21 +3094,25 @@ class Main(QMainWindow, Ui_MainWindow):
                 # print('----------------第', row, '个储层内的井段----------------')
                 if (formation_End <= float(end_Evaluation)) & (formation_Start >= float(start_Evaluation)):
                     ratio_Series1 = self.layer_evaluation1(df1, formation_Start, formation_End)[0]  # 调取一界面评价函数
-                    evaluation_of_formation1 = self.layer_evaluation1(df1, formation_Start, formation_End)[1]  # 调取一界面评价函数
+                    evaluation_of_formation1 = self.layer_evaluation1(df1, formation_Start, formation_End)[
+                        1]  # 调取一界面评价函数
                     # print(ratio_Series1)
                     all_evaluation_of_formation1.append(evaluation_of_formation1)
 
                     ratio_Series2 = self.layer_evaluation2(df2, formation_Start, formation_End)[0]  # 调取二界面评价函数
-                    evaluation_of_formation2 = self.layer_evaluation2(df2, formation_Start, formation_End)[1]  # 调取二界面评价函数
+                    evaluation_of_formation2 = self.layer_evaluation2(df2, formation_Start, formation_End)[
+                        1]  # 调取二界面评价函数
                     all_evaluation_of_formation2.append(evaluation_of_formation2)
 
                 elif (formation_End > float(end_Evaluation)) & (formation_Start < float(end_Evaluation)) & (
                         formation_Start >= float(start_Evaluation)):
                     ratio_Series1 = self.layer_evaluation1(df1, formation_Start, float(end_Evaluation))[0]  # 调取一界面评价函数
-                    evaluation_of_formation1 = self.layer_evaluation1(df1, formation_Start, float(end_Evaluation))[1]  # 调取一界面评价函数
+                    evaluation_of_formation1 = self.layer_evaluation1(df1, formation_Start, float(end_Evaluation))[
+                        1]  # 调取一界面评价函数
                     print(ratio_Series1)
                     ratio_Series2 = self.layer_evaluation2(df2, formation_Start, float(end_Evaluation))[0]  # 调取二界面评价函数
-                    evaluation_of_formation2 = self.layer_evaluation2(df2, formation_Start, float(end_Evaluation))[1]  # 调取二界面评价函数
+                    evaluation_of_formation2 = self.layer_evaluation2(df2, formation_Start, float(end_Evaluation))[
+                        1]  # 调取二界面评价函数
                 else:
                     print('储层界超出了测量范围，请检查')
                     pass
@@ -3181,6 +3235,8 @@ class Main(QMainWindow, Ui_MainWindow):
         TEMPLATE_PATH = ".\\resources\\模板"
         PATH = "."
 
+        if cement_Quantity == '-99999':
+            cement_Quantity = '/'
         self.DICT = {
             "well_Name": well_Name,
             "stru_Position": stru_Position,
@@ -3567,13 +3623,15 @@ class Main(QMainWindow, Ui_MainWindow):
                     ratio_Series1 = self.layer_evaluation1(df1, float(formation_Start_Depth), float(formation_Start))[
                         0]  # 调取一界面评价函数
                     evaluation_of_formation_upper1 = \
-                    self.layer_evaluation1(df1, float(formation_Start_Depth), float(formation_Start))[1]  # 调取一界面评价函数
+                        self.layer_evaluation1(df1, float(formation_Start_Depth), float(formation_Start))[
+                            1]  # 调取一界面评价函数
                     all_evaluation_of_formation_upper1.append(evaluation_of_formation_upper1)
 
                     ratio_Series2 = self.layer_evaluation2(df2, float(formation_Start_Depth), float(formation_Start))[
                         0]  # 调取二界面评价函数
                     evaluation_of_formation_upper2 = \
-                    self.layer_evaluation2(df2, float(formation_Start_Depth), float(formation_Start))[1]  # 调取二界面评价函数
+                        self.layer_evaluation2(df2, float(formation_Start_Depth), float(formation_Start))[
+                            1]  # 调取二界面评价函数
                     all_evaluation_of_formation_upper2.append(evaluation_of_formation_upper2)
                 else:
                     print('储层上部深度范围溢出，请检查')
@@ -4783,16 +4841,25 @@ class Main(QMainWindow, Ui_MainWindow):
         if self.checkBox_6.isChecked():
             self.checkBox_7.setCheckState(Qt.Unchecked)
             self.checkBox_8.setCheckState(Qt.Unchecked)
+            self.checkBox_12.setCheckState(Qt.Unchecked)
 
     def changecb_type2(self):
         if self.checkBox_7.isChecked():
             self.checkBox_6.setCheckState(Qt.Unchecked)
             self.checkBox_8.setCheckState(Qt.Unchecked)
+            self.checkBox_12.setCheckState(Qt.Unchecked)
 
     def changecb_type3(self):
         if self.checkBox_8.isChecked():
             self.checkBox_6.setCheckState(Qt.Unchecked)
             self.checkBox_7.setCheckState(Qt.Unchecked)
+            self.checkBox_12.setCheckState(Qt.Unchecked)
+
+    def changecb_type4(self):
+        if self.checkBox_12.isChecked():
+            self.checkBox_6.setCheckState(Qt.Unchecked)
+            self.checkBox_7.setCheckState(Qt.Unchecked)
+            self.checkBox_8.setCheckState(Qt.Unchecked)
 
     def changecb1(self):
         if self.checkBox_4.checkState() == Qt.Checked:
@@ -4815,7 +4882,8 @@ class Main(QMainWindow, Ui_MainWindow):
             self.checkBox_4.setCheckState(Qt.Unchecked)
 
     def clean_the_dir(self):
-        my_files = ['.\\WorkSpace\\套损检测快速解释结论.docx', '.\\Penetration.xlsx', '.\\Projection.xlsx', '.\\Transformation.xlsx', \
+        my_files = ['.\\WorkSpace\\套损检测快速解释结论.docx', '.\\Penetration.xlsx', '.\\Projection.xlsx',
+                    '.\\Transformation.xlsx', \
                     '.\\损伤评价表.xlsx', '.\\结垢评价表.xlsx', '.\\变形评价表.xlsx', '.\\casing_data.xls']
         for my_file in my_files:
             if os.path.exists(my_file):
@@ -4849,6 +4917,8 @@ class Main(QMainWindow, Ui_MainWindow):
             self.mat_view = Matplot_class_MIT60(fileDir)
         elif self.checkBox_8.checkState() == Qt.Checked:
             self.mat_view = Matplot_class_MFC40(fileDir)
+        elif self.checkBox_12.checkState() == Qt.Checked:
+            self.mat_view = Matplot_class_MFC24(fileDir)
 
     def table_casing(self):
         self.tableWidget_5.setColumnCount(5)
@@ -5423,77 +5493,6 @@ class Main(QMainWindow, Ui_MainWindow):
         self.textEdit_3.setText(text_all)
 
     ################################################################################################################ 表格拼接和分段统计模块
-    # 一界面表处理函数
-    def workbook_process1(self, file_path):
-        wb = load_workbook(file_path)
-        sheet = wb[wb.sheetnames[0]]
-
-        # 获得表单的行数及列数
-        nrow = sheet.max_row
-        ncol = sheet.max_column
-        print('一界面表行数为:', nrow)
-
-        # 处理最末一行（当为空的时候）
-        if sheet.cell(nrow, 1).value == None:
-            sheet.delete_rows(nrow)
-
-        # 处理表头
-        try:
-            sheet.unmerge_cells('A3:A4')
-            sheet.unmerge_cells('B3:B4')
-            sheet.unmerge_cells('C3:C4')
-            sheet.unmerge_cells('D3:D4')
-            sheet.unmerge_cells('E3:E4')
-            sheet.unmerge_cells('F3:F4')
-            sheet.unmerge_cells('G3:G4')
-        except:
-            QMessageBox.information(self, "提示", "整理表格时似乎出了一点问题，意外中止")
-        else:
-            pass
-        sheet.delete_rows(4)
-        sheet.cell(row=3, column=1).value = '解释序号'
-        sheet.cell(row=3, column=2).value = '井段(m)'
-        sheet.cell(row=3, column=3).value = '厚度(m)'
-        sheet.cell(row=3, column=4).value = '最大声幅(%)'
-        sheet.cell(row=3, column=5).value = '最小声幅(%)'
-        sheet.cell(row=3, column=6).value = '平均声幅(%)'
-        sheet.cell(row=3, column=7).value = '结论'
-        wb.save(file_path)
-
-    # 二界面表处理函数
-    def workbook_process2(self, file_path):
-        wb = load_workbook(file_path)
-        sheet = wb[wb.sheetnames[0]]
-
-        # 获得表单的行数及列数
-        nrow = sheet.max_row
-        ncol = sheet.max_column
-        print('二界面表行数为:', nrow)
-
-        # 处理最末一行（当为空的时候）
-        if sheet.cell(row=nrow, column=1).value == None:
-            sheet.delete_rows(nrow)
-
-        # 处理表头
-        sheet.unmerge_cells('A3:A4')
-        sheet.unmerge_cells('B3:B4')
-        sheet.unmerge_cells('C3:C4')
-        sheet.unmerge_cells('D3:D4')
-        sheet.unmerge_cells('E3:E4')
-        sheet.unmerge_cells('F3:F4')
-        sheet.unmerge_cells('G3:G4')
-        sheet.delete_rows(4)
-        sheet.cell(row=3, column=1).value = '解释序号'
-        sheet.cell(row=3, column=2).value = '井段(m)'
-        sheet.cell(row=3, column=3).value = '厚度(m)'
-        sheet.cell(row=3, column=4).value = '最大指数'
-        sheet.cell(row=3, column=5).value = '最小指数'
-        sheet.cell(row=3, column=6).value = '平均指数'
-        sheet.cell(row=3, column=7).value = '结论'
-        # if sheet.cell(row=4, column=7).value == '不确定':
-        #     sheet.delete_rows(4)
-        wb.save(file_path)
-
     def reset_table_process(self):
         try:
             self.radioButton.toggled.disconnect(lambda: self.btnstate_table(self.radioButton))
@@ -5572,18 +5571,18 @@ class Main(QMainWindow, Ui_MainWindow):
     def table_process1(self):
         fileDir1 = self.lineEdit_48.text()
         fileDir2 = self.lineEdit_52.text()
-        self.workbook_process1(fileDir1)
+        self.xls_formatting_first_layer(fileDir1)
         if fileDir1 != fileDir2:
-            self.workbook_process1(fileDir2)
-        QMessageBox.information(self, "提示", "一界面表格数据整理完毕")
+            self.xls_formatting_first_layer(fileDir2)
+        QMessageBox.information(self, "提示", "一界面表格数据规范化完毕")
 
     def table_process2(self):
         fileDir1 = self.lineEdit_48.text()
         fileDir2 = self.lineEdit_52.text()
-        self.workbook_process2(fileDir1)
+        self.xls_formatting_second_layer(fileDir1)
         if fileDir1 != fileDir2:
-            self.workbook_process2(fileDir2)
-        QMessageBox.information(self, "提示", "二界面表格数据整理完毕")
+            self.xls_formatting_second_layer(fileDir2)
+        QMessageBox.information(self, "提示", "二界面表格数据规范化完毕")
 
     def calculate_for_first_layer(self):
         splicing_Depth = float(self.lineEdit_45.text())
@@ -5592,6 +5591,7 @@ class Main(QMainWindow, Ui_MainWindow):
         fileDir2 = self.lineEdit_52.text()
 
         df1 = pd.read_excel(fileDir1, header=2, index='序号')
+        df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -5608,6 +5608,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
         #####################################################
         df2 = pd.read_excel(fileDir2, header=2, index='序号')
+        df2.drop([0], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df2) % 2 == 0:#如果len(df2)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -5751,7 +5752,8 @@ class Main(QMainWindow, Ui_MainWindow):
         sheet['D6'] = Cha_Ratio
 
         self.mkdir('.\\WorkSpace\\成果表合并统计工区')
-        wb.save('.\\WorkSpace\\成果表合并统计工区\\一界面水泥胶结统计表(' + str(calculation_Start) + '-' + str(calculation_End) + 'm).xlsx')
+        wb.save(
+            '.\\WorkSpace\\成果表合并统计工区\\一界面水泥胶结统计表(' + str(calculation_Start) + '-' + str(calculation_End) + 'm).xlsx')
 
         # 保存指定起始截止深度的单层统计表
         df_temp.drop(['井段Start', '井段End', '重计算厚度'], axis=1, inplace=True)
@@ -5771,6 +5773,7 @@ class Main(QMainWindow, Ui_MainWindow):
         fileDir2 = self.lineEdit_52.text()
 
         df1 = pd.read_excel(fileDir1, header=2, index='序号')
+        df1.drop([0], inplace=True)
         if df1.loc[0, '结论'] == '不确定':
             df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
@@ -5789,6 +5792,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
         #####################################################
         df2 = pd.read_excel(fileDir2, header=2, index='序号')
+        df2.drop([0], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df2) % 2 == 0:#如果len(df2)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -5934,7 +5938,8 @@ class Main(QMainWindow, Ui_MainWindow):
         sheet['D6'] = Cha_Ratio
 
         self.mkdir('.\\WorkSpace\\成果表合并统计工区')
-        wb.save('.\\WorkSpace\\成果表合并统计工区\\二界面水泥胶结统计表(' + str(calculation_Start) + '-' + str(calculation_End) + 'm).xlsx')
+        wb.save(
+            '.\\WorkSpace\\成果表合并统计工区\\二界面水泥胶结统计表(' + str(calculation_Start) + '-' + str(calculation_End) + 'm).xlsx')
 
         # 保存指定起始截止深度的单层统计表
         df_temp.drop(['井段Start', '井段End', '重计算厚度'], axis=1, inplace=True)
@@ -5957,6 +5962,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def now(self):
         return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

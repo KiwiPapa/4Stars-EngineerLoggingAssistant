@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['井筒完整性评价工作助手.py'],
-             pathex=['H:\\源代码工区@20201012\\#井筒完整性评价工作助手'],
+             pathex=['H:\\Python\\well_integrity_works_helper'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False , icon='H:\\源代码工区@20201012\\#井筒完整性评价工作助手\\resources\\ico\\petro.ico')
+          console=False )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
