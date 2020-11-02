@@ -10,19 +10,19 @@
     <x>0</x>
     <y>0</y>
     <width>1320</width>
-    <height>875</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1320</width>
-    <height>875</height>
+    <height>900</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1320</width>
-    <height>875</height>
+    <height>900</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
    <widget class="QTabWidget" name="tabWidget_2">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>10</y>
       <width>1291</width>
       <height>851</height>
@@ -4352,6 +4352,34 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1320</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="action_2"/>
+    <addaction name="action"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <action name="action">
+   <property name="text">
+    <string>联系开发者</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>简单介绍</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

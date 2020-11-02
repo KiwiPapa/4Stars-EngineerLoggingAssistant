@@ -530,6 +530,12 @@ class Main(QMainWindow, Ui_MainWindow):
         self.pushButton_39.clicked.connect(self.organize_ccl_table)
         ###################################################
 
+        # 菜单actions
+        ###################################################
+        self.action_2.triggered.connect(self.menubar_simple_instruction)
+        self.action.triggered.connect(self.menubar_author_info)
+        ###################################################
+
     # 在textBrowser中显示程序运行状态
     def outputWritten(self, text):
         cursor = self.textBrowser.textCursor()
@@ -537,6 +543,12 @@ class Main(QMainWindow, Ui_MainWindow):
         cursor.insertText(text)
         self.textBrowser.setTextCursor(cursor)
         self.textBrowser.ensureCursorVisible()
+
+    def menubar_simple_instruction(self):
+        QMessageBox.information(self, "简单介绍", "井筒完整性评价工作助手主要针对工程所生产过程中的LEAD固井质量处理、套损检测中的工作实现自动化的实现，能够有效地提升生产效率和规范报告图件")
+
+    def menubar_author_info(self):
+        QMessageBox.information(self, "联系方式", "有任何问题请联系中油测井西南分公司解释评价中心杨艺，电话：18580367621，邮箱：978030836@qq.com")
 
     # 添加一个计时器事件
     def timerEvent(self, e):
@@ -1125,7 +1137,7 @@ class Main(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "提示", "签名成功，即将打开图片")
             oriImg.show()
         except IOError:
-            QMessageBox.information(self, "提示", "can't open the file, check the path again")
+            QMessageBox.information(self, "提示", "不能打开，请确认路径是否正确")
 
     def add_signature_on_pic_150(self):
         if self.run_on_net == True:
@@ -3978,11 +3990,11 @@ class Main(QMainWindow, Ui_MainWindow):
                 run = paragraph.add_run("")
                 PATH = ".\\WorkSpace\\报告自动生成工区\\4储层图"
                 if all_Formation_Extentions[0] == '.png':
-                    run.add_picture(PATH + '\\' + all_Formation_Names[pic_number] + '.png', width=Inches(5.0))
+                    run.add_picture(PATH + '\\' + all_Formation_Names[pic_number] + '.png', width=Inches(6.0))
                 elif all_Formation_Extentions[0] == '.jpg':
-                    run.add_picture(PATH + '\\' + all_Formation_Names[pic_number] + '.jpg', width=Inches(5.0))
+                    run.add_picture(PATH + '\\' + all_Formation_Names[pic_number] + '.jpg', width=Inches(6.0))
                 elif all_Formation_Extentions[0] == '.bmp':
-                    run.add_picture(PATH + '\\' + all_Formation_Names[pic_number] + '.bmp', width=Inches(5.0))
+                    run.add_picture(PATH + '\\' + all_Formation_Names[pic_number] + '.bmp', width=Inches(6.0))
                 p = document.add_paragraph()
                 p.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
                 p.paragraph_format.line_spacing = Pt(24)
@@ -4089,11 +4101,11 @@ class Main(QMainWindow, Ui_MainWindow):
                 run = paragraph.add_run("")
 
                 if bad_Interval_Extentions[0] == '.png':
-                    run.add_picture(PATH + '\\' + bad_Interval_Names[bad_number] + '.png', width=Inches(5.0))
+                    run.add_picture(PATH + '\\' + bad_Interval_Names[bad_number] + '.png', width=Inches(6.0))
                 elif bad_Interval_Extentions[0] == '.jpg':
-                    run.add_picture(PATH + '\\' + bad_Interval_Names[bad_number] + '.jpg', width=Inches(5.0))
+                    run.add_picture(PATH + '\\' + bad_Interval_Names[bad_number] + '.jpg', width=Inches(6.0))
                 elif bad_Interval_Extentions[0] == '.bmp':
-                    run.add_picture(PATH + '\\' + bad_Interval_Names[bad_number] + '.bmp', width=Inches(5.0))
+                    run.add_picture(PATH + '\\' + bad_Interval_Names[bad_number] + '.bmp', width=Inches(6.0))
 
                 p = document.add_paragraph()
                 p.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER

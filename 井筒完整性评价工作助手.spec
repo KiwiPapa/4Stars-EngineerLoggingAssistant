@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['井筒完整性评价工作助手.py'],
-             pathex=['H:\\Python\\well_integrity_works_helper'],
+             pathex=['F:\\geek_playground\\well_integrity_works_helper'],
              binaries=[],
              datas=[],
              hiddenimports=[],
