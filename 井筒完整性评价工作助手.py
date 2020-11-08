@@ -55,9 +55,10 @@ class Main(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowOpacity(0.95)
 
+        #TODO
         # 将控制台输出重定向到textBrowser中
-        sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -499,6 +500,13 @@ class Main(QMainWindow, Ui_MainWindow):
         self.pushButton_9.clicked.connect(self.open_file1)
         self.pushButton_10.clicked.connect(self.open_file2)
         self.pushButton_29.clicked.connect(self.reset_table_process)
+        ###################################################
+
+        # list文件拼接模块初始化
+        ###################################################
+        self.pushButton_43.clicked.connect(self.open_list_file1)
+        self.pushButton_45.clicked.connect(self.open_list_file2)
+        self.pushButton_44.clicked.connect(self.assemble_list_together)
         ###################################################
 
         # 分层表和储层表整理模块初始化
@@ -1594,15 +1602,8 @@ class Main(QMainWindow, Ui_MainWindow):
         flu_Density = drilling_Fluid_Density[0]
         self.lineEdit_61.setText(flu_Density)
 
-        drilling_Fluid_Viscosity = document.tables[1].cell(11, 2).text.strip()
-        drilling_Fluid_Viscosity = drilling_Fluid_Viscosity.replace(' ', '')
-        if 's' in drilling_Fluid_Viscosity:
-            drilling_Fluid_Viscosity = drilling_Fluid_Viscosity.split('s')
-        elif 'S' in drilling_Fluid_Viscosity:
-            drilling_Fluid_Viscosity = drilling_Fluid_Viscosity.split('S')
-        elif '秒' in drilling_Fluid_Viscosity:
-            drilling_Fluid_Viscosity = drilling_Fluid_Viscosity.split('秒')
-        flu_Viscosity = drilling_Fluid_Viscosity[0]
+        drilling_Fluid_Viscosity = document.tables[1].cell(11, 2).text
+        flu_Viscosity = drilling_Fluid_Viscosity.replace(' ', '').replace('s', '').replace('S', '').replace('秒', '')
         self.lineEdit_62.setText(flu_Viscosity)
 
         # 补充信息
@@ -5602,7 +5603,7 @@ class Main(QMainWindow, Ui_MainWindow):
         fileDir1 = self.lineEdit_48.text()
         fileDir2 = self.lineEdit_52.text()
 
-        df1 = pd.read_excel(fileDir1, header=2, index='序号')
+        df1 = pd.read_excel(fileDir1, header=2)
         df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
@@ -5619,7 +5620,7 @@ class Main(QMainWindow, Ui_MainWindow):
         # print(df_temp1)
 
         #####################################################
-        df2 = pd.read_excel(fileDir2, header=2, index='序号')
+        df2 = pd.read_excel(fileDir2, header=2)
         df2.drop([0], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
@@ -5784,10 +5785,10 @@ class Main(QMainWindow, Ui_MainWindow):
         fileDir1 = self.lineEdit_48.text()
         fileDir2 = self.lineEdit_52.text()
 
-        df1 = pd.read_excel(fileDir1, header=2, index='序号')
+        df1 = pd.read_excel(fileDir1, header=2)
         df1.drop([0], inplace=True)
-        if df1.loc[0, '结论'] == '不确定':
-            df1.drop([0], inplace=True)
+        if df1.loc[1, '结论'] == '不确定':
+            df1.drop([1], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -5803,7 +5804,7 @@ class Main(QMainWindow, Ui_MainWindow):
         # print(df_temp1)
 
         #####################################################
-        df2 = pd.read_excel(fileDir2, header=2, index='序号')
+        df2 = pd.read_excel(fileDir2, header=2)
         df2.drop([0], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
@@ -5974,6 +5975,84 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def now(self):
         return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+    def open_list_file1(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开第一个文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_112.setText(fname)
+
+    def open_list_file2(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开第二个文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_114.setText(fname)
+
+    def assemble_list_together(self):
+
+        fileDir1 = self.lineEdit_112.text()
+        fileDir2 = self.lineEdit_114.text()
+        assembled_point = float(self.lineEdit_113.text())
+
+        with open(fileDir1, "r") as f:  # 打开文件
+            data1 = f.readlines()  # 读取文件
+
+        with open(fileDir2, "r") as f:  # 打开文件
+            data2 = f.readlines()  # 读取文件
+
+        for item in data1[2:]:
+            if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
+                item_number1 = int(item.split(',')[0])
+                data1 = data1[0:(item_number1 + 2)]
+                break
+            else:
+                pass
+        print(item_number1)
+        print(data1)
+
+        for item in data2[2:]:
+            if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
+                item_number2 = int(item.split(',')[0])
+                data2 = data2[(item_number2 + 1):]
+                break
+            else:
+                pass
+        print(item_number2)
+        print(data2)
+
+        count = 0
+        data3 = []
+        for item in data2:
+            item = ','.join(
+                [str(item_number1 + count), item.split(',')[1], item.split(',')[2], item.split(',')[3],
+                 item.split(',')[4],
+                 item.split(',')[5], item.split(',')[6]])
+            count = count + 1
+            data3.append(item)
+
+        print(data3)
+        first = data3[0].split(',')[0]
+        second = ''.join([data1[-1].split(',')[1].split('-')[0], '-', data3[0].split(',')[1].split('-')[1]])
+        third = round(float(data3[0].split(',')[1].split('-')[1]) - float(data1[-1].split(',')[1].split('-')[0]), 2)
+        fouth = max(float(data1[-1].split(',')[3]), float(data3[0].split(',')[3]))
+        fifth = min(float(data1[-1].split(',')[4]), float(data3[0].split(',')[4]))
+        sixth = round((float(data1[-1].split(',')[5]) + float(data3[0].split(',')[5])) / 2, 2)
+        seventh = data3[0].split(',')[6]
+        data3[0] = ','.join([first, str(second), str(third), str(fouth), str(fifth), str(sixth), seventh])
+
+        temp = fileDir1.split('/')[-1]
+        path = fileDir1.replace(temp, '')
+        f = open(path + '组合后的数据.list', 'w', encoding='UTF-8')
+        for item1 in data1[0:-1]:
+            f.write(item1)
+        for item3 in data3:
+            f.write(item3)
+        f.close()
+
+        with open(path + "组合后的数据.list", "r", encoding='UTF-8') as f:  # 打开文件
+            data4 = f.read()  # 读取文件
+        print(data4)
+        QMessageBox.information(self, "提示", "list文件拼接完毕，请在源数据同级目录查看")
 
 
 if __name__ == "__main__":
