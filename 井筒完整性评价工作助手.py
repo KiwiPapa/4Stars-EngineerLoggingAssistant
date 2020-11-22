@@ -55,7 +55,7 @@ class Main(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowOpacity(0.95)
 
-        #TODO
+        # TODO
         # 将控制台输出重定向到textBrowser中
         # sys.stdout = EmittingStr(textWritten=self.outputWritten)
         # sys.stderr = EmittingStr(textWritten=self.outputWritten)
@@ -370,6 +370,12 @@ class Main(QMainWindow, Ui_MainWindow):
         self.pushButton_5.clicked.connect(self.clean_report_workspace)  # 清理报告生成工区目录（除了result，因为整理后的会输出到这个目录）
         self.pushButton_31.clicked.connect(self.clean_report_workspace_all)  # 清理报告生成工区目录
         self.pushButton_40.clicked.connect(self.clean_workspace_all)  # 清理所有工区目录
+        self.pushButton_48.clicked.connect(self.open_report_workspace_directory)  # 打开报告生成工区
+        self.pushButton_41.clicked.connect(self.open_result_table_directory)  # 打开成果表文件夹
+        self.pushButton_42.clicked.connect(self.open_formation_table_directory)  # 打开储层表文件夹
+        self.pushButton_47.clicked.connect(self.open_formation_pictures_directory)  # 打开储层图文件夹
+        self.pushButton_46.clicked.connect(self.open_bad_cement_pictures_directory)  # 打开胶结差图文件夹
+        self.pushButton_49.clicked.connect(self.flush_on_textEdits)  # 在textEdit上刷新显示
 
         self.comboBox_8.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
         self.comboBox_8.setCurrentText('/')
@@ -2852,7 +2858,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def clean_report_workspace(self):
         dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
-        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2成果表'
         dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
         dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
         self.clean_dir_of_all(dir1_path)
@@ -2863,7 +2869,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def clean_report_workspace_all(self):
         dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
-        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2成果表'
         dir3_path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
         dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
         dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
@@ -2876,7 +2882,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
     def clean_workspace_all(self):
         dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
-        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2解释成果表'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2成果表'
         dir3_path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
         dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
         dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
@@ -2893,6 +2899,84 @@ class Main(QMainWindow, Ui_MainWindow):
         self.clean_dir_just_files(dir8_path)
         QMessageBox.information(self, "提示", "WorkSpace工区全部清理完毕")
 
+    def open_report_workspace_directory(self):
+        path = '.\\WorkSpace\\报告自动生成工区'
+        os.startfile(path)
+
+    def open_result_table_directory(self):
+        path = '.\\WorkSpace\\报告自动生成工区\\2成果表'
+        os.startfile(path)
+
+    def open_formation_table_directory(self):
+        path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
+        os.startfile(path)
+
+    def open_formation_pictures_directory(self):
+        path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
+        os.startfile(path)
+
+    def open_bad_cement_pictures_directory(self):
+        path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
+        os.startfile(path)
+
+    def flush_on_textEdits(self):
+        dir1_path = '.\\WorkSpace\\报告自动生成工区\\1原始资料'
+        dir2_path = '.\\WorkSpace\\报告自动生成工区\\2成果表'
+        dir3_path = '.\\WorkSpace\\报告自动生成工区\\3储层表'
+        dir4_path = '.\\WorkSpace\\报告自动生成工区\\4储层图'
+        dir5_path = '.\\WorkSpace\\报告自动生成工区\\5胶结差图'
+        ###################
+        fileNames = []
+        if os.listdir(dir2_path) != []:
+            for fileName in os.listdir(dir2_path):
+                fileNames.append(fileName)
+        else:
+            fileNames = ['空']
+
+        text = ''
+        for item in fileNames:
+            text = text + item + '\n'
+        self.textEdit_4.setText(text)
+
+        ###################
+        fileNames = []
+        if os.listdir(dir3_path) != []:
+            for fileName in os.listdir(dir3_path):
+                fileNames.append(fileName)
+        else:
+            fileNames = ['空']
+
+        text = ''
+        for item in fileNames:
+            text = text + item + '\n'
+        self.textEdit_5.setText(text)
+        ###################
+        fileNames = []
+        if os.listdir(dir4_path) != []:
+            for fileName in os.listdir(dir4_path):
+                fileNames.append(fileName)
+        else:
+            fileNames = ['空']
+        # 利用lambda表达式排序
+        fileNames.sort(key=lambda x: int(x.split('#')[0].split('-')[0]))
+        text = ''
+        for item in fileNames:
+            text = text + item + '\n'
+        self.textEdit_6.setText(text)
+        ###################
+        fileNames = []
+        if os.listdir(dir5_path) != []:
+            for fileName in os.listdir(dir5_path):
+                fileNames.append(fileName)
+        else:
+            fileNames = ['空']
+        # 利用lambda表达式排序
+        fileNames.sort(key=lambda x: int(x.split('-')[0]))
+        text = ''
+        for item in fileNames:
+            text = text + item + '\n'
+        self.textEdit_8.setText(text)
+
     def generate_report_thread(self):
         generate_report = threading.Thread(target=self.generate_report)
         generate_report.start()
@@ -2904,7 +2988,7 @@ class Main(QMainWindow, Ui_MainWindow):
             pass
 
         # 现在开始提取成果表中的内容
-        PATH = ".\\WorkSpace\\报告自动生成工区\\2解释成果表"
+        PATH = ".\\WorkSpace\\报告自动生成工区\\2成果表"
         for fileName in os.listdir(PATH):
             if '1统' in fileName:
                 fileDir = PATH + "\\" + fileName
@@ -2966,7 +3050,7 @@ class Main(QMainWindow, Ui_MainWindow):
             second_Eval_Result = '不合格'
         ################################################################################
         # 读取单层统计表
-        PATH = ".\\WorkSpace\\报告自动生成工区\\2解释成果表"
+        PATH = ".\\WorkSpace\\报告自动生成工区\\2成果表"
         for fileName in os.listdir(PATH):
             if '1单' in fileName and '.xls' in fileName and '$' not in fileName:
                 fileDir = PATH + "\\" + fileName
@@ -2990,7 +3074,7 @@ class Main(QMainWindow, Ui_MainWindow):
         end_Evaluation = end_Evaluation.split('-')[1]
         first_Pro_Interval = ''.join([start_Evaluation, '-', end_Evaluation])
 
-        PATH = ".\\WorkSpace\\报告自动生成工区\\2解释成果表"
+        PATH = ".\\WorkSpace\\报告自动生成工区\\2成果表"
         for fileName in os.listdir(PATH):
             if '2单' in fileName and '.xls' in fileName and '$' not in fileName:
                 fileDir = PATH + "\\" + fileName
@@ -3060,7 +3144,7 @@ class Main(QMainWindow, Ui_MainWindow):
         all_evaluation_of_formation2 = []
         if formation_be_or_not == '有储层':
             # 单层统计表
-            PATH = ".\\WorkSpace\\报告自动生成工区\\2解释成果表"
+            PATH = ".\\WorkSpace\\报告自动生成工区\\2成果表"
             for fileName in os.listdir(PATH):
                 if '1单' in fileName and '$' not in fileName:
                     fileDir1 = PATH + "\\" + fileName
@@ -3370,7 +3454,7 @@ class Main(QMainWindow, Ui_MainWindow):
 
         ################################################################################
         print('单层统计表添加中...')
-        PATH = ".\\WorkSpace\\报告自动生成工区\\2解释成果表"
+        PATH = ".\\WorkSpace\\报告自动生成工区\\2成果表"
         # 添加1单
         for fileName in os.listdir(PATH):
             if '1单' in fileName and '.xls' in fileName and '$' not in fileName:
@@ -3572,7 +3656,7 @@ class Main(QMainWindow, Ui_MainWindow):
                 formation_Start_End = ''.join([formation_Start_Depth, '-', formation_End_Depth])
                 ################################################################################
                 # 单层统计表
-                PATH = ".\\WorkSpace\\报告自动生成工区\\2解释成果表"
+                PATH = ".\\WorkSpace\\报告自动生成工区\\2成果表"
                 for fileName in os.listdir(PATH):
                     if '1单' in fileName and '$' not in fileName:
                         fileDir1 = PATH + "\\" + fileName
@@ -6061,7 +6145,7 @@ if __name__ == "__main__":
 
     # 随机暗色主题
     random_num = random.randint(1, 100)
-    if random_num % 2 == 0:
+    if random_num % 2 == 0 and random_num % 3 == 0:
         # setup stylesheet
         app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         # or in new API
