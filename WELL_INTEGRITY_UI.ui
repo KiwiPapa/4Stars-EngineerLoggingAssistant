@@ -3734,53 +3734,67 @@
        </property>
       </widget>
      </widget>
-     <widget class="QTextEdit" name="textEdit_11">
+     <widget class="QLabel" name="label_131">
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>450</y>
-        <width>931</width>
-        <height>121</height>
+        <y>420</y>
+        <width>921</width>
+        <height>151</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>黑体</family>
-        <pointsize>12</pointsize>
+        <pointsize>10</pointsize>
         <weight>50</weight>
         <italic>false</italic>
         <bold>false</bold>
-        <stylestrategy>PreferDefault</stylestrategy>
-        <kerning>true</kerning>
+        <underline>false</underline>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 12pt &quot;黑体&quot;;</string>
+       <string notr="true">font: 10pt &quot;黑体&quot;;</string>
       </property>
-      <property name="markdown">
-       <string>`说明：`
-
-`1、审核人员审核完正式图后，把最终形成的正式固井处理图(jpg)和固井评价表(CBL-S.txt)发到录井邮箱（附录B中的录井邮箱）里面；`
-
-`2、报告审核完成后，把最终形成的正式固井处理图(jpg)、固井评价表(CBL-S.txt)和审核好的固井报告发到各个矿区相应的邮箱里面；`
-
-`3、所有西南油气田分公司的井都要同时发一份到西油分公司工程技术研究院。libin2015@petrochina.com.cn`
-
-`4、注明了是东钻总包井的，解释结论发东钻邮箱：cdztzjzyb@cnpc.com.cn 接收人 川东钻探钻井作业部，不要直接给井队发。`
-
-</string>
+      <property name="text">
+       <string>说明：
+1、审核人员审核完正式图后，把最终形成的正式固井处理图(jpg)和固井评价表(CBL-S.txt)发到录井邮箱（附录B中的录井邮箱）里面；
+2、报告审核完成后，把最终形成的正式固井处理图(jpg)、固井评价表(CBL-S.txt)和审核好的固井报告发到各个矿区相应的邮箱里面；
+3、所有西南油气田分公司的井都要同时发一份到西油分公司工程技术研究院。libin2015@petrochina.com.cn
+4、注明了是东钻总包井的，解释结论发东钻邮箱：cdztzjzyb@cnpc.com.cn 接收人 川东钻探钻井作业部，不要直接给井队发。</string>
       </property>
-      <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'黑体'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;说明：&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;1、审核人员审核完正式图后，把最终形成的正式固井处理图(jpg)和固井评价表(CBL-S.txt)发到录井邮箱（附录B中的录井邮箱）里面；&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;2、报告审核完成后，把最终形成的正式固井处理图(jpg)、固井评价表(CBL-S.txt)和审核好的固井报告发到各个矿区相应的邮箱里面；&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;3、所有西南油气田分公司的井都要同时发一份到西油分公司工程技术研究院。libin2015@petrochina.com.cn&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;4、注明了是东钻总包井的，解释结论发东钻邮箱：cdztzjzyb@cnpc.com.cn 接收人 川东钻探钻井作业部，不要直接给井队发。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>540</y>
+        <width>421</width>
+        <height>21</height>
+       </rect>
       </property>
+      <layout class="QGridLayout" name="gridLayout_40">
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="lineEdit_116">
+         <property name="styleSheet">
+          <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+         </property>
+         <property name="text">
+          <string>libin2015@petrochina.com.cn</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lineEdit_117">
+         <property name="styleSheet">
+          <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+         </property>
+         <property name="text">
+          <string>cdztzjzyb@cnpc.com.cn</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
