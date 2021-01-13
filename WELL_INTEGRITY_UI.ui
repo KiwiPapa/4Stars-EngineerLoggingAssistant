@@ -3,30 +3,33 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1190</width>
-    <height>750</height>
+    <width>1160</width>
+    <height>710</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1190</width>
-    <height>750</height>
+    <width>1160</width>
+    <height>710</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1190</width>
-    <height>750</height>
+    <width>1160</width>
+    <height>710</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>井筒完整性评价工作助手V1.0</string>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -38,7 +41,7 @@
    <string/>
   </property>
   <property name="documentMode">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -48,9 +51,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
-      <width>1151</width>
-      <height>661</height>
+      <y>0</y>
+      <width>1141</width>
+      <height>651</height>
      </rect>
     </property>
     <property name="font">
@@ -77,6 +80,12 @@
     <property name="styleSheet">
      <string notr="true">font: 10pt &quot;黑体&quot;;</string>
     </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::South</enum>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Triangular</enum>
+    </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
@@ -85,6 +94,9 @@
       <width>20</width>
       <height>20</height>
      </size>
+    </property>
+    <property name="elideMode">
+     <enum>Qt::ElideMiddle</enum>
     </property>
     <property name="documentMode">
      <bool>true</bool>
@@ -96,11 +108,11 @@
      <bool>true</bool>
     </property>
     <property name="tabBarAutoHide">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>原始资料登记表解析</string>
+      <string>登记表解析</string>
      </attribute>
      <widget class="QFrame" name="frame_5">
       <property name="geometry">
@@ -514,7 +526,7 @@
         <string notr="true">font: 10pt &quot;黑体&quot;;</string>
        </property>
        <property name="text">
-        <string>智能填写======&gt;</string>
+        <string>自动填写顶底深→</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -523,7 +535,7 @@
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>400</x>
@@ -700,7 +712,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>570</x>
@@ -821,9 +833,9 @@
      <widget class="QFrame" name="frame_2">
       <property name="geometry">
        <rect>
-        <x>270</x>
+        <x>260</x>
         <y>330</y>
-        <width>201</width>
+        <width>191</width>
         <height>271</height>
        </rect>
       </property>
@@ -839,7 +851,7 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>40</y>
          <width>171</width>
          <height>221</height>
@@ -1047,7 +1059,7 @@
        <rect>
         <x>760</x>
         <y>60</y>
-        <width>391</width>
+        <width>371</width>
         <height>261</height>
        </rect>
       </property>
@@ -1421,7 +1433,7 @@
        <rect>
         <x>20</x>
         <y>330</y>
-        <width>241</width>
+        <width>231</width>
         <height>271</height>
        </rect>
       </property>
@@ -1464,7 +1476,7 @@
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>221</width>
+         <width>211</width>
          <height>221</height>
         </rect>
        </property>
@@ -1629,7 +1641,7 @@
      <widget class="QFrame" name="frame_4">
       <property name="geometry">
        <rect>
-        <x>480</x>
+        <x>460</x>
         <y>330</y>
         <width>191</width>
         <height>201</height>
@@ -1813,7 +1825,7 @@
      <widget class="QFrame" name="frame_8">
       <property name="geometry">
        <rect>
-        <x>680</x>
+        <x>660</x>
         <y>330</y>
         <width>471</width>
         <height>201</height>
@@ -1833,7 +1845,7 @@
         <rect>
          <x>150</x>
          <y>40</y>
-         <width>333</width>
+         <width>311</width>
          <height>151</height>
         </rect>
        </property>
@@ -1927,7 +1939,7 @@
            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
           </property>
           <property name="text">
-           <string>套管深度段</string>
+           <string>深度段</string>
           </property>
          </widget>
         </item>
@@ -2434,7 +2446,7 @@
        <rect>
         <x>20</x>
         <y>16</y>
-        <width>1131</width>
+        <width>1111</width>
         <height>41</height>
        </rect>
       </property>
@@ -2502,8 +2514,8 @@
      <widget class="QFrame" name="frame_7">
       <property name="geometry">
        <rect>
-        <x>480</x>
-        <y>539</y>
+        <x>460</x>
+        <y>540</y>
         <width>671</width>
         <height>61</height>
        </rect>
@@ -2650,15 +2662,31 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QLabel" name="label_110">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>600</y>
+        <width>231</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+      </property>
+      <property name="text">
+       <string>time</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
-      <string>水泥胶结报告自动生成</string>
+      <string>报告自动生成</string>
      </attribute>
      <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>0</x>
         <y>110</y>
         <width>1131</width>
         <height>441</height>
@@ -3013,8 +3041,8 @@
        </property>
        <property name="font">
         <font>
-         <family>楷体</family>
-         <pointsize>8</pointsize>
+         <family>黑体</family>
+         <pointsize>10</pointsize>
          <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
@@ -3023,7 +3051,7 @@
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 8pt &quot;楷体&quot;;</string>
+        <string notr="true">font: 10pt &quot;黑体&quot;;</string>
        </property>
       </widget>
       <widget class="QPushButton" name="pushButton_41">
@@ -3185,15 +3213,15 @@
        </property>
        <property name="font">
         <font>
-         <family>楷体</family>
-         <pointsize>8</pointsize>
+         <family>黑体</family>
+         <pointsize>10</pointsize>
          <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 8pt &quot;楷体&quot;;</string>
+        <string notr="true">font: 10pt &quot;黑体&quot;;</string>
        </property>
       </widget>
       <widget class="QTextEdit" name="textEdit_6">
@@ -3206,7 +3234,7 @@
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 8pt &quot;楷体&quot;;</string>
+        <string notr="true">font: 10pt &quot;黑体&quot;;</string>
        </property>
       </widget>
       <widget class="QTextEdit" name="textEdit_8">
@@ -3219,7 +3247,7 @@
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 8pt &quot;楷体&quot;;</string>
+        <string notr="true">font: 10pt &quot;黑体&quot;;</string>
        </property>
       </widget>
       <widget class="QFrame" name="frame_19">
@@ -3484,9 +3512,280 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_9">
+     <attribute name="title">
+      <string>邮件地址</string>
+     </attribute>
+     <widget class="QFrame" name="frame_21">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>110</y>
+        <width>931</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>40</y>
+         <width>201</width>
+         <height>90</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_38">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_130">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>录井队联系人</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLineEdit" name="lineEdit_115">
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_129">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>录井队邮件地址</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLineEdit" name="lineEdit_59">
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>30</y>
+         <width>621</width>
+         <height>231</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_39">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_100">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>甲方邮件地址</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_128">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>注意事项</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTextEdit" name="textEdit_9">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <stylestrategy>PreferDefault</stylestrategy>
+            <kerning>true</kerning>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTextEdit" name="textEdit_10">
+          <property name="font">
+           <font>
+            <family>黑体</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <stylestrategy>PreferDefault</stylestrategy>
+            <kerning>true</kerning>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QComboBox" name="comboBox_10">
+       <property name="geometry">
+        <rect>
+         <x>95</x>
+         <y>171</y>
+         <width>141</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_97">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>170</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>黑体</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>矿区</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QTextEdit" name="textEdit_11">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>450</y>
+        <width>931</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>12</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <stylestrategy>PreferDefault</stylestrategy>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 12pt &quot;黑体&quot;;</string>
+      </property>
+      <property name="markdown">
+       <string>`说明：`
+
+`1、审核人员审核完正式图后，把最终形成的正式固井处理图(jpg)和固井评价表(CBL-S.txt)发到录井邮箱（附录B中的录井邮箱）里面；`
+
+`2、报告审核完成后，把最终形成的正式固井处理图(jpg)、固井评价表(CBL-S.txt)和审核好的固井报告发到各个矿区相应的邮箱里面；`
+
+`3、所有西南油气田分公司的井都要同时发一份到西油分公司工程技术研究院。libin2015@petrochina.com.cn`
+
+`4、注明了是东钻总包井的，解释结论发东钻邮箱：cdztzjzyb@cnpc.com.cn 接收人 川东钻探钻井作业部，不要直接给井队发。`
+
+</string>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'黑体'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;说明：&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;1、审核人员审核完正式图后，把最终形成的正式固井处理图(jpg)和固井评价表(CBL-S.txt)发到录井邮箱（附录B中的录井邮箱）里面；&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;2、报告审核完成后，把最终形成的正式固井处理图(jpg)、固井评价表(CBL-S.txt)和审核好的固井报告发到各个矿区相应的邮箱里面；&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;3、所有西南油气田分公司的井都要同时发一份到西油分公司工程技术研究院。libin2015@petrochina.com.cn&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:8pt;&quot;&gt;4、注明了是东钻总包井的，解释结论发东钻邮箱：cdztzjzyb@cnpc.com.cn 接收人 川东钻探钻井作业部，不要直接给井队发。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>小工具集合</string>
+      <string>小工具聚合</string>
      </attribute>
      <widget class="QFrame" name="frame_9">
       <property name="geometry">
@@ -3507,7 +3806,7 @@
        <property name="geometry">
         <rect>
          <x>150</x>
-         <y>20</y>
+         <y>30</y>
          <width>241</width>
          <height>21</height>
         </rect>
@@ -3687,8 +3986,8 @@
       <widget class="QLabel" name="label_113">
        <property name="geometry">
         <rect>
-         <x>160</x>
-         <y>20</y>
+         <x>150</x>
+         <y>10</y>
          <width>281</width>
          <height>21</height>
         </rect>
@@ -3892,7 +4191,7 @@
        <rect>
         <x>620</x>
         <y>40</y>
-        <width>521</width>
+        <width>501</width>
         <height>171</height>
        </rect>
       </property>
@@ -3937,8 +4236,8 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>70</y>
+         <x>10</x>
+         <y>60</y>
          <width>481</width>
          <height>25</height>
         </rect>
@@ -3959,7 +4258,7 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>100</y>
          <width>186</width>
          <height>44</height>
@@ -3985,7 +4284,7 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>340</x>
+         <x>330</x>
          <y>100</y>
          <width>158</width>
          <height>25</height>
@@ -4049,9 +4348,9 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>30</x>
          <y>60</y>
-         <width>511</width>
+         <width>531</width>
          <height>25</height>
         </rect>
        </property>
@@ -4084,7 +4383,7 @@
        <rect>
         <x>620</x>
         <y>220</y>
-        <width>521</width>
+        <width>501</width>
         <height>161</height>
        </rect>
       </property>
@@ -4097,7 +4396,7 @@
       <widget class="QLabel" name="label_121">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>140</x>
          <y>20</y>
          <width>231</width>
          <height>21</height>
@@ -4116,7 +4415,7 @@
       <widget class="QWidget" name="layoutWidget_12">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>10</x>
          <y>70</y>
          <width>471</width>
          <height>25</height>
@@ -4164,7 +4463,7 @@
        <rect>
         <x>620</x>
         <y>530</y>
-        <width>521</width>
+        <width>501</width>
         <height>81</height>
        </rect>
       </property>
@@ -4199,7 +4498,7 @@
        <rect>
         <x>620</x>
         <y>390</y>
-        <width>521</width>
+        <width>501</width>
         <height>131</height>
        </rect>
       </property>
@@ -4212,8 +4511,8 @@
       <widget class="QLabel" name="label_127">
        <property name="geometry">
         <rect>
-         <x>210</x>
-         <y>20</y>
+         <x>200</x>
+         <y>10</y>
          <width>111</width>
          <height>20</height>
         </rect>
@@ -4231,7 +4530,7 @@
       <widget class="QPushButton" name="pushButton_44">
        <property name="geometry">
         <rect>
-         <x>430</x>
+         <x>420</x>
          <y>20</y>
          <width>71</width>
          <height>23</height>
@@ -4247,7 +4546,7 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>50</y>
          <width>481</width>
          <height>61</height>
@@ -4287,7 +4586,7 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>20</y>
          <width>151</width>
          <height>22</height>
@@ -4310,7 +4609,7 @@
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
-      <string>管柱损伤分析与描述</string>
+      <string>套损自动评价</string>
      </attribute>
      <widget class="QPushButton" name="pushButton_23">
       <property name="geometry">
@@ -4386,7 +4685,7 @@
      <widget class="QFrame" name="frame_12">
       <property name="geometry">
        <rect>
-        <x>920</x>
+        <x>900</x>
         <y>70</y>
         <width>101</width>
         <height>141</height>
@@ -4484,7 +4783,7 @@
      <widget class="QFrame" name="frame_11">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>710</x>
         <y>70</y>
         <width>181</width>
         <height>141</height>
@@ -4558,7 +4857,7 @@
        <rect>
         <x>20</x>
         <y>270</y>
-        <width>1121</width>
+        <width>1101</width>
         <height>361</height>
        </rect>
       </property>
@@ -4633,7 +4932,7 @@
        <widget class="QTextEdit" name="textEdit">
         <property name="geometry">
          <rect>
-          <x>860</x>
+          <x>840</x>
           <y>70</y>
           <width>241</width>
           <height>251</height>
@@ -4661,7 +4960,7 @@
          <rect>
           <x>30</x>
           <y>70</y>
-          <width>811</width>
+          <width>791</width>
           <height>251</height>
          </rect>
         </property>
@@ -4723,7 +5022,7 @@
        <widget class="QTextEdit" name="textEdit_2">
         <property name="geometry">
          <rect>
-          <x>860</x>
+          <x>840</x>
           <y>70</y>
           <width>241</width>
           <height>251</height>
@@ -4751,7 +5050,7 @@
          <rect>
           <x>30</x>
           <y>70</y>
-          <width>811</width>
+          <width>791</width>
           <height>251</height>
          </rect>
         </property>
@@ -4797,7 +5096,7 @@
        <widget class="QTextEdit" name="textEdit_3">
         <property name="geometry">
          <rect>
-          <x>860</x>
+          <x>840</x>
           <y>70</y>
           <width>241</width>
           <height>251</height>
@@ -4825,7 +5124,7 @@
          <rect>
           <x>30</x>
           <y>70</y>
-          <width>811</width>
+          <width>791</width>
           <height>251</height>
          </rect>
         </property>
@@ -4848,37 +5147,44 @@
        </widget>
       </widget>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QTextEdit" name="textEdit_7">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>220</y>
+        <width>921</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_34">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>220</y>
+        <width>85</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>解析LAS数据</string>
+      </property>
+      <property name="default">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_38">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>230</y>
-        <width>1121</width>
-        <height>73</height>
+        <y>220</y>
+        <width>85</width>
+        <height>31</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_38">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_38">
-         <property name="text">
-          <string>载入LAS数据</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="pushButton_34">
-         <property name="text">
-          <string>解析LAS数据</string>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QTextEdit" name="textEdit_7"/>
-       </item>
-      </layout>
+      <property name="text">
+       <string>载入LAS数据</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab">
@@ -4888,30 +5194,14 @@
      <widget class="QTextBrowser" name="textBrowser">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>10</x>
         <y>20</y>
-        <width>1111</width>
+        <width>1121</width>
         <height>571</height>
        </rect>
       </property>
      </widget>
     </widget>
-   </widget>
-   <widget class="QLabel" name="label_110">
-    <property name="geometry">
-     <rect>
-      <x>950</x>
-      <y>0</y>
-      <width>231</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;黑体&quot;;</string>
-    </property>
-    <property name="text">
-     <string>time</string>
-    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -4920,13 +5210,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1190</width>
+     <width>1160</width>
      <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>About</string>
+     <string>关于</string>
     </property>
     <addaction name="action_2"/>
     <addaction name="action"/>
@@ -4940,7 +5230,7 @@
   </action>
   <action name="action_2">
    <property name="text">
-    <string>简单介绍</string>
+    <string>简介</string>
    </property>
   </action>
  </widget>

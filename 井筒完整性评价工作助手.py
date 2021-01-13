@@ -363,7 +363,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         ###################################################
         self.pushButton.clicked.connect(self.open_file)
         self.pushButton.setToolTip('请确保原始记录登记表格式正确')
-        self.pushButton_53.clicked.connect(self.automate_table_helper) # 智能补充解释评价顶底深度
+        self.pushButton_53.clicked.connect(self.automate_table_helper)  # 智能补充解释评价顶底深度
         self.pushButton_53.setToolTip('成果表放置后该按钮才有用噢')
         self.pushButton_3.clicked.connect(self.generate_txt_file)
         self.pushButton_3.setToolTip('生成可导入LEAD4.0的TXT井信息文件')
@@ -385,7 +385,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.comboBox_9.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
         self.comboBox_9.setCurrentText('/')
 
-        choices_list1 = ["李海军", "陈海祥", "杨艺", "朱莉", "何强", "罗文", "王昌德", "孙路路", '?']
+        choices_list1 = ["李海军", "陈海祥", "杨艺", "朱莉", "何强", "罗文", "王昌德", "周政英", "孙路路", '?']
         self.comboBox_2.addItems(choices_list1)
         self.comboBox_3.addItems(choices_list1)
         self.comboBox_2.setCurrentText('?')
@@ -393,7 +393,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.comboBox_2.currentIndexChanged[str].connect(self.connection_to_comboBox_3)
         self.comboBox_3.currentIndexChanged[str].connect(self.connection_to_comboBox_2)
 
-        choices_list2 = ["李海军", "陈海祥", "杨艺", "朱莉", "何强", "罗文", "王昌德", "孙路路", '?']
+        choices_list2 = ["李海军", "陈海祥", "杨艺", "朱莉", "何强", "罗文", "王昌德", "周政英", "孙路路", '?']
         self.comboBox.addItems(choices_list2)
         self.comboBox.setCurrentText('?')
 
@@ -526,8 +526,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.layer_table_process)
         self.pushButton_6.clicked.connect(self.select_formation_table)
         self.pushButton_8.clicked.connect(self.formation_table_process)
-        self.pushButton_50.clicked.connect(self.open_layer_result_directory)  # 打开layer+result文件夹
-        self.pushButton_51.clicked.connect(self.open_layer_result_directory)  # 打开layer+result文件夹
+        self.pushButton_50.clicked.connect(self.open_layer_result_directory)  # 打开分层和成果表工区文件夹
+        self.pushButton_51.clicked.connect(self.open_layer_result_directory)  # 打开分层和成果表工区文件夹
         ###################################################
 
         # 解释评价顶底深度编辑后发送信号
@@ -555,6 +555,154 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.action.triggered.connect(self.menubar_author_info)
         ###################################################
 
+        # 邮件地址助手模块初始化
+        self.mail_Addresses = ['长宁', '威远', '川中油气矿', '蜀南气矿', '重庆气矿', '开发事业部', '川东北气矿', '勘探事业部', \
+                               '致密气项目部', '川西北气矿', '大庆勘探事业部', '四川页岩气', '?']
+        self.comboBox_10.addItems(self.mail_Addresses)
+        self.comboBox_10.setCurrentText('?')
+        self.comboBox_10.currentIndexChanged.connect(self.mail_Addresses_Update)
+
+    def mail_Addresses_Update(self):
+        # 初始化
+        self.textEdit_9.setText('')
+        self.textEdit_10.setText('')
+        fileDir = '.\\resources\\邮箱地址\\'
+
+        if '长宁' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '长宁-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '长宁-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '威远' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '威远-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '威远-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '川中' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '川中-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '川中-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '蜀南' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '蜀南-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '蜀南-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '重庆气矿' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '重庆气矿-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '重庆气矿-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '开发' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '开发-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '开发-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '川东北' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '川东北-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '川东北-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '勘探' in self.comboBox_10.currentText() and '大庆' not in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '勘探-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '勘探-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '致密' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '致密-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '致密-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '川西北' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '川西北-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '川西北-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '大庆' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '大庆-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '大庆-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        elif '四川' in self.comboBox_10.currentText():
+            with open(''.join([fileDir, '四川-甲方邮件地址.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text1 = f.readlines()  # 读取文件
+                for item in text1:
+                    item = item.replace('\n', '')
+                    self.textEdit_9.append(item)
+            with open(''.join([fileDir, '四川-注意事项.txt']), 'r', encoding='UTF-8') as f:  # 打开文件
+                text2 = f.readlines()  # 读取文件
+                for item in text2:
+                    item = item.replace('\n', '')
+                    self.textEdit_10.append(item)
+        else:
+            pass
+
     # 在textBrowser中显示程序运行状态
     def outputWritten(self, text):
         cursor = self.textBrowser.textCursor()
@@ -567,7 +715,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         QMessageBox.information(self, "简单介绍", "井筒完整性评价工作助手主要针对工程所生产过程中的LEAD固井质量处理、套损检测中的工作实现自动化的实现，能够有效地提升生产效率和规范报告图件")
 
     def menubar_author_info(self):
-        QMessageBox.information(self, "联系方式", "有任何问题请联系中油测井西南分公司解释评价中心杨艺，电话：18580367621，邮箱：978030836@qq.com")
+        QMessageBox.information(self, "联系方式", "软件开发: 杨艺 \n电话：18580367621，邮箱：978030836@qq.com\n软件测试: 刘恒 王参文 何强")
 
     # 添加一个计时器事件
     def timerEvent(self, e):
@@ -902,7 +1050,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     sheet1_openpyxl[row][col].value = '嘉三^1'
                 else:
                     pass
-        wb1_openpyxl.save('.\\WorkSpace\\Layer+Result\\Layer_整理后.xlsx')
+        wb1_openpyxl.save('.\\WorkSpace\\分层和成果表工区\\Layer_整理后.xlsx')
         QMessageBox.information(self, "提示", "整理完毕，请到目录中查看")
 
     def select_formation_table(self):
@@ -1033,11 +1181,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
             sheet2_openpyxl[row][3].value = sheet2_openpyxl[row][2].value.split('--')[1]
             sheet2_openpyxl[row][2].value = sheet2_openpyxl[row][2].value.split('--')[0]
             sheet2_openpyxl[row][4].value = sheet2_openpyxl[row][5].value
-        wb2_openpyxl.save('.\\WorkSpace\\Layer+Result\\Result_整理后.xlsx')
+        wb2_openpyxl.save('.\\WorkSpace\\分层和成果表工区\\Result_整理后.xlsx')
         QMessageBox.information(self, "提示", "整理完毕，请到目录中查看")
 
     def open_layer_result_directory(self):
-        path = '.\\WorkSpace\\Layer+Result'
+        path = '.\\WorkSpace\\分层和成果表工区'
         os.startfile(path)
 
     ################################################################################## 添加签名模块
@@ -1786,19 +1934,30 @@ class Main_window(QMainWindow, Ui_MainWindow):
             cement_Density = other_Cement_Density
         self.lineEdit_72.setText(cement_Density)
 
+        # 密度大于1.75产生警告
+        try:
+            slow_Density = float(slow_Cement_Density)
+            fast_Density = float(fast_Cement_Density)
+            if slow_Density >= 1.75 or fast_Density >= 1.75:
+                QMessageBox.information(self, "提示", "请注意水泥密度大于1.75g/cm3\n需要按照15/30标准进行评价")
+            else:
+                pass
+        except:
+            pass
+
         ######################################################################## 水泥设计返高design_Depth
         try:
             design_Depth = document.tables[2].cell(5, 2).text.strip()
             design_Depth = design_Depth.replace(' ', '')
             design_Depth = design_Depth.replace('m', '')
             if design_Depth == ['井口', '地面']:
-                design_Depth = '0'
+                design_Depth = '0.0'
         except:
             QMessageBox.information(self, "提示", "请检查design_Depth（水泥设计返高）是否为空")
             design_Depth = '-99999'
         self.lineEdit_69.setText(design_Depth)
         if design_Depth == '':
-            self.lineEdit_69.setText('0')
+            self.lineEdit_69.setText('0.0')
 
         ######################################################################## 水泥实际返高actual_Depth
         try:
@@ -1825,18 +1984,18 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         ######################################################################## 套管数据
         # 套管外径
-        casing1_Dia = document.tables[2].cell(15, 3).text.strip()
-        casing2_Dia = document.tables[2].cell(16, 3).text.strip()
-        casing3_Dia = document.tables[2].cell(17, 3).text.strip()
-        casing4_Dia = document.tables[2].cell(18, 3).text.strip()
-        casing5_Dia = document.tables[2].cell(19, 3).text.strip()
-        casing6_Dia = document.tables[2].cell(20, 3).text.strip()
-        casing7_Dia = document.tables[2].cell(21, 3).text.strip()
-        casing8_Dia = document.tables[2].cell(22, 3).text.strip()
-        casing9_Dia = document.tables[2].cell(23, 3).text.strip()
-        casing10_Dia = document.tables[2].cell(24, 3).text.strip()
-        casing11_Dia = document.tables[2].cell(25, 3).text.strip()
-        casing12_Dia = document.tables[2].cell(26, 3).text.strip()
+        casing1_Dia = document.tables[2].cell(14, 3).text.strip()
+        casing2_Dia = document.tables[2].cell(15, 3).text.strip()
+        casing3_Dia = document.tables[2].cell(16, 3).text.strip()
+        casing4_Dia = document.tables[2].cell(17, 3).text.strip()
+        casing5_Dia = document.tables[2].cell(18, 3).text.strip()
+        casing6_Dia = document.tables[2].cell(19, 3).text.strip()
+        casing7_Dia = document.tables[2].cell(20, 3).text.strip()
+        casing8_Dia = document.tables[2].cell(21, 3).text.strip()
+        casing9_Dia = document.tables[2].cell(22, 3).text.strip()
+        casing10_Dia = document.tables[2].cell(23, 3).text.strip()
+        casing11_Dia = document.tables[2].cell(24, 3).text.strip()
+        casing12_Dia = document.tables[2].cell(25, 3).text.strip()
         self.lineEdit_75.setText(casing1_Dia)
         self.lineEdit_77.setText(casing2_Dia)
         self.lineEdit_79.setText(casing3_Dia)
@@ -1844,18 +2003,18 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_83.setText(casing5_Dia)
 
         # 套管内径
-        casing1_Inner_Dia = document.tables[2].cell(15, 4).text.strip()
-        casing2_Inner_Dia = document.tables[2].cell(16, 4).text.strip()
-        casing3_Inner_Dia = document.tables[2].cell(17, 4).text.strip()
-        casing4_Inner_Dia = document.tables[2].cell(18, 4).text.strip()
-        casing5_Inner_Dia = document.tables[2].cell(19, 4).text.strip()
-        casing6_Inner_Dia = document.tables[2].cell(20, 4).text.strip()
-        casing7_Inner_Dia = document.tables[2].cell(21, 4).text.strip()
-        casing8_Inner_Dia = document.tables[2].cell(22, 4).text.strip()
-        casing9_Inner_Dia = document.tables[2].cell(23, 4).text.strip()
-        casing10_Inner_Dia = document.tables[2].cell(24, 4).text.strip()
-        casing11_Inner_Dia = document.tables[2].cell(25, 4).text.strip()
-        casing12_Inner_Dia = document.tables[2].cell(26, 4).text.strip()
+        casing1_Inner_Dia = document.tables[2].cell(14, 4).text.strip()
+        casing2_Inner_Dia = document.tables[2].cell(15, 4).text.strip()
+        casing3_Inner_Dia = document.tables[2].cell(16, 4).text.strip()
+        casing4_Inner_Dia = document.tables[2].cell(17, 4).text.strip()
+        casing5_Inner_Dia = document.tables[2].cell(18, 4).text.strip()
+        casing6_Inner_Dia = document.tables[2].cell(19, 4).text.strip()
+        casing7_Inner_Dia = document.tables[2].cell(20, 4).text.strip()
+        casing8_Inner_Dia = document.tables[2].cell(21, 4).text.strip()
+        casing9_Inner_Dia = document.tables[2].cell(22, 4).text.strip()
+        casing10_Inner_Dia = document.tables[2].cell(23, 4).text.strip()
+        casing11_Inner_Dia = document.tables[2].cell(24, 4).text.strip()
+        casing12_Inner_Dia = document.tables[2].cell(25, 4).text.strip()
         self.lineEdit_73.setText(casing1_Inner_Dia)
         self.lineEdit_76.setText(casing2_Inner_Dia)
         self.lineEdit_78.setText(casing3_Inner_Dia)
@@ -1863,18 +2022,18 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_82.setText(casing5_Inner_Dia)
 
         # 套管壁厚
-        casing1_Thickness = document.tables[2].cell(15, 5).text.strip().replace('尺寸（mm）', '')
-        casing2_Thickness = document.tables[2].cell(16, 5).text.strip().replace('尺寸（mm）', '')
-        casing3_Thickness = document.tables[2].cell(17, 5).text.strip().replace('尺寸（mm）', '')
-        casing4_Thickness = document.tables[2].cell(18, 5).text.strip().replace('尺寸（mm）', '')
-        casing5_Thickness = document.tables[2].cell(19, 5).text.strip().replace('尺寸（mm）', '')
-        casing6_Thickness = document.tables[2].cell(20, 5).text.strip().replace('尺寸（mm）', '')
-        casing7_Thickness = document.tables[2].cell(21, 5).text.strip().replace('尺寸（mm）', '')
-        casing8_Thickness = document.tables[2].cell(22, 5).text.strip().replace('尺寸（mm）', '')
-        casing9_Thickness = document.tables[2].cell(23, 5).text.strip().replace('尺寸（mm）', '')
-        casing10_Thickness = document.tables[2].cell(24, 5).text.strip().replace('尺寸（mm）', '')
-        casing11_Thickness = document.tables[2].cell(25, 5).text.strip().replace('尺寸（mm）', '')
-        casing12_Thickness = document.tables[2].cell(26, 5).text.strip().replace('尺寸（mm）', '')
+        casing1_Thickness = document.tables[2].cell(14, 5).text.strip().replace('尺寸（mm）', '')
+        casing2_Thickness = document.tables[2].cell(15, 5).text.strip().replace('尺寸（mm）', '')
+        casing3_Thickness = document.tables[2].cell(16, 5).text.strip().replace('尺寸（mm）', '')
+        casing4_Thickness = document.tables[2].cell(17, 5).text.strip().replace('尺寸（mm）', '')
+        casing5_Thickness = document.tables[2].cell(18, 5).text.strip().replace('尺寸（mm）', '')
+        casing6_Thickness = document.tables[2].cell(19, 5).text.strip().replace('尺寸（mm）', '')
+        casing7_Thickness = document.tables[2].cell(20, 5).text.strip().replace('尺寸（mm）', '')
+        casing8_Thickness = document.tables[2].cell(21, 5).text.strip().replace('尺寸（mm）', '')
+        casing9_Thickness = document.tables[2].cell(22, 5).text.strip().replace('尺寸（mm）', '')
+        casing10_Thickness = document.tables[2].cell(23, 5).text.strip().replace('尺寸（mm）', '')
+        casing11_Thickness = document.tables[2].cell(24, 5).text.strip().replace('尺寸（mm）', '')
+        casing12_Thickness = document.tables[2].cell(25, 5).text.strip().replace('尺寸（mm）', '')
         self.lineEdit_84.setText(casing1_Thickness)
         self.lineEdit_86.setText(casing2_Thickness)
         self.lineEdit_88.setText(casing3_Thickness)
@@ -1895,7 +2054,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         casing11_bottom = ''
         casing12_bottom = ''
 
-        casing1_interval = document.tables[2].cell(15, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing1_interval = document.tables[2].cell(14, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing1_interval = casing1_interval.replace(' ', '')
         casing1_interval = casing1_interval.replace('～', '-')
         casing1_interval = casing1_interval.replace('~', '-')
@@ -1907,7 +2066,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_89.setText(casing1_bottom)
         self.lineEdit_96.setText(casing1_interval)
 
-        casing2_interval = document.tables[2].cell(16, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing2_interval = document.tables[2].cell(15, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing2_interval = casing2_interval.replace(' ', '')
         casing2_interval = casing2_interval.replace('～', '-')
         casing2_interval = casing2_interval.replace('~', '-')
@@ -1919,7 +2078,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_91.setText(casing2_bottom)
         self.lineEdit_97.setText(casing2_interval)
 
-        casing3_interval = document.tables[2].cell(17, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing3_interval = document.tables[2].cell(16, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing3_interval = casing3_interval.replace(' ', '')
         casing3_interval = casing3_interval.replace('～', '-')
         casing3_interval = casing3_interval.replace('~', '-')
@@ -1931,7 +2090,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_93.setText(casing3_bottom)
         self.lineEdit_95.setText(casing3_interval)
 
-        casing4_interval = document.tables[2].cell(18, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing4_interval = document.tables[2].cell(17, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing4_interval = casing4_interval.replace(' ', '')
         casing4_interval = casing4_interval.replace('～', '-')
         casing4_interval = casing4_interval.replace('~', '-')
@@ -1943,7 +2102,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_92.setText(casing4_bottom)
         self.lineEdit_94.setText(casing4_interval)
 
-        casing5_interval = document.tables[2].cell(19, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing5_interval = document.tables[2].cell(18, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing5_interval = casing5_interval.replace(' ', '')
         casing5_interval = casing5_interval.replace('～', '-')
         casing5_interval = casing5_interval.replace('~', '-')
@@ -1955,7 +2114,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_90.setText(casing5_bottom)
         self.lineEdit_98.setText(casing5_interval)
 
-        casing6_interval = document.tables[2].cell(20, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing6_interval = document.tables[2].cell(19, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing6_interval = casing6_interval.replace(' ', '')
         casing6_interval = casing6_interval.replace('～', '-')
         casing6_interval = casing6_interval.replace('~', '-')
@@ -1965,7 +2124,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if casing6_interval != '':
             casing6_bottom = casing6_interval.split('-')[1]
 
-        casing7_interval = document.tables[2].cell(21, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing7_interval = document.tables[2].cell(20, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing7_interval = casing7_interval.replace(' ', '')
         casing7_interval = casing7_interval.replace('～', '-')
         casing7_interval = casing7_interval.replace('~', '-')
@@ -1975,7 +2134,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if casing7_interval != '':
             casing7_bottom = casing7_interval.split('-')[1]
 
-        casing8_interval = document.tables[2].cell(22, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing8_interval = document.tables[2].cell(21, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing8_interval = casing8_interval.replace(' ', '')
         casing8_interval = casing8_interval.replace('～', '-')
         casing8_interval = casing8_interval.replace('~', '-')
@@ -1985,7 +2144,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if casing8_interval != '':
             casing8_bottom = casing8_interval.split('-')[1]
 
-        casing9_interval = document.tables[2].cell(23, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing9_interval = document.tables[2].cell(22, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing9_interval = casing9_interval.replace(' ', '')
         casing9_interval = casing9_interval.replace('～', '-')
         casing9_interval = casing9_interval.replace('~', '-')
@@ -1995,7 +2154,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if casing9_interval != '':
             casing9_bottom = casing9_interval.split('-')[1]
 
-        casing10_interval = document.tables[2].cell(24, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing10_interval = document.tables[2].cell(23, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing10_interval = casing10_interval.replace(' ', '')
         casing10_interval = casing10_interval.replace('～', '-')
         casing10_interval = casing10_interval.replace('~', '-')
@@ -2005,7 +2164,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if casing10_interval != '':
             casing10_bottom = casing10_interval.split('-')[1]
 
-        casing11_interval = document.tables[2].cell(25, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing11_interval = document.tables[2].cell(24, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing11_interval = casing11_interval.replace(' ', '')
         casing11_interval = casing11_interval.replace('～', '-')
         casing11_interval = casing11_interval.replace('~', '-')
@@ -2015,7 +2174,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if casing11_interval != '':
             casing11_bottom = casing11_interval.split('-')[1]
 
-        casing12_interval = document.tables[2].cell(26, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
+        casing12_interval = document.tables[2].cell(25, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing12_interval = casing12_interval.replace(' ', '')
         casing12_interval = casing12_interval.replace('～', '-')
         casing12_interval = casing12_interval.replace('~', '-')
@@ -2026,43 +2185,35 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing12_bottom = casing12_interval.split('-')[1]
 
         # 目标套管尺寸casing_Goal
-        if casing12_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        temp_list = ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']
+        if casing12_Dia not in temp_list:
             casing_Goal = casing12_Dia
-        elif casing11_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing11_Dia not in temp_list:
             casing_Goal = casing11_Dia
-        elif casing10_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing10_Dia not in temp_list:
             casing_Goal = casing10_Dia
-        elif casing9_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing9_Dia not in temp_list:
             casing_Goal = casing9_Dia
-        elif casing8_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing8_Dia not in temp_list:
             casing_Goal = casing8_Dia
-        elif casing7_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing7_Dia not in temp_list:
             casing_Goal = casing7_Dia
-        elif casing6_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing6_Dia not in temp_list:
             casing_Goal = casing6_Dia
-        elif casing5_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing5_Dia not in temp_list:
             casing_Goal = casing5_Dia
-        elif casing4_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing4_Dia not in temp_list:
             casing_Goal = casing4_Dia
-        elif casing3_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing3_Dia not in temp_list:
             casing_Goal = casing3_Dia
-        elif casing2_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing2_Dia not in temp_list:
             casing_Goal = casing2_Dia
-        elif casing1_Dia not in ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']:
+        elif casing1_Dia not in temp_list:
             casing_Goal = casing1_Dia
         self.lineEdit_108.setText(casing_Goal)
 
         ######################################################################## 目标套管下深casing_Goal_Depth
         if casing12_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(26, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(26, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(26, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(26, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(26, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(26, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(26, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(26, 6).text.strip()
-        elif casing11_Dia == casing_Goal:
             if '～' in document.tables[2].cell(25, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(25, 6).text.strip():
@@ -2071,7 +2222,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(25, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip()
-        elif casing10_Dia == casing_Goal:
+        elif casing11_Dia == casing_Goal:
             if '～' in document.tables[2].cell(24, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(24, 6).text.strip():
@@ -2080,7 +2231,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(24, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip()
-        elif casing9_Dia == casing_Goal:
+        elif casing10_Dia == casing_Goal:
             if '～' in document.tables[2].cell(23, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(23, 6).text.strip():
@@ -2089,7 +2240,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(23, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip()
-        elif casing8_Dia == casing_Goal:
+        elif casing9_Dia == casing_Goal:
             if '～' in document.tables[2].cell(22, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(22, 6).text.strip():
@@ -2098,7 +2249,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(22, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip()
-        elif casing7_Dia == casing_Goal:
+        elif casing8_Dia == casing_Goal:
             if '～' in document.tables[2].cell(21, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(21, 6).text.strip():
@@ -2107,7 +2258,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(21, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip()
-        elif casing6_Dia == casing_Goal:
+        elif casing7_Dia == casing_Goal:
             if '～' in document.tables[2].cell(20, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(20, 6).text.strip():
@@ -2116,7 +2267,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(20, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip()
-        elif casing5_Dia == casing_Goal:
+        elif casing6_Dia == casing_Goal:
             if '～' in document.tables[2].cell(19, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(19, 6).text.strip():
@@ -2125,7 +2276,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(19, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip()
-        elif casing4_Dia == casing_Goal:
+        elif casing5_Dia == casing_Goal:
             if '～' in document.tables[2].cell(18, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(18, 6).text.strip():
@@ -2134,7 +2285,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(18, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip()
-        elif casing3_Dia == casing_Goal:
+        elif casing4_Dia == casing_Goal:
             if '～' in document.tables[2].cell(17, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(17, 6).text.strip():
@@ -2143,7 +2294,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(17, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip()
-        elif casing2_Dia == casing_Goal:
+        elif casing3_Dia == casing_Goal:
             if '～' in document.tables[2].cell(16, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(16, 6).text.strip():
@@ -2152,7 +2303,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(16, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip()
-        elif casing1_Dia == casing_Goal:
+        elif casing2_Dia == casing_Goal:
             if '～' in document.tables[2].cell(15, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip().split('～')[1]
             elif '~' in document.tables[2].cell(15, 6).text.strip():
@@ -2161,6 +2312,15 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip().split('-')[1]
             elif '-' not in document.tables[2].cell(15, 6).text.strip():
                 casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip()
+        elif casing1_Dia == casing_Goal:
+            if '～' in document.tables[2].cell(14, 6).text.strip():
+                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip().split('～')[1]
+            elif '~' in document.tables[2].cell(14, 6).text.strip():
+                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip().split('~')[1]
+            elif '-' in document.tables[2].cell(14, 6).text.strip():
+                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip().split('-')[1]
+            elif '-' not in document.tables[2].cell(14, 6).text.strip():
+                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip()
         self.lineEdit_109.setText(casing_Goal_Depth)
         ######################################################################## 获取测量井段
         for row in range(3, 26):
@@ -2172,62 +2332,72 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 measure_Interval_Start_Depth = measure_Interval.split('-')[0]
                 measure_Interval_End_Depth = measure_Interval.split('-')[1]
                 pass
+        try:  # 强制类型转换后增加小数位数
+            measure_Interval_Start_Depth = str(round(float(measure_Interval_Start_Depth), 1))
+            measure_Interval_End_Depth = str(round(float(measure_Interval_End_Depth), 1))
+        except:
+            pass
         self.lineEdit_110.setText(measure_Interval_Start_Depth)
         self.lineEdit_111.setText(measure_Interval_End_Depth)
         ######################################################################## 判断甲方是谁
-        if len(document.tables) == 9:
-            if document.tables[8].cell(2, 5).text.strip() == '√' or document.tables[8].cell(2, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(2, 2).text.strip()
-            elif document.tables[8].cell(3, 5).text.strip() == '√' or document.tables[8].cell(3, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(3, 2).text.strip()
-            elif document.tables[8].cell(4, 5).text.strip() == '√' or document.tables[8].cell(4, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(4, 2).text.strip()
-            elif document.tables[8].cell(5, 5).text.strip() == '√' or document.tables[8].cell(5, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(5, 2).text.strip()
-            elif document.tables[8].cell(6, 5).text.strip() == '√' or document.tables[8].cell(6, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(6, 2).text.strip()
-            elif document.tables[8].cell(7, 5).text.strip() == '√' or document.tables[8].cell(7, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(7, 2).text.strip()
-            elif document.tables[8].cell(8, 5).text.strip() == '√' or document.tables[8].cell(8, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(8, 2).text.strip()
-            elif document.tables[8].cell(9, 5).text.strip() == '√' or document.tables[8].cell(9, 6).text.strip() == '√':
-                client_Name = document.tables[8].cell(9, 2).text.strip()
-            elif document.tables[8].cell(10, 5).text.strip() == '√' or document.tables[8].cell(10,
-                                                                                               6).text.strip() == '√':
-                client_Name = document.tables[8].cell(10, 2).text.strip()
-            elif document.tables[8].cell(11, 5).text.strip() == '√' or document.tables[8].cell(11,
-                                                                                               6).text.strip() == '√':
-                client_Name = document.tables[8].cell(11, 2).text.strip()
-            elif document.tables[8].cell(12, 5).text.strip() == '√' or document.tables[8].cell(12,
-                                                                                               6).text.strip() == '√':
-                client_Name = document.tables[8].cell(12, 2).text.strip()
-        elif len(document.tables) == 8:
-            if document.tables[7].cell(2, 5).text.strip() == '√' or document.tables[7].cell(2, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(2, 2).text.strip()
-            elif document.tables[7].cell(3, 5).text.strip() == '√' or document.tables[7].cell(3, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(3, 2).text.strip()
-            elif document.tables[7].cell(4, 5).text.strip() == '√' or document.tables[7].cell(4, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(4, 2).text.strip()
-            elif document.tables[7].cell(5, 5).text.strip() == '√' or document.tables[7].cell(5, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(5, 2).text.strip()
-            elif document.tables[7].cell(6, 5).text.strip() == '√' or document.tables[7].cell(6, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(6, 2).text.strip()
-            elif document.tables[7].cell(7, 5).text.strip() == '√' or document.tables[7].cell(7, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(7, 2).text.strip()
-            elif document.tables[7].cell(8, 5).text.strip() == '√' or document.tables[7].cell(8, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(8, 2).text.strip()
-            elif document.tables[7].cell(9, 5).text.strip() == '√' or document.tables[7].cell(9, 6).text.strip() == '√':
-                client_Name = document.tables[7].cell(9, 2).text.strip()
-            elif document.tables[7].cell(10, 5).text.strip() == '√' or document.tables[7].cell(10,
-                                                                                               6).text.strip() == '√':
-                client_Name = document.tables[7].cell(10, 2).text.strip()
-            elif document.tables[7].cell(11, 5).text.strip() == '√' or document.tables[7].cell(11,
-                                                                                               6).text.strip() == '√':
-                client_Name = document.tables[7].cell(11, 2).text.strip()
-            elif document.tables[7].cell(12, 5).text.strip() == '√' or document.tables[7].cell(12,
-                                                                                               6).text.strip() == '√':
-                client_Name = document.tables[7].cell(12, 2).text.strip()
+        if document.tables[7].cell(2, 5).text.strip() == '√' or \
+                document.tables[7].cell(2, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(2, 2).text.strip()
+        elif document.tables[7].cell(3, 5).text.strip() == '√' or \
+                document.tables[7].cell(3, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(3, 2).text.strip()
+        elif document.tables[7].cell(4, 5).text.strip() == '√' or \
+                document.tables[7].cell(4, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(4, 2).text.strip()
+        elif document.tables[7].cell(5, 5).text.strip() == '√' or \
+                document.tables[7].cell(5, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(5, 2).text.strip()
+        elif document.tables[7].cell(6, 5).text.strip() == '√' or \
+                document.tables[7].cell(6, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(6, 2).text.strip()
+        elif document.tables[7].cell(7, 5).text.strip() == '√' or \
+                document.tables[7].cell(7, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(7, 2).text.strip()
+        elif document.tables[7].cell(8, 5).text.strip() == '√' or \
+                document.tables[7].cell(8, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(8, 2).text.strip()
+        elif document.tables[7].cell(9, 5).text.strip() == '√' or \
+                document.tables[7].cell(9, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(9, 2).text.strip()
+        elif document.tables[7].cell(10, 5).text.strip() == '√' or \
+                document.tables[7].cell(10, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(10, 2).text.strip()
+        elif document.tables[7].cell(11, 5).text.strip() == '√' or \
+                document.tables[7].cell(11, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(11, 2).text.strip()
+        elif document.tables[7].cell(12, 5).text.strip() == '√' or \
+                document.tables[7].cell(12, 6).text.strip() == '√':
+            client_Name = document.tables[7].cell(12, 2).text.strip()
         self.lineEdit_50.setText(client_Name)
+
+        # 解析录井队长和录井队邮箱至界面，具有11和12行，4列和5列的容错性
+        if '邮' in document.tables[7].cell(13, 5).text.strip():
+            mud_Logging_Leader = document.tables[7].cell(14, 3).text.strip()
+            mud_Logging_Mail_Address = document.tables[7].cell(14, 5).text.strip()
+            self.lineEdit_115.setText(mud_Logging_Leader)
+            self.lineEdit_59.setText(mud_Logging_Mail_Address)
+        elif '邮' in document.tables[7].cell(13, 6).text.strip():
+            mud_Logging_Leader = document.tables[7].cell(14, 3).text.strip()
+            mud_Logging_Mail_Address = document.tables[7].cell(14, 6).text.strip()
+            self.lineEdit_115.setText(mud_Logging_Leader)
+            self.lineEdit_59.setText(mud_Logging_Mail_Address)
+        elif '邮' in document.tables[7].cell(12, 5).text.strip():
+            mud_Logging_Leader = document.tables[7].cell(13, 3).text.strip()
+            mud_Logging_Mail_Address = document.tables[7].cell(13, 5).text.strip()
+            self.lineEdit_115.setText(mud_Logging_Leader)
+            self.lineEdit_59.setText(mud_Logging_Mail_Address)
+        elif '邮' in document.tables[7].cell(12, 6).text.strip():
+            mud_Logging_Leader = document.tables[7].cell(13, 3).text.strip()
+            mud_Logging_Mail_Address = document.tables[7].cell(13, 6).text.strip()
+            self.lineEdit_115.setText(mud_Logging_Leader)
+            self.lineEdit_59.setText(mud_Logging_Mail_Address)
+        else:
+            pass
 
     def connection_to_comboBox_3(self):
         self.comboBox_3.setCurrentText(self.comboBox_2.currentText())
@@ -2359,6 +2529,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         if cement_Quantity == '-99999':
             cement_Quantity = '/'
+        else:
+            pass
+
         DICT = {
             "井名": well_Name,
             "井别": well_Category,
@@ -2452,7 +2625,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "套管4终深": casing4_bottom,
             "套管5内径": casing5_Inner_Dia,
             "套管5外径": casing5_Dia,
-            "套管5壁厚": casing4_Thickness,
+            "套管5壁厚": casing5_Thickness,
             "套管5终深": casing5_bottom,
             "MINTHICK": 1,
             "钻井深度": deepest_bit,
@@ -2494,7 +2667,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
     def view_bar(self, num, total):
         rate = float(num) / float(total)
         rate_num = int(rate * 100)
-        r = '\r[%s%s]%d%%' % ("█" * rate_num, " " * (100 - rate_num), rate_num)
+        r = '\r[%s%s]%d%%' % ("*" * rate_num, " " * (100 - rate_num), rate_num)
         sys.stdout.write(r)
         sys.stdout.flush()
 
@@ -2526,20 +2699,24 @@ class Main_window(QMainWindow, Ui_MainWindow):
         well_Name = self.lineEdit.text()
         casing_Goal = self.lineEdit_108.text()
         logging_Date = self.lineEdit_40.text()
-        log_End_Time = logging_Date
-        year = logging_Date.split('-')[0]
-        month = logging_Date.split('-')[1]
-        day = logging_Date.split('-')[2]
+        try:
+            year = logging_Date.split('-')[0]
+            month = logging_Date.split('-')[1]
+            day = logging_Date.split('-')[2]
+        except:
+            year = ''
+            month = ''
+            day = ''
         first_Pro_Interval = ''.join([self.lineEdit_103.text(), '-', self.lineEdit_105.text()])
 
-        PATH = '.\\WorkSpace\\'
-        TEMPLATE_PATH = '.\\resources\\模板'
+        PATH = '.\\WorkSpace\\报告生成工区\\'
+        TEMPLATE_PATH = '.\\resources\\模板\\'
         newFile = PATH + well_Name + '_' + year + month + \
                   day + '_(' + casing_Goal + 'mm套,' + first_Pro_Interval + 'm)固井报告' + '.docx'
         if formation_be_or_not == '有储层':
-            document = Document(TEMPLATE_PATH + '\\template-with-formation.docx')
+            document = Document(TEMPLATE_PATH + 'template-with-formation.docx')
         else:
-            document = Document(TEMPLATE_PATH + '\\template-without-formation.docx')
+            document = Document(TEMPLATE_PATH + 'template-without-formation.docx')
         if self.checkBox_9.isChecked():
             document = self.check(document)  # 调用替换函数
         else:
@@ -2909,7 +3086,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.clean_dir_of_all(dir2_path)
         self.clean_dir_of_all(dir4_path)
         self.clean_dir_of_all(dir5_path)
-        QMessageBox.information(self, "提示", "报告自动生成工区清理完毕\n（除了储层表文件夹）")
+        QMessageBox.information(self, "提示", "报告生成工区清理完毕\n（除了储层表文件夹）")
 
     def clean_report_workspace_all(self):
         dir1_path = '.\\WorkSpace\\报告生成工区\\原始资料'
@@ -2922,7 +3099,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.clean_dir_of_all(dir3_path)
         self.clean_dir_of_all(dir4_path)
         self.clean_dir_of_all(dir5_path)
-        QMessageBox.information(self, "提示", "报告自动生成工区全部清理完毕")
+        QMessageBox.information(self, "提示", "报告生成工区全部清理完毕")
 
     def clean_workspace_all(self):
         dir1_path = '.\\WorkSpace\\报告生成工区\\原始资料'
@@ -2930,7 +3107,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         dir3_path = '.\\WorkSpace\\报告生成工区\\储层表'
         dir4_path = '.\\WorkSpace\\报告生成工区\\储层图'
         dir5_path = '.\\WorkSpace\\报告生成工区\\胶结差图'
-        dir6_path = '.\\WorkSpace\\Layer+Result'
+        dir6_path = '.\\WorkSpace\\分层和成果表工区'
         dir7_path = '.\\WorkSpace\\合并统计工区'
         dir8_path = '.\\WorkSpace'
         self.clean_dir_of_all(dir1_path)
@@ -3002,7 +3179,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         else:
             fileNames = ['空']
         # 利用lambda表达式排序
-        fileNames.sort(key=lambda x: int(x.split('#')[0].split('-')[0]))
+        if fileNames != ['空']:
+            fileNames.sort(key=lambda x: int(x.split('#')[0].split('-')[0]))
         text = ''
         for item in fileNames:
             text = text + item + '\n'
@@ -3015,7 +3193,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         else:
             fileNames = ['空']
         # 利用lambda表达式排序
-        fileNames.sort(key=lambda x: int(x.split('-')[0]))
+        if fileNames != ['空']:
+            fileNames.sort(key=lambda x: int(x.split('-')[0]))
         text = ''
         for item in fileNames:
             text = text + item + '\n'
@@ -3031,6 +3210,23 @@ class Main_window(QMainWindow, Ui_MainWindow):
         else:
             pass
         self.lock.acquire()  # 上锁
+
+        # 长宁和威远的井报告模板较特殊，需要提示
+        well_Name = self.lineEdit.text()
+        if '长宁' in well_Name or '宁' in well_Name:
+            QMessageBox.information(self, "提示", "请注意长宁的井报告模板特殊格式")
+        elif '威' in well_Name:
+            QMessageBox.information(self, "提示", "请注意威远的井报告模板特殊格式")
+        else:
+            pass
+
+        # 重庆气矿报告模板较特殊，需要提示
+        client_Name = self.lineEdit_50.text()
+        if '重庆' in client_Name:
+            QMessageBox.information(self, "提示", "请注意重庆气矿报告模板特殊格式")
+        else:
+            pass
+
         # 提取成果表中的内容
         PATH = ".\\WorkSpace\\报告生成工区\\成果表"
         for fileName in os.listdir(PATH):
@@ -3083,12 +3279,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
         print('统计表解析完成')
 
         # 整体评价
-        if eval(first_Pass_Percent) >= 60:
+        if eval(first_Pass_Percent) >= 70:
             first_Eval_Result = '合格'
         else:
             first_Eval_Result = '不合格'
 
-        if eval(second_Pass_Percent) >= 60:
+        if eval(second_Pass_Percent) >= 70:
             second_Eval_Result = '合格'
         else:
             second_Eval_Result = '不合格'
@@ -3351,9 +3547,14 @@ class Main_window(QMainWindow, Ui_MainWindow):
         casing_Goal = self.lineEdit_108.text()
         measure_Interval = ''.join([measure_Interval_Start_Depth, '-', measure_Interval_End_Depth])
         log_End_Time = logging_Date
-        year = logging_Date.split('-')[0]
-        month = logging_Date.split('-')[1]
-        day = logging_Date.split('-')[2]
+        try:
+            year = logging_Date.split('-')[0]
+            month = logging_Date.split('-')[1]
+            day = logging_Date.split('-')[2]
+        except:
+            year = ''
+            month = ''
+            day = ''
         dev_Depth_Ratio = self.lineEdit_26.text()
         casing1_interval = self.lineEdit_96.text()
         casing2_interval = self.lineEdit_97.text()
@@ -3460,7 +3661,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         ################################################################################
         # 储层表的嵌入
-        PATH = ".\\WorkSpace\\"
+        PATH = ".\\WorkSpace\\报告生成工区\\"
         for fileName in os.listdir(PATH):
             newFile = PATH + well_Name + '_' + year + month + \
                       day + '_(' + casing_Goal + 'mm套,' + first_Pro_Interval + 'm)固井报告' + '.docx'
@@ -3478,7 +3679,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             nrow = sheet.nrows
             ncol = sheet.ncols
 
-            formation_table = document.tables[5]
+            formation_table = document.tables[6]
             for num in range(eval(formation_Number) - 1):
                 row_cells = formation_table.add_row()
 
@@ -3510,15 +3711,21 @@ class Main_window(QMainWindow, Ui_MainWindow):
         nrow = sheet.nrows
         ncol = sheet.ncols
 
+        # 提示
+        if nrow > 200:
+            QMessageBox.information(self, '提示', '单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
+        else:
+            pass
+
         document = Document(newFile)
         document.styles['Normal'].font.size = Pt(9)  # 小五
         document.styles['Normal'].font.name = u'Times New Roman'
         document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
 
         if formation_be_or_not == '有储层':
-            table = document.tables[8]
+            table = document.tables[9]
         else:
-            table = document.tables[7]
+            table = document.tables[8]
         table.autofit = True
         for num in range(nrow - 4):
             row_cells = table.add_row()
@@ -3580,9 +3787,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
         document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
 
         if formation_be_or_not == '有储层':
-            table = document.tables[9]
+            table = document.tables[10]
         else:
-            table = document.tables[8]
+            table = document.tables[9]
         table.autofit = True
         for num in range(nrow - 4):
             row_cells = table.add_row()
@@ -3797,6 +4004,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     formation_Start_End_Number = formation_Name_Split[0]
                 formation_Start_Depth = formation_Name_Split[1].split('-')[0]
                 formation_End_Depth = formation_Name_Split[1].split('-')[1]
+                try:  # 强制类型转换后取整
+                    formation_Start_Depth = str(int(float(formation_Start_Depth)))
+                    formation_End_Depth = str(int(float(formation_End_Depth)))
+                except:
+                    pass
+                else:
+                    pass
                 formation_Start_End = ''.join([formation_Start_Depth, '-', formation_End_Depth])
                 ###
                 if all_evaluation_of_formation_upper1[pic_number] == '好':
@@ -4183,6 +4397,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 bad_Serial_Number = bad_Name_Split[0]
                 bad_Start_Depth = bad_Name_Split[1]
                 bad_End_Depth = bad_Name_Split[2]
+                try:  # 强制类型转换后取整
+                    bad_Start_Depth = str(int(float(bad_Start_Depth)))
+                    bad_End_Depth = str(int(float(bad_End_Depth)))
+                except:
+                    pass
+                else:
+                    pass
                 bad_Start_End = ''.join([bad_Start_Depth, '-', bad_End_Depth])
                 bad_Start_Ends.append(bad_Start_End + 'm、')
             bad_Start_Ends = ''.join(bad_Start_Ends).rstrip('、')
@@ -4285,6 +4506,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             add1.add_run().add_picture(PATH + '签名-罗文.jpg', width=Inches(1.0))
         elif report_Writer == '王昌德':
             add1.add_run().add_picture(PATH + '签名-王昌德.jpg', width=Inches(1.0))
+        elif report_Writer == '周政英':
+            add1.add_run().add_picture(PATH + '签名-周政英.jpg', width=Inches(1.0))
         elif report_Writer == '孙路路':
             add1.add_run().add_picture(PATH + '签名-孙路路.jpg', width=Inches(1.0))
         else:
@@ -4302,13 +4525,14 @@ class Main_window(QMainWindow, Ui_MainWindow):
         else:
             pass
         document.save(newFile)
-        print('报告生成完毕，请查看WorkSpace')
+        print('报告生成完毕，请查看报告生成工区')
         self.pushButton_4.setText('生成解释报告')
         self.pushButton_4.setEnabled(True)
         self.timer.stop()
         self.lock.release()  # 解锁
         # 加上会死机，可能是线程冲突
-        # QMessageBox.information(self, "提示", "水泥胶结评价报告生成完毕，请查看WorkSpace")
+        # QMessageBox.information(self, "提示", "水泥胶结评价报告生成完毕，请查看报告生成工区")
+
     ########################################################################################套损评价相关函数
     def generate_fast_report(self):
         if self.run_on_net == True:
@@ -4977,7 +5201,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             r.font.color.rgb = RGBColor(0, 0, 0)
             document.save('.\\WorkSpace\\套损检测快速解释结论.docx')
         else:
-            QMessageBox.information(self, 'oh no', '貌似你没有勾选啊！')
+            QMessageBox.information(self, 'OH NO', '貌似你没有勾选')
 
         QMessageBox.information(self, "提示", "快速解释结论生成完毕，请查看WorkSpace")
 
