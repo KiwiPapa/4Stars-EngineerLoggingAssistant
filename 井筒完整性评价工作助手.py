@@ -56,6 +56,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.setWindowOpacity(0.98)
         self.lock = threading.Lock()  # 数据锁
 
+        # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
         # sys.stdout = EmittingStr(textWritten=self.outputWritten)
@@ -3711,11 +3712,18 @@ class Main_window(QMainWindow, Ui_MainWindow):
         nrow = sheet.nrows
         ncol = sheet.ncols
 
+        '''
+        会导致崩溃
+        分析认为sheet占用内存较大
+        在这种情况下弹出提示框会导致崩溃
+        '''
         # 提示
-        if nrow > 200:
-            QMessageBox.information(self, '提示', '单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
-        else:
-            pass
+        # time.sleep(1)
+        # if nrow > 200:
+        #     QMessageBox.information(self, '提示', '单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
+        # else:
+        #     pass
+        # time.sleep(1)
 
         document = Document(newFile)
         document.styles['Normal'].font.size = Pt(9)  # 小五
@@ -3837,7 +3845,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         print('正在添加储层段落，请等待...')
         ################################################################################
         # 上部井段固井质量评价表单元格居左
-        upper_interval_table = document.tables[4]
+        upper_interval_table = document.tables[5]
         for row in range(1, len(upper_interval_table.rows)):
             for col in range(len(upper_interval_table.columns)):
                 upper_interval_table.cell(row, col).paragraphs[
@@ -4402,8 +4410,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     bad_End_Depth = str(int(float(bad_End_Depth)))
                 except:
                     pass
-                else:
-                    pass
                 bad_Start_End = ''.join([bad_Start_Depth, '-', bad_End_Depth])
                 bad_Start_Ends.append(bad_Start_End + 'm、')
             bad_Start_Ends = ''.join(bad_Start_Ends).rstrip('、')
@@ -4443,6 +4449,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 bad_Serial_Number = bad_Name_Split[0]
                 bad_Start_Depth = bad_Name_Split[1]
                 bad_End_Depth = bad_Name_Split[2]
+                try:  # 强制类型转换后取整
+                    bad_Start_Depth = str(int(float(bad_Start_Depth)))
+                    bad_End_Depth = str(int(float(bad_End_Depth)))
+                except:
+                    pass
                 bad_Start_End = ''.join([bad_Start_Depth, '-', bad_End_Depth])
 
                 paragraph = document.add_paragraph()
