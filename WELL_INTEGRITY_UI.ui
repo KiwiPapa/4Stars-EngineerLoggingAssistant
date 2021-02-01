@@ -3764,13 +3764,13 @@
 4、注明了是东钻总包井的，解释结论发东钻邮箱：cdztzjzyb@cnpc.com.cn 接收人 川东钻探钻井作业部，不要直接给井队发。</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>70</x>
         <y>540</y>
         <width>421</width>
-        <height>21</height>
+        <height>22</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_40">
@@ -5230,7 +5230,7 @@
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>关于</string>
+     <string>Info</string>
     </property>
     <addaction name="action_2"/>
     <addaction name="action"/>
