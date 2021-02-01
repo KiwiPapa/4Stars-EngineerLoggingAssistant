@@ -360,6 +360,21 @@ class Main_window(QMainWindow, Ui_MainWindow):
         server.quit()
 
     def main_initialization(self):
+        # 防止上传Github不能保存空文件夹的bug
+        dir1_path = '.\\WorkSpace\\报告生成工区\\原始资料'
+        dir2_path = '.\\WorkSpace\\报告生成工区\\成果表'
+        dir3_path = '.\\WorkSpace\\报告生成工区\\储层表'
+        dir4_path = '.\\WorkSpace\\报告生成工区\\储层图'
+        dir5_path = '.\\WorkSpace\\报告生成工区\\胶结差图'
+        dir6_path = '.\\WorkSpace\\分层和成果表工区'
+        dir7_path = '.\\WorkSpace\\合并统计工区'
+        dir8_path = '.\\WorkSpace'
+        dir_paths = [dir1_path, dir2_path, dir3_path, dir4_path, dir5_path, dir6_path, dir7_path, dir8_path]
+        for item in dir_paths:
+            if not os.path.exists(item):
+                os.makedirs(item)
+                print(item, ' has been created.')
+
         # 水泥胶结评价模块初始化
         ###################################################
         self.pushButton.clicked.connect(self.open_file)
