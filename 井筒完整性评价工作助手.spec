@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['井筒完整性评价工作助手.py'],
-             pathex=['F:\\井筒完整性评价工作助手(2020.1-)'],
+             pathex=['C:\\Users\\YANGYI\\source\\repos\\well_integrity_works_helper'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          console=True )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
