@@ -2789,7 +2789,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         df_temp = df1.loc[(df1['井段Start'] >= formation_Start) & (df1['井段Start'] <= formation_End), :]
         # 获取起始深度到第一层井段底界的结论
         df_temp_start_to_first_layer = df1.loc[(df1['井段Start'] <= formation_Start), :]
-        start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        if len(df_temp_start_to_first_layer) != 0:  # 若为空dataframe
+            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        elif len(df_temp_start_to_first_layer) == 0:  # 若不为空dataframe
+            start_to_upper_result = df1.loc[1, '结论']
         # 获取calculation_Start所在段的声幅值
         df_temp_formation_Start = df1.loc[(df1['井段Start'] <= formation_Start) & (
                 df1['井段End'] >= formation_Start), :]
@@ -2902,7 +2905,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         df_temp = df1.loc[(df1['井段Start'] >= formation_Start) & (df1['井段Start'] <= formation_End), :]
         # 获取起始深度到第一层井段底界的结论
         df_temp_start_to_first_layer = df1.loc[(df1['井段Start'] <= formation_Start), :]
-        start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        if len(df_temp_start_to_first_layer) != 0:  # 若为空dataframe
+            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        elif len(df_temp_start_to_first_layer) == 0:  # 若不为空dataframe
+            start_to_upper_result = df1.loc[1, '结论']
         # 获取calculation_Start所在段的声幅值
         df_temp_formation_Start = df1.loc[(df1['井段Start'] <= formation_Start) & (
                 df1['井段End'] >= formation_Start), :]
