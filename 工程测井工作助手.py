@@ -2789,7 +2789,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         df_temp = df1.loc[(df1['井段Start'] >= formation_Start) & (df1['井段Start'] <= formation_End), :]
         # 获取起始深度到第一层井段底界的结论
         df_temp_start_to_first_layer = df1.loc[(df1['井段Start'] <= formation_Start), :]
-        start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        if len(df_temp_start_to_first_layer) != 0:  # 若为空dataframe
+            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        elif len(df_temp_start_to_first_layer) == 0:  # 若不为空dataframe
+            start_to_upper_result = df1.loc[1, '结论']
         # 获取calculation_Start所在段的声幅值
         df_temp_formation_Start = df1.loc[(df1['井段Start'] <= formation_Start) & (
                 df1['井段End'] >= formation_Start), :]
@@ -2902,7 +2905,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         df_temp = df1.loc[(df1['井段Start'] >= formation_Start) & (df1['井段Start'] <= formation_End), :]
         # 获取起始深度到第一层井段底界的结论
         df_temp_start_to_first_layer = df1.loc[(df1['井段Start'] <= formation_Start), :]
-        start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        if len(df_temp_start_to_first_layer) != 0:  # 若为空dataframe
+            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
+        elif len(df_temp_start_to_first_layer) == 0:  # 若不为空dataframe
+            start_to_upper_result = df1.loc[1, '结论']
         # 获取calculation_Start所在段的声幅值
         df_temp_formation_Start = df1.loc[(df1['井段Start'] <= formation_Start) & (
                 df1['井段End'] >= formation_Start), :]
@@ -3227,6 +3233,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             pass
         self.lock.acquire()  # 上锁
 
+        # 会导致死机
+        '''
         # 长宁和威远的井报告模板较特殊，需要提示
         well_Name = self.lineEdit.text()
         if '长宁' in well_Name or '宁' in well_Name:
@@ -3242,6 +3250,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "提示", "请注意重庆气矿报告模板特殊格式")
         else:
             pass
+        '''
 
         # 提取成果表中的内容
         PATH = ".\\WorkSpace\\报告生成工区\\成果表"
@@ -4621,6 +4630,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     table1.cell(row, col).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
                     table1.cell(row, col).vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
             table1.cell(0, 0).text = '序号'
+
             # 首列居中
             for row in range(len(table1.rows)):
                 table1.cell(row, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
@@ -5175,9 +5185,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
             for fileName in os.listdir(PATH):
                 if '变形' in fileName and '.xlsx' in fileName and '$' not in fileName:
                     fileDir = PATH + "\\" + fileName
-                    workbook_projection = xlrd.open_workbook(fileDir)
+                    workbook_transformation = xlrd.open_workbook(fileDir)
 
-            sheet = workbook_projection.sheets()[0]
+            sheet = workbook_transformation.sheets()[0]
             # 获得表单的行数及列数
             nrow = sheet.nrows
             ncol = sheet.ncols
@@ -5227,7 +5237,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             r.font.color.rgb = RGBColor(0, 0, 0)
             document.save('.\\WorkSpace\\套损检测快速解释结论.docx')
         else:
-            QMessageBox.information(self, 'OH NO', '貌似你没有勾选')
+            QMessageBox.information(self, '提示', '您似乎没有勾选')
 
         QMessageBox.information(self, "提示", "快速解释结论生成完毕，请查看WorkSpace")
 
