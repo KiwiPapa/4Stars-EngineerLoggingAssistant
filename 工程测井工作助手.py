@@ -2450,6 +2450,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
             self.lineEdit_103.setText(start_Evaluation)
             self.lineEdit_105.setText(end_Evaluation)
 
+            # 自动补充井次名
+            self.set_well_detail_name()
+
     def generate_txt_file(self):
         if self.run_on_net == True:
             self.lead_txt_usage_supervisor()
@@ -3233,24 +3236,28 @@ class Main_window(QMainWindow, Ui_MainWindow):
             pass
         self.lock.acquire()  # 上锁
 
-        # 会导致死机
-        '''
         # 长宁和威远的井报告模板较特殊，需要提示
+        # QMessageBox会导致死机，因此改用setText方式进行提醒
         well_Name = self.lineEdit.text()
         if '长宁' in well_Name or '宁' in well_Name:
-            QMessageBox.information(self, "提示", "请注意长宁的井报告模板特殊格式")
+            self.label_132.setText('请注意长宁的井报告模板特殊格式')
+            self.label_132.setStyleSheet("font: 12pt")
+            self.label_132.setStyleSheet("color: rgb(255, 0, 0)")
         elif '威' in well_Name:
-            QMessageBox.information(self, "提示", "请注意威远的井报告模板特殊格式")
+            self.label_132.setText('请注意威远的井报告模板特殊格式')
+            self.label_132.setStyleSheet("font: 12pt")
+            self.label_132.setStyleSheet("color: rgb(255, 0, 0)")
         else:
             pass
 
         # 重庆气矿报告模板较特殊，需要提示
         client_Name = self.lineEdit_50.text()
         if '重庆' in client_Name:
-            QMessageBox.information(self, "提示", "请注意重庆气矿报告模板特殊格式")
+            self.label_132.setText('请注意重庆气矿报告模板特殊格式')
+            self.label_132.setStyleSheet("font: 12pt")
+            self.label_132.setStyleSheet("color: rgb(255, 0, 0)")
         else:
             pass
-        '''
 
         # 提取成果表中的内容
         PATH = ".\\WorkSpace\\报告生成工区\\成果表"
@@ -3458,7 +3465,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     ratio_Series1 = self.layer_evaluation1(df1, formation_Start, formation_End)[0]  # 调取一界面评价函数
                     evaluation_of_formation1 = self.layer_evaluation1(df1, formation_Start, formation_End)[
                         1]  # 调取一界面评价函数
-                    # print(ratio_Series1)
                     all_evaluation_of_formation1.append(evaluation_of_formation1)
 
                     ratio_Series2 = self.layer_evaluation2(df2, formation_Start, formation_End)[0]  # 调取二界面评价函数
@@ -3471,7 +3477,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     ratio_Series1 = self.layer_evaluation1(df1, formation_Start, float(end_Evaluation))[0]  # 调取一界面评价函数
                     evaluation_of_formation1 = self.layer_evaluation1(df1, formation_Start, float(end_Evaluation))[
                         1]  # 调取一界面评价函数
-                    print(ratio_Series1)
                     ratio_Series2 = self.layer_evaluation2(df2, formation_Start, float(end_Evaluation))[0]  # 调取二界面评价函数
                     evaluation_of_formation2 = self.layer_evaluation2(df2, formation_Start, float(end_Evaluation))[
                         1]  # 调取二界面评价函数
@@ -3709,7 +3714,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 row_cells = formation_table.add_row()
 
             for row in range(1, len(formation_table.rows)):
-                # print('已添加第', str(row), '个储层')
+                print('已添加第', str(row), '个储层数据到报告')
                 for col in range(len(formation_table.columns)):
                     formation_table.cell(row, col).text = str(sheet.cell_value(row + 1, col)).strip()
                     formation_table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
@@ -3736,18 +3741,15 @@ class Main_window(QMainWindow, Ui_MainWindow):
         nrow = sheet.nrows
         ncol = sheet.ncols
 
-        '''
-        会导致崩溃
-        分析认为sheet占用内存较大
-        在这种情况下弹出提示框会导致崩溃
-        '''
-        # 提示
-        # time.sleep(1)
-        # if nrow > 200:
-        #     QMessageBox.information(self, '提示', '单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
-        # else:
-        #     pass
-        # time.sleep(1)
+        # 行数过多提醒
+        # QMessageBox会导致崩溃，改为label提示的方式
+        if nrow > 200:
+            # QMessageBox.information(self, '提示', '单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
+            self.label_133.setText('单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
+            self.label_133.setStyleSheet("font: 16pt")
+            self.label_133.setStyleSheet("color: rgb(255, 0, 0)")
+        else:
+            pass
 
         document = Document(newFile)
         document.styles['Normal'].font.size = Pt(9)  # 小五
@@ -3775,7 +3777,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 print(' @第', str(row), '行')
                 for col in range(len(table.columns)):
                     table.cell(row, col).text = str(sheet.cell_value(row + 3, col))
-
             for row in range(1, len(table.rows)):
                 for col in range(len(table.columns)):
                     table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
