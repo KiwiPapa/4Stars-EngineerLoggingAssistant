@@ -1188,7 +1188,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 if sheet2_openpyxl[row][col - 1].value == '储层厚度':
                     delete_Col = col
                     sheet2_openpyxl.delete_cols(delete_Col)
-        wb2_openpyxl.save('.\\WorkSpace\\报告生成工区\\储层表\\Result_for_report.xlsx')
+        wb2_openpyxl.save('.\\WorkSpace\\分层和成果表工区\\Result_报告格式(需转xls).xlsx')
 
         # insert column
         sheet2_openpyxl.insert_cols(4)
