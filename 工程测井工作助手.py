@@ -2201,7 +2201,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing12_bottom = casing12_interval.split('-')[1]
 
         # 目标套管尺寸casing_Goal
-        temp_list = ['', '类  型', '橡胶扶正器', '橡胶', '外径（mm）']
+        temp_list = ['', '类  型', '弹簧扶正器', '橡胶扶正器', '橡胶', '外径（mm）']
         if casing12_Dia not in temp_list:
             casing_Goal = casing12_Dia
         elif casing11_Dia not in temp_list:
@@ -3743,8 +3743,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         # 行数过多提醒
         # QMessageBox会导致崩溃，改为label提示的方式
-        if nrow > 200:
-            # QMessageBox.information(self, '提示', '单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
+        if nrow > 280:
+            # QMessageBox.information(self, '提示', '单层评价表行数较多，表格调整耗时较长，建议取消勾选，自行手动调整:)')
             self.label_133.setText('单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
             self.label_133.setStyleSheet("font: 16pt")
             self.label_133.setStyleSheet("color: rgb(255, 0, 0)")
@@ -3762,7 +3762,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             table = document.tables[8]
         table.autofit = True
         for num in range(nrow - 4):
-            row_cells = table.add_row()
+            table.add_row()
 
         # 设置整个表格字体属性
         table.style.font.color.rgb = RGBColor(0, 0, 0)
@@ -3777,9 +3777,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 print(' @第', str(row), '行')
                 for col in range(len(table.columns)):
                     table.cell(row, col).text = str(sheet.cell_value(row + 3, col))
-            for row in range(1, len(table.rows)):
-                for col in range(len(table.columns)):
                     table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
+            table.cell(0, 0).text = '序号'
+
+            # for row in range(1, len(table.rows)):
+            #     for col in range(len(table.columns)):
+            #         table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
         else:
             pass
         document.save(newFile)
@@ -3791,13 +3794,14 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 self.view_bar(row, len(table.rows) - 1)
                 table.rows[row].height = Pt(20)
                 for col in range(len(table.columns)):
-                    table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
+                    # table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
                     table.cell(row, col).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
                     table.cell(row, col).vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
-            table.cell(0, 0).text = '序号'
+
             # 首列居中
-            for row in range(len(table.rows)):
-                table.cell(row, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            # for row in range(len(table.rows)):
+            #     table.cell(row, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            table.cell(0, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
         else:
             pass
         document.save(newFile)
@@ -3825,7 +3829,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             table = document.tables[9]
         table.autofit = True
         for num in range(nrow - 4):
-            row_cells = table.add_row()
+            table.add_row()
 
         # 设置整个表格字体属性
         table.style.font.color.rgb = RGBColor(0, 0, 0)
@@ -3840,10 +3844,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 print(' @第', str(row), '行')
                 for col in range(len(table.columns)):
                     table.cell(row, col).text = str(sheet.cell_value(row + 3, col))
-
-            for row in range(1, len(table.rows)):
-                for col in range(len(table.columns)):
                     table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
+            table.cell(0, 0).text = '序号'
+
+            # for row in range(1, len(table.rows)):
+            #     for col in range(len(table.columns)):
+            #         table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
         else:
             pass
         document.save(newFile)
@@ -3855,13 +3861,14 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 self.view_bar(row, len(table.rows) - 1)
                 table.rows[row].height = Pt(20)
                 for col in range(len(table.columns)):
-                    table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
+                    # table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
                     table.cell(row, col).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
                     table.cell(row, col).vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
-            table.cell(0, 0).text = '序号'
+
             # 首列居中
-            for row in range(len(table.rows)):
-                table.cell(row, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            # for row in range(len(table.rows)):
+            #     table.cell(row, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            table.cell(0, 0).paragraphs[0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
         else:
             pass
         document.save(newFile)
