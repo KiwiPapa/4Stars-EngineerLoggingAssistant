@@ -1881,7 +1881,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             max_Well_Deviation = round(float(max_Well_Deviation), 2)
             max_Well_Deviation = str(max_Well_Deviation)
         except:
-            QMessageBox.information(self, "提示", "请检查max_Well_Deviation（最大井斜）是否为空")
+            # QMessageBox.information(self, "提示", "请检查max_Well_Deviation（最大井斜）是否为空")
             max_Well_Deviation = '-99999'
         self.lineEdit_28.setText(max_Well_Deviation)
 
@@ -1892,7 +1892,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             max_Well_Deviation_Depth = round(float(max_Well_Deviation_Depth), 2)
             max_Well_Deviation_Depth = str(max_Well_Deviation_Depth)
         except:
-            QMessageBox.information(self, "提示", "请检查max_Well_Deviation_Depth（最大井斜深度）是否为空")
+            # QMessageBox.information(self, "提示", "请检查max_Well_Deviation_Depth（最大井斜深度）是否为空")
             max_Well_Deviation_Depth = '-99999'
         self.lineEdit_24.setText(max_Well_Deviation_Depth)
 
@@ -1918,7 +1918,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 else:
                     arti_Bottom = ''
         except:
-            QMessageBox.information(self, "提示", "请检查arti_Bottom（人工井底）是否为空")
+            # QMessageBox.information(self, "提示", "请检查arti_Bottom（人工井底）是否为空")
             arti_Bottom = '-99999'
         self.lineEdit_65.setText(arti_Bottom)
         ######################################################################## 已注入水泥量cement_Quantity
@@ -1959,7 +1959,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
             slow_Density = float(slow_Cement_Density)
             fast_Density = float(fast_Cement_Density)
             if slow_Density >= 1.75 or fast_Density >= 1.75:
-                QMessageBox.information(self, "提示", "请注意水泥密度大于1.75g/cm3\n需要按照15/30标准进行评价")
+                self.label_134.setText('注意要按照15/30标准处理')
+                self.label_134.setStyleSheet("font: 12pt")
+                self.label_134.setStyleSheet("color: rgb(255, 0, 0)")
             else:
                 pass
         except:
@@ -2685,6 +2687,18 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.tableWidget_6.setRowHeight(3, 20)
         self.tableWidget_6.setRowHeight(4, 20)
 
+        # 值初始化，否则会出现AttributeError: 'NoneType' object has no attribute 'text'
+        self.tableWidget_6.setItem(0, 0, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(0, 1, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(1, 1, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(1, 1, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(2, 0, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(2, 1, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(3, 0, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(3, 1, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(4, 0, QTableWidgetItem(str('')))
+        self.tableWidget_6.setItem(4, 1, QTableWidgetItem(str('')))
+
         # self.tableWidget_6.setRowHeight(0, 50)
         # self.tableWidget_6.verticalHeader().setVisible(False)  # 隐藏垂直表头
         # self.tableWidget_6.horizontalHeader().setVisible(False)  # 隐藏水平表头
@@ -2710,6 +2724,34 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.tableWidget_7.setRowHeight(2, 20)
         self.tableWidget_7.setRowHeight(3, 20)
         self.tableWidget_7.setRowHeight(4, 20)
+
+        # 值初始化
+        self.tableWidget_7.setItem(0, 0, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(0, 1, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(0, 2, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(0, 3, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(0, 4, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(1, 0, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(1, 1, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(1, 2, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(1, 3, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(1, 4, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(2, 0, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(2, 1, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(2, 2, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(2, 3, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(2, 4, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(3, 0, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(3, 1, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(3, 2, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(3, 3, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(3, 4, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(4, 0, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(4, 1, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(4, 2, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(4, 3, QTableWidgetItem(str('')))
+        self.tableWidget_7.setItem(4, 4, QTableWidgetItem(str('')))
+
 
         # self.tableWidget_7.setRowHeight(0, 50)
         # self.tableWidget_7.verticalHeader().setVisible(False)  # 隐藏垂直表头
