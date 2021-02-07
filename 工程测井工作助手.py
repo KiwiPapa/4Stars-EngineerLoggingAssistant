@@ -395,6 +395,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.pushButton_46.clicked.connect(self.open_bad_cement_pictures_directory)  # 打开胶结差图文件夹
         self.pushButton_49.clicked.connect(self.flush_on_textEdits)  # 在textEdit上刷新显示
 
+        # 钻头数据表和套管数据表初始化
+        self.bit_info_table()
+        self.casing_info_table()
+
         self.comboBox_8.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
         self.comboBox_8.setCurrentText('/')
 
@@ -446,8 +450,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         # 套损评价模块初始化
         ###################################################
-        self.id = 1
-        self.lines = []
+        # self.id = 1
+        # self.lines = []
         self.editable = True
         self.des_sort = True
         self.table2()
@@ -728,10 +732,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.textBrowser.ensureCursorVisible()
 
     def menubar_simple_instruction(self):
-        QMessageBox.information(self, "简单介绍", "井筒完整性评价工作助手主要针对工程所生产过程中的LEAD固井质量处理、套损检测中的工作实现自动化的实现，能够有效地提升生产效率和规范报告图件")
+        QMessageBox.information(self, "简单介绍", "工程测井工作助手主要针对工程所生产过程中的LEAD固井质量处理、套损检测中的工作实现自动化的实现，能够有效地提升生产效率和规范报告图件")
 
     def menubar_author_info(self):
-        QMessageBox.information(self, "联系方式", "软件开发: 杨艺 \n电话：18580367621，邮箱：978030836@qq.com\n软件测试: 刘恒 王参文 何强")
+        QMessageBox.information(self, "联系方式", "软件开发: 杨艺  软件测试: 刘恒 王参文 何强\n电话：18580367621，邮箱：978030836@qq.com")
 
     # 添加一个计时器事件
     def timerEvent(self, e):
@@ -1598,8 +1602,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             bit1_Diameter = '-99999'
         if bit1_Depth == '':
             bit1_Depth = '-99999'
-        self.lineEdit_29.setText(bit1_Diameter)
-        self.lineEdit_30.setText(bit1_Depth)
+        self.tableWidget_6.setItem(0, 0, QTableWidgetItem(str(bit1_Diameter)))
+        self.tableWidget_6.setItem(0, 1, QTableWidgetItem(str(bit1_Depth)))
         bit2_Diameter = document.tables[0].cell(21, 2).text.strip()
         bit2_Diameter = bit2_Diameter.replace(' ', '')
         bit2_Diameter = bit2_Diameter.split('mm')
@@ -1608,8 +1612,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         bit2_Depth = bit2_Depth.replace(' ', '').replace('M', '')
         bit2_Depth = bit2_Depth.split('m')
         bit2_Depth = bit2_Depth[0]
-        self.lineEdit_32.setText(bit2_Diameter)
-        self.lineEdit_31.setText(bit2_Depth)
+        self.tableWidget_6.setItem(1, 0, QTableWidgetItem(str(bit2_Diameter)))
+        self.tableWidget_6.setItem(1, 1, QTableWidgetItem(str(bit2_Depth)))
 
         bit3_Diameter = document.tables[0].cell(22, 2).text.strip()
         bit3_Diameter = bit3_Diameter.replace(' ', '')
@@ -1619,8 +1623,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         bit3_Depth = bit3_Depth.replace(' ', '').replace('M', '')
         bit3_Depth = bit3_Depth.split('m')
         bit3_Depth = bit3_Depth[0]
-        self.lineEdit_34.setText(bit3_Diameter)
-        self.lineEdit_33.setText(bit3_Depth)
+        self.tableWidget_6.setItem(2, 0, QTableWidgetItem(str(bit3_Diameter)))
+        self.tableWidget_6.setItem(2, 1, QTableWidgetItem(str(bit3_Depth)))
 
         bit4_Diameter = document.tables[0].cell(23, 2).text.strip()
         bit4_Diameter = bit4_Diameter.replace(' ', '')
@@ -1630,8 +1634,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         bit4_Depth = bit4_Depth.replace(' ', '').replace('M', '')
         bit4_Depth = bit4_Depth.split('m')
         bit4_Depth = bit4_Depth[0]
-        self.lineEdit_36.setText(bit4_Diameter)
-        self.lineEdit_35.setText(bit4_Depth)
+        self.tableWidget_6.setItem(3, 0, QTableWidgetItem(str(bit4_Diameter)))
+        self.tableWidget_6.setItem(3, 1, QTableWidgetItem(str(bit4_Depth)))
 
         bit5_Diameter = document.tables[0].cell(24, 2).text.strip()
         bit5_Diameter = bit5_Diameter.replace(' ', '')
@@ -1641,8 +1645,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         bit5_Depth = bit5_Depth.replace(' ', '').replace('M', '')
         bit5_Depth = bit5_Depth.split('m')
         bit5_Depth = bit5_Depth[0]
-        self.lineEdit_38.setText(bit5_Diameter)
-        self.lineEdit_37.setText(bit5_Depth)
+        self.tableWidget_6.setItem(4, 0, QTableWidgetItem(str(bit5_Diameter)))
+        self.tableWidget_6.setItem(4, 1, QTableWidgetItem(str(bit5_Depth)))
 
         bit6_Diameter = document.tables[0].cell(25, 2).text.strip()
         bit6_Diameter = bit6_Diameter.replace(' ', '')
@@ -2012,11 +2016,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         casing10_Dia = document.tables[2].cell(23, 3).text.strip()
         casing11_Dia = document.tables[2].cell(24, 3).text.strip()
         casing12_Dia = document.tables[2].cell(25, 3).text.strip()
-        self.lineEdit_75.setText(casing1_Dia)
-        self.lineEdit_77.setText(casing2_Dia)
-        self.lineEdit_79.setText(casing3_Dia)
-        self.lineEdit_81.setText(casing4_Dia)
-        self.lineEdit_83.setText(casing5_Dia)
+        self.tableWidget_7.setItem(0, 1, QTableWidgetItem(str(casing1_Dia)))
+        self.tableWidget_7.setItem(1, 1, QTableWidgetItem(str(casing2_Dia)))
+        self.tableWidget_7.setItem(2, 1, QTableWidgetItem(str(casing3_Dia)))
+        self.tableWidget_7.setItem(3, 1, QTableWidgetItem(str(casing4_Dia)))
+        self.tableWidget_7.setItem(4, 1, QTableWidgetItem(str(casing5_Dia)))
 
         # 套管内径
         casing1_Inner_Dia = document.tables[2].cell(14, 4).text.strip()
@@ -2031,11 +2035,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         casing10_Inner_Dia = document.tables[2].cell(23, 4).text.strip()
         casing11_Inner_Dia = document.tables[2].cell(24, 4).text.strip()
         casing12_Inner_Dia = document.tables[2].cell(25, 4).text.strip()
-        self.lineEdit_73.setText(casing1_Inner_Dia)
-        self.lineEdit_76.setText(casing2_Inner_Dia)
-        self.lineEdit_78.setText(casing3_Inner_Dia)
-        self.lineEdit_80.setText(casing4_Inner_Dia)
-        self.lineEdit_82.setText(casing5_Inner_Dia)
+        self.tableWidget_7.setItem(0, 0, QTableWidgetItem(str(casing1_Inner_Dia)))
+        self.tableWidget_7.setItem(1, 0, QTableWidgetItem(str(casing2_Inner_Dia)))
+        self.tableWidget_7.setItem(2, 0, QTableWidgetItem(str(casing3_Inner_Dia)))
+        self.tableWidget_7.setItem(3, 0, QTableWidgetItem(str(casing4_Inner_Dia)))
+        self.tableWidget_7.setItem(4, 0, QTableWidgetItem(str(casing5_Inner_Dia)))
 
         # 套管壁厚
         casing1_Thickness = document.tables[2].cell(14, 5).text.strip().replace('尺寸（mm）', '')
@@ -2050,11 +2054,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         casing10_Thickness = document.tables[2].cell(23, 5).text.strip().replace('尺寸（mm）', '')
         casing11_Thickness = document.tables[2].cell(24, 5).text.strip().replace('尺寸（mm）', '')
         casing12_Thickness = document.tables[2].cell(25, 5).text.strip().replace('尺寸（mm）', '')
-        self.lineEdit_84.setText(casing1_Thickness)
-        self.lineEdit_86.setText(casing2_Thickness)
-        self.lineEdit_88.setText(casing3_Thickness)
-        self.lineEdit_87.setText(casing4_Thickness)
-        self.lineEdit_85.setText(casing5_Thickness)
+        self.tableWidget_7.setItem(0, 2, QTableWidgetItem(str(casing1_Thickness)))
+        self.tableWidget_7.setItem(1, 2, QTableWidgetItem(str(casing2_Thickness)))
+        self.tableWidget_7.setItem(2, 2, QTableWidgetItem(str(casing3_Thickness)))
+        self.tableWidget_7.setItem(3, 2, QTableWidgetItem(str(casing4_Thickness)))
+        self.tableWidget_7.setItem(4, 2, QTableWidgetItem(str(casing5_Thickness)))
 
         # 避免套管下深井段为单数字而不为井段
         casing1_bottom = ''
@@ -2079,8 +2083,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing1_interval = ''.join(['0', '-', casing1_interval])
         if casing1_interval != '':
             casing1_bottom = casing1_interval.split('-')[1]
-        self.lineEdit_89.setText(casing1_bottom)
-        self.lineEdit_96.setText(casing1_interval)
+        self.tableWidget_7.setItem(0, 3, QTableWidgetItem(str(casing1_bottom)))
+        self.tableWidget_7.setItem(0, 4, QTableWidgetItem(str(casing1_interval)))
 
         casing2_interval = document.tables[2].cell(15, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing2_interval = casing2_interval.replace(' ', '')
@@ -2091,8 +2095,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing2_interval = ''.join(['0', '-', casing2_interval])
         if casing2_interval != '':
             casing2_bottom = casing2_interval.split('-')[1]
-        self.lineEdit_91.setText(casing2_bottom)
-        self.lineEdit_97.setText(casing2_interval)
+        self.tableWidget_7.setItem(1, 3, QTableWidgetItem(str(casing2_bottom)))
+        self.tableWidget_7.setItem(1, 4, QTableWidgetItem(str(casing2_interval)))
 
         casing3_interval = document.tables[2].cell(16, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing3_interval = casing3_interval.replace(' ', '')
@@ -2103,8 +2107,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing3_interval = ''.join(['0', '-', casing3_interval])
         if casing3_interval != '':
             casing3_bottom = casing3_interval.split('-')[1]
-        self.lineEdit_93.setText(casing3_bottom)
-        self.lineEdit_95.setText(casing3_interval)
+        self.tableWidget_7.setItem(2, 3, QTableWidgetItem(str(casing3_bottom)))
+        self.tableWidget_7.setItem(2, 4, QTableWidgetItem(str(casing3_interval)))
 
         casing4_interval = document.tables[2].cell(17, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing4_interval = casing4_interval.replace(' ', '')
@@ -2115,8 +2119,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing4_interval = ''.join(['0', '-', casing4_interval])
         if casing4_interval != '':
             casing4_bottom = casing4_interval.split('-')[1]
-        self.lineEdit_92.setText(casing4_bottom)
-        self.lineEdit_94.setText(casing4_interval)
+        self.tableWidget_7.setItem(3, 3, QTableWidgetItem(str(casing4_bottom)))
+        self.tableWidget_7.setItem(3, 4, QTableWidgetItem(str(casing4_interval)))
 
         casing5_interval = document.tables[2].cell(18, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing5_interval = casing5_interval.replace(' ', '')
@@ -2127,8 +2131,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             casing5_interval = ''.join(['0', '-', casing5_interval])
         if casing5_interval != '':
             casing5_bottom = casing5_interval.split('-')[1]
-        self.lineEdit_90.setText(casing5_bottom)
-        self.lineEdit_98.setText(casing5_interval)
+        self.tableWidget_7.setItem(4, 3, QTableWidgetItem(str(casing5_bottom)))
+        self.tableWidget_7.setItem(4, 4, QTableWidgetItem(str(casing5_interval)))
 
         casing6_interval = document.tables[2].cell(19, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
         casing6_interval = casing6_interval.replace(' ', '')
@@ -2480,16 +2484,16 @@ class Main_window(QMainWindow, Ui_MainWindow):
         drilling_Unit = self.lineEdit_74.text()
         max_Well_Deviation_Depth = self.lineEdit_28.text()
         max_Well_Deviation = self.lineEdit_24.text()
-        bit1_Diameter = self.lineEdit_29.text()
-        bit1_Depth = self.lineEdit_30.text()
-        bit2_Diameter = self.lineEdit_32.text()
-        bit2_Depth = self.lineEdit_31.text()
-        bit3_Diameter = self.lineEdit_34.text()
-        bit3_Depth = self.lineEdit_33.text()
-        bit4_Diameter = self.lineEdit_36.text()
-        bit4_Depth = self.lineEdit_35.text()
-        bit5_Diameter = self.lineEdit_38.text()
-        bit5_Depth = self.lineEdit_37.text()
+        bit1_Diameter = self.tableWidget_6.item(0, 0).text()
+        bit1_Depth = self.tableWidget_6.item(0, 1).text()
+        bit2_Diameter = self.tableWidget_6.item(1, 0).text()
+        bit2_Depth = self.tableWidget_6.item(1, 1).text()
+        bit3_Diameter = self.tableWidget_6.item(2, 0).text()
+        bit3_Depth = self.tableWidget_6.item(2, 1).text()
+        bit4_Diameter = self.tableWidget_6.item(3, 0).text()
+        bit4_Depth = self.tableWidget_6.item(3, 1).text()
+        bit5_Diameter = self.tableWidget_6.item(4, 0).text()
+        bit5_Depth = self.tableWidget_6.item(4, 1).text()
         well_Times_Name = self.lineEdit_3.text()
         well_Times_Type = self.lineEdit_49.text()
         logging_Date = self.lineEdit_40.text()
@@ -2517,30 +2521,30 @@ class Main_window(QMainWindow, Ui_MainWindow):
         cement_End_Date = self.lineEdit_22.text()
         cement_Unit = self.lineEdit_25.text()
 
-        casing1_Inner_Dia = self.lineEdit_73.text()
-        casing1_Dia = self.lineEdit_75.text()
-        casing1_Thickness = self.lineEdit_84.text()
-        casing1_bottom = self.lineEdit_89.text()
+        casing1_Inner_Dia = self.tableWidget_7.item(0, 0).text()
+        casing1_Dia = self.tableWidget_7.item(0, 1).text()
+        casing1_Thickness = self.tableWidget_7.item(0, 2).text()
+        casing1_bottom = self.tableWidget_7.item(0, 3).text()
 
-        casing2_Inner_Dia = self.lineEdit_76.text()
-        casing2_Dia = self.lineEdit_77.text()
-        casing2_Thickness = self.lineEdit_86.text()
-        casing2_bottom = self.lineEdit_91.text()
+        casing2_Inner_Dia = self.tableWidget_7.item(1, 0).text()
+        casing2_Dia = self.tableWidget_7.item(1, 1).text()
+        casing2_Thickness = self.tableWidget_7.item(1, 2).text()
+        casing2_bottom = self.tableWidget_7.item(1, 3).text()
 
-        casing3_Inner_Dia = self.lineEdit_78.text()
-        casing3_Dia = self.lineEdit_79.text()
-        casing3_Thickness = self.lineEdit_88.text()
-        casing3_bottom = self.lineEdit_93.text()
+        casing3_Inner_Dia = self.tableWidget_7.item(2, 0).text()
+        casing3_Dia = self.tableWidget_7.item(2, 1).text()
+        casing3_Thickness = self.tableWidget_7.item(2, 2).text()
+        casing3_bottom = self.tableWidget_7.item(2, 3).text()
 
-        casing4_Inner_Dia = self.lineEdit_80.text()
-        casing4_Dia = self.lineEdit_81.text()
-        casing4_Thickness = self.lineEdit_87.text()
-        casing4_bottom = self.lineEdit_92.text()
+        casing4_Inner_Dia = self.tableWidget_7.item(3, 0).text()
+        casing4_Dia = self.tableWidget_7.item(3, 1).text()
+        casing4_Thickness = self.tableWidget_7.item(3, 2).text()
+        casing4_bottom = self.tableWidget_7.item(3, 3).text()
 
-        casing5_Inner_Dia = self.lineEdit_82.text()
-        casing5_Dia = self.lineEdit_83.text()
-        casing5_Thickness = self.lineEdit_85.text()
-        casing5_bottom = self.lineEdit_90.text()
+        casing5_Inner_Dia = self.tableWidget_7.item(4, 0).text()
+        casing5_Dia = self.tableWidget_7.item(4, 1).text()
+        casing5_Thickness = self.tableWidget_7.item(4, 2).text()
+        casing5_bottom = self.tableWidget_7.item(4, 3).text()
 
         cement_End_Time = self.lineEdit_101.text()
         logging_Start_Time = self.lineEdit_104.text()
@@ -2661,6 +2665,55 @@ class Main_window(QMainWindow, Ui_MainWindow):
             f.write(key + '=' + str(value) + '\n')
         f.close()
         QMessageBox.information(self, "提示", "井信息文件已生成，和原始资料登记表在同一目录")
+
+    def bit_info_table(self):
+        self.tableWidget_6.setColumnCount(2)
+        self.tableWidget_6.setRowCount(5)
+        row = 0  # 第几行（从0开始）
+        col = 0  # 第几列（从0开始）
+        # self.tableWidget_6.horizontalHeader().setStretchLastSection(True)  # 设置最后一列拉伸至最大
+        self.tableWidget_6.horizontalHeader().setSectionsClickable(False)  # 禁止点击表头的列
+        self.headers = ['直径', '深度']
+        self.tableWidget_6.setHorizontalHeaderLabels(self.headers)
+
+        self.tableWidget_6.setColumnWidth(0, 50)
+        self.tableWidget_6.setColumnWidth(1, 60)
+
+        self.tableWidget_6.setRowHeight(0, 20)
+        self.tableWidget_6.setRowHeight(1, 20)
+        self.tableWidget_6.setRowHeight(2, 20)
+        self.tableWidget_6.setRowHeight(3, 20)
+        self.tableWidget_6.setRowHeight(4, 20)
+
+        # self.tableWidget_6.setRowHeight(0, 50)
+        # self.tableWidget_6.verticalHeader().setVisible(False)  # 隐藏垂直表头
+        # self.tableWidget_6.horizontalHeader().setVisible(False)  # 隐藏水平表头
+
+    def casing_info_table(self):
+        self.tableWidget_7.setColumnCount(5)
+        self.tableWidget_7.setRowCount(5)
+        row = 0  # 第几行（从0开始）
+        col = 0  # 第几列（从0开始）
+        # self.tableWidget_7.horizontalHeader().setStretchLastSection(True)  # 设置最后一列拉伸至最大
+        self.tableWidget_7.horizontalHeader().setSectionsClickable(False)  # 禁止点击表头的列
+        self.headers = ['内径', '外径', '壁厚', '终深', '深度段']
+        self.tableWidget_7.setHorizontalHeaderLabels(self.headers)
+
+        self.tableWidget_7.setColumnWidth(0, 50)
+        self.tableWidget_7.setColumnWidth(1, 50)
+        self.tableWidget_7.setColumnWidth(2, 50)
+        self.tableWidget_7.setColumnWidth(3, 50)
+        self.tableWidget_7.setColumnWidth(4, 80)
+
+        self.tableWidget_7.setRowHeight(0, 20)
+        self.tableWidget_7.setRowHeight(1, 20)
+        self.tableWidget_7.setRowHeight(2, 20)
+        self.tableWidget_7.setRowHeight(3, 20)
+        self.tableWidget_7.setRowHeight(4, 20)
+
+        # self.tableWidget_7.setRowHeight(0, 50)
+        # self.tableWidget_7.verticalHeader().setVisible(False)  # 隐藏垂直表头
+        # self.tableWidget_7.horizontalHeader().setVisible(False)  # 隐藏水平表头
 
     ################################################################################
     # 函数定义集结地
@@ -3507,16 +3560,16 @@ class Main_window(QMainWindow, Ui_MainWindow):
         drilling_Unit = self.lineEdit_74.text()
         max_Well_Deviation_Depth = self.lineEdit_28.text()
         max_Well_Deviation = self.lineEdit_24.text()
-        bit1_Diameter = self.lineEdit_29.text()
-        bit1_Depth = self.lineEdit_30.text()
-        bit2_Diameter = self.lineEdit_32.text()
-        bit2_Depth = self.lineEdit_31.text()
-        bit3_Diameter = self.lineEdit_34.text()
-        bit3_Depth = self.lineEdit_33.text()
-        bit4_Diameter = self.lineEdit_36.text()
-        bit4_Depth = self.lineEdit_35.text()
-        bit5_Diameter = self.lineEdit_38.text()
-        bit5_Depth = self.lineEdit_37.text()
+        bit1_Diameter = self.tableWidget_6.item(0, 0).text()
+        bit1_Depth = self.tableWidget_6.item(0, 1).text()
+        bit2_Diameter = self.tableWidget_6.item(1, 0).text()
+        bit2_Depth = self.tableWidget_6.item(1, 1).text()
+        bit3_Diameter = self.tableWidget_6.item(2, 0).text()
+        bit3_Depth = self.tableWidget_6.item(2, 1).text()
+        bit4_Diameter = self.tableWidget_6.item(3, 0).text()
+        bit4_Depth = self.tableWidget_6.item(3, 1).text()
+        bit5_Diameter = self.tableWidget_6.item(4, 0).text()
+        bit5_Depth = self.tableWidget_6.item(4, 1).text()
         well_Times_Name = self.lineEdit_3.text()
         well_Times_Type = self.lineEdit_49.text()
         logging_Date = self.lineEdit_40.text()
@@ -3544,30 +3597,30 @@ class Main_window(QMainWindow, Ui_MainWindow):
         cement_End_Date = self.lineEdit_22.text()
         cement_Unit = self.lineEdit_25.text()
 
-        casing1_Inner_Dia = self.lineEdit_73.text()
-        casing1_Dia = self.lineEdit_75.text()
-        casing1_Thickness = self.lineEdit_84.text()
-        casing1_bottom = self.lineEdit_89.text()
+        casing1_Inner_Dia = self.tableWidget_7.item(0, 0).text()
+        casing1_Dia = self.tableWidget_7.item(0, 1).text()
+        casing1_Thickness = self.tableWidget_7.item(0, 2).text()
+        casing1_bottom = self.tableWidget_7.item(0, 3).text()
 
-        casing2_Inner_Dia = self.lineEdit_76.text()
-        casing2_Dia = self.lineEdit_77.text()
-        casing2_Thickness = self.lineEdit_86.text()
-        casing2_bottom = self.lineEdit_91.text()
+        casing2_Inner_Dia = self.tableWidget_7.item(1, 0).text()
+        casing2_Dia = self.tableWidget_7.item(1, 1).text()
+        casing2_Thickness = self.tableWidget_7.item(1, 2).text()
+        casing2_bottom = self.tableWidget_7.item(1, 3).text()
 
-        casing3_Inner_Dia = self.lineEdit_78.text()
-        casing3_Dia = self.lineEdit_79.text()
-        casing3_Thickness = self.lineEdit_88.text()
-        casing3_bottom = self.lineEdit_93.text()
+        casing3_Inner_Dia = self.tableWidget_7.item(2, 0).text()
+        casing3_Dia = self.tableWidget_7.item(2, 1).text()
+        casing3_Thickness = self.tableWidget_7.item(2, 2).text()
+        casing3_bottom = self.tableWidget_7.item(2, 3).text()
 
-        casing4_Inner_Dia = self.lineEdit_80.text()
-        casing4_Dia = self.lineEdit_81.text()
-        casing4_Thickness = self.lineEdit_87.text()
-        casing4_bottom = self.lineEdit_92.text()
+        casing4_Inner_Dia = self.tableWidget_7.item(3, 0).text()
+        casing4_Dia = self.tableWidget_7.item(3, 1).text()
+        casing4_Thickness = self.tableWidget_7.item(3, 2).text()
+        casing4_bottom = self.tableWidget_7.item(3, 3).text()
 
-        casing5_Inner_Dia = self.lineEdit_82.text()
-        casing5_Dia = self.lineEdit_83.text()
-        casing5_Thickness = self.lineEdit_85.text()
-        casing5_bottom = self.lineEdit_90.text()
+        casing5_Inner_Dia = self.tableWidget_7.item(4, 0).text()
+        casing5_Dia = self.tableWidget_7.item(4, 1).text()
+        casing5_Thickness = self.tableWidget_7.item(4, 2).text()
+        casing5_bottom = self.tableWidget_7.item(4, 3).text()
 
         cement_End_Time = self.lineEdit_101.text()
         logging_Start_Time = self.lineEdit_104.text()
@@ -3586,11 +3639,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
             month = ''
             day = ''
         dev_Depth_Ratio = self.lineEdit_26.text()
-        casing1_interval = self.lineEdit_96.text()
-        casing2_interval = self.lineEdit_97.text()
-        casing3_interval = self.lineEdit_95.text()
-        casing4_interval = self.lineEdit_94.text()
-        casing5_interval = self.lineEdit_98.text()
+        casing1_interval = self.tableWidget_7.item(0, 4).text()
+        casing2_interval = self.tableWidget_7.item(1, 4).text()
+        casing3_interval = self.tableWidget_7.item(2, 4).text()
+        casing4_interval = self.tableWidget_7.item(3, 4).text()
+        casing5_interval = self.tableWidget_7.item(4, 4).text()
 
         # 报告中的未知字段补充
         second_Start = self.lineEdit_106.text()
