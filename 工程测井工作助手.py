@@ -26,7 +26,7 @@ from docx.shared import Cm, Inches, Pt, RGBColor
 from openpyxl import load_workbook
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets, QtNetwork
-from PyQt5.QtCore import QBasicTimer, QDateTime, Qt, QTimer
+from PyQt5.QtCore import QDate, QTime, QBasicTimer, QDateTime, Qt, QTimer
 from PyQt5.QtPrintSupport import QPageSetupDialog, QPrintDialog, QPrinter
 from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QFontDialog, QLabel, QLineEdit, QMainWindow,
@@ -1351,9 +1351,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "提示", "can't open the file, check the path again")
 
     def showtime(self):
-        datetime = QDateTime.currentDateTime()
-        text = datetime.toString()
-        self.label_110.setText("     " + text)
+        # datetime = QDateTime.currentDateTime()
+        date = QDate.currentDate()
+        time = QTime.currentTime()
+        text1 = date.toString(Qt.DefaultLocaleLongDate)
+        text2 = time.toString(Qt.DefaultLocaleLongDate)
+        self.label_110.setText(text1 + text2)
 
     def open_file(self):
         fnames = QFileDialog.getOpenFileNames(self, '打开文件', './')  # 注意这里返回值是元组
@@ -5491,12 +5494,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
                         '最大内径(mm)']
         self.tableWidget_2.setHorizontalHeaderLabels(self.headers)
 
-        self.tableWidget_2.setColumnWidth(0, 80)
-        self.tableWidget_2.setColumnWidth(1, 80)
-        self.tableWidget_2.setColumnWidth(2, 115)
+        self.tableWidget_2.setColumnWidth(0, 90)
+        self.tableWidget_2.setColumnWidth(1, 90)
+        self.tableWidget_2.setColumnWidth(2, 125)
         self.tableWidget_2.setColumnWidth(3, 40)
-        self.tableWidget_2.setColumnWidth(4, 100)
-        self.tableWidget_2.setColumnWidth(5, 100)
+        self.tableWidget_2.setColumnWidth(4, 110)
+        self.tableWidget_2.setColumnWidth(5, 110)
         self.tableWidget_2.setColumnWidth(6, 100)
         self.tableWidget_2.setColumnWidth(7, 100)
         self.tableWidget_2.setColumnWidth(8, 100)
@@ -5665,12 +5668,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
                         '最大内径(mm)']
         self.tableWidget_3.setHorizontalHeaderLabels(self.headers)
 
-        self.tableWidget_3.setColumnWidth(0, 80)
-        self.tableWidget_3.setColumnWidth(1, 80)
-        self.tableWidget_3.setColumnWidth(2, 115)
+        self.tableWidget_3.setColumnWidth(0, 90)
+        self.tableWidget_3.setColumnWidth(1, 90)
+        self.tableWidget_3.setColumnWidth(2, 125)
         self.tableWidget_3.setColumnWidth(3, 40)
-        self.tableWidget_3.setColumnWidth(4, 100)
-        self.tableWidget_3.setColumnWidth(5, 100)
+        self.tableWidget_3.setColumnWidth(4, 110)
+        self.tableWidget_3.setColumnWidth(5, 110)
         self.tableWidget_3.setColumnWidth(6, 100)
         self.tableWidget_3.setColumnWidth(7, 100)
         self.tableWidget_3.setColumnWidth(8, 100)
@@ -5837,9 +5840,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.headers = ['起始深度(m)', '结束深度(m)', '最大变形点深度(m)', '最小内径(mm)', '平均内径(mm)', '最大内径(mm)']
         self.tableWidget_4.setHorizontalHeaderLabels(self.headers)
 
-        self.tableWidget_4.setColumnWidth(0, 80)
-        self.tableWidget_4.setColumnWidth(1, 80)
-        self.tableWidget_4.setColumnWidth(2, 110)
+        self.tableWidget_4.setColumnWidth(0, 90)
+        self.tableWidget_4.setColumnWidth(1, 90)
+        self.tableWidget_4.setColumnWidth(2, 125)
         self.tableWidget_4.setColumnWidth(3, 90)
         self.tableWidget_4.setColumnWidth(4, 90)
         self.tableWidget_4.setColumnWidth(5, 90)
