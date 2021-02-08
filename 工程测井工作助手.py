@@ -1348,7 +1348,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "提示", "签名成功，即将打开图片")
             oriImg.show()
         except IOError:
-            QMessageBox.information(self, "提示", "can't open the file, check the path again")
+            QMessageBox.information(self, "提示", "不能打开，请确认路径是否正确")
 
     def showtime(self):
         # datetime = QDateTime.currentDateTime()
