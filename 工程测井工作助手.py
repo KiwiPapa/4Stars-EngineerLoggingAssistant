@@ -37,6 +37,7 @@ from MATPLOTLIB_MFC40 import Matplot_class_MFC40
 from MATPLOTLIB_MIT24 import Matplot_class_MIT24
 from MATPLOTLIB_MIT60 import Matplot_class_MIT60
 from MATPLOTLIB_MFC24 import Matplot_class_MFC24
+from FTP_Up_Down import myFTP
 
 
 class EmittingStr(QtCore.QObject):
@@ -54,13 +55,17 @@ class Main_window(QMainWindow, Ui_MainWindow):
         super(Main_window, self).__init__()
         self.setupUi(self)
         self.setWindowOpacity(0.98)
-        self.lock = threading.Lock()  # 数据锁
+        # self.lock = threading.Lock()  # 数据锁
+        try: # 将工区备份至FTP
+            self.auto_upload_to_FTP()
+        except:
+            print('faild to connect to oracle_data')
 
         # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
-        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -581,6 +586,19 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.comboBox_10.addItems(self.mail_Addresses)
         self.comboBox_10.setCurrentText('?')
         self.comboBox_10.currentIndexChanged.connect(self.mail_Addresses_Update)
+
+    def auto_upload_to_FTP(self):
+        ftp = myFTP('10.132.203.206')
+        ftp.Login('zonghs', 'zonghs123')
+        local_path = './WorkSpace'
+        # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
+        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/###'
+
+        timeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        timeStr = timeStr.replace(' ', '-')
+        ftp.Mkd(remote_path + '/' + timeStr)
+
+        ftp.UpLoadFileTree(local_path, remote_path + '/' + timeStr)
 
     def mail_Addresses_Update(self):
         # 初始化
