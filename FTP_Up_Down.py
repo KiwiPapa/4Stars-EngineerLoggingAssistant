@@ -2,6 +2,7 @@
 import shutil
 import os
 import ftplib
+import socket
 import time
 
 
@@ -49,12 +50,12 @@ class myFTP:
                     try:
                         self.DownLoadFileTree(Local, file)
                     except:
-                        print('Error downloading a directory')
+                        print('Error downloading directory')
                 else:
                     try:
                         self.DownLoadFile(Local, file)
                     except:
-                        print('Error downloading a file')
+                        print('Error downloading file')
         self.ftp.cwd("..")
         return
 
@@ -110,10 +111,15 @@ if __name__ == "__main__":
     ftp.Login('zonghs', 'zonghs123')
     local_path = './WorkSpace'
     # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
-    remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/###'
+    remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工区备份'
 
+    # 备份文件夹改名
+    myname = socket.getfqdn(socket.gethostname())  # 获取本机电脑名
+    myaddr = socket.gethostbyname(myname)  # 获取本机ip
+    myaddr = myaddr.replace('.', '-')
     timeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    timeStr = timeStr.replace(' ', '-')
-    ftp.Mkd(remote_path + '/' + timeStr)
+    timeStr = timeStr.replace(':', '-').replace(' ', '-')
+    print(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
+    ftp.Mkd(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
 
-    ftp.UpLoadFileTree(local_path, remote_path + '/' + timeStr)
+    ftp.UpLoadFileTree(local_path, remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
