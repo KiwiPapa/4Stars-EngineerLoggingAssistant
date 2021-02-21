@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (QApplication, QFileDialog, QMainWindow,
                              QTableWidgetItem)
 
 
-class Matplot_class_MFC24:
+class MATPLOTLIB_MFC40:
     def __init__(self, fileDir):
         self.damage_Tag = ''
         self.lines = []  # 生成的成果list
@@ -67,6 +67,22 @@ class Matplot_class_MFC24:
         self.ax1.plot(self.log.data['D22'] + 52.5, self.log.data['DEPT'], 'g-', lw=0.3)
         self.ax1.plot(self.log.data['D23'] + 55, self.log.data['DEPT'], 'g-', lw=0.3)
         self.ax1.plot(self.log.data['D24'] + 57.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D25'] + 60, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D26'] + 62.5, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax1.plot(self.log.data['D27'] + 65, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D28'] + 67.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D29'] + 70, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D30'] + 72.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D31'] + 75, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax1.plot(self.log.data['D32'] + 77.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D33'] + 80, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D34'] + 82.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D35'] + 85, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D36'] + 87.5, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax1.plot(self.log.data['D37'] + 90, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D38'] + 92.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D39'] + 95, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax1.plot(self.log.data['D40'] + 97.5, self.log.data['DEPT'], 'g-', lw=0.3)
 
         self.ax1.set_xlim(self.scale_left, self.scale_right)
         self.ax1.set_ylim(self.log.start, self.log.stop)
@@ -110,6 +126,22 @@ class Matplot_class_MFC24:
         self.ax2.plot(self.log.data['D22'] + 52.5, self.log.data['DEPT'], 'g-', lw=0.3)
         self.ax2.plot(self.log.data['D23'] + 55, self.log.data['DEPT'], 'g-', lw=0.3)
         self.ax2.plot(self.log.data['D24'] + 57.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D25'] + 60, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D26'] + 62.5, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax2.plot(self.log.data['D27'] + 65, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D28'] + 67.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D29'] + 70, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D30'] + 72.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D31'] + 75, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax2.plot(self.log.data['D32'] + 77.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D33'] + 80, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D34'] + 82.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D35'] + 85, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D36'] + 87.5, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax2.plot(self.log.data['D37'] + 90, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D38'] + 92.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D39'] + 95, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax2.plot(self.log.data['D40'] + 97.5, self.log.data['DEPT'], 'g-', lw=0.3)
 
         self.ax2.set_xlim(self.scale_left, self.scale_right)
         self.ax2.set_ylim(self.log.start, self.log.stop)
@@ -148,6 +180,22 @@ class Matplot_class_MFC24:
         self.ax3.plot(self.log.data['D22'] + 52.5, self.log.data['DEPT'], 'g-', lw=0.3)
         self.ax3.plot(self.log.data['D23'] + 55, self.log.data['DEPT'], 'g-', lw=0.3)
         self.ax3.plot(self.log.data['D24'] + 57.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D25'] + 60, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D26'] + 62.5, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax3.plot(self.log.data['D27'] + 65, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D28'] + 67.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D29'] + 70, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D30'] + 72.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D31'] + 75, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax3.plot(self.log.data['D32'] + 77.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D33'] + 80, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D34'] + 82.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D35'] + 85, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D36'] + 87.5, self.log.data['DEPT'], 'r-', lw=0.3)
+        self.ax3.plot(self.log.data['D37'] + 90, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D38'] + 92.5, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D39'] + 95, self.log.data['DEPT'], 'g-', lw=0.3)
+        self.ax3.plot(self.log.data['D40'] + 97.5, self.log.data['DEPT'], 'g-', lw=0.3)
 
         self.ax3.set_xlim(self.scale_left, self.scale_right)
         self.ax3.set_ylim(self.log.start, self.log.stop)
@@ -241,6 +289,22 @@ class Matplot_class_MFC24:
             D22_value = self.log.data['D22'][index]
             D23_value = self.log.data['D23'][index]
             D24_value = self.log.data['D24'][index]
+            D25_value = self.log.data['D25'][index]
+            D26_value = self.log.data['D26'][index]
+            D27_value = self.log.data['D27'][index]
+            D28_value = self.log.data['D28'][index]
+            D29_value = self.log.data['D29'][index]
+            D30_value = self.log.data['D30'][index]
+            D31_value = self.log.data['D31'][index]
+            D32_value = self.log.data['D32'][index]
+            D33_value = self.log.data['D33'][index]
+            D34_value = self.log.data['D34'][index]
+            D35_value = self.log.data['D35'][index]
+            D36_value = self.log.data['D36'][index]
+            D37_value = self.log.data['D37'][index]
+            D38_value = self.log.data['D38'][index]
+            D39_value = self.log.data['D39'][index]
+            D40_value = self.log.data['D40'][index]
             self.Min_value = self.log.data['IDMN'][index]
             self.Ave_value = self.log.data['IDAV'][index]
             self.Max_value = self.log.data['IDMX'][index]
@@ -259,7 +323,10 @@ class Matplot_class_MFC24:
                 All_Ders = [D01_value, D02_value, D03_value, D04_value, D05_value, D06_value,
                                D07_value, D08_value, D09_value, D10_value, D11_value, D12_value,
                                D13_value, D14_value, D15_value, D16_value, D17_value, D18_value,
-                               D19_value, D20_value, D21_value, D22_value, D23_value, D24_value]
+                               D19_value, D20_value, D21_value, D22_value, D23_value, D24_value,
+                               D25_value, D26_value, D27_value, D28_value, D29_value, D30_value,
+                               D31_value, D32_value, D33_value, D34_value, D35_value, D36_value,
+                               D37_value, D38_value, D39_value, D40_value]
                 All_Ders_Dict = {'D01_value': D01_value,
                                     'D02_value': D02_value,
                                     'D03_value': D03_value,
@@ -284,6 +351,22 @@ class Matplot_class_MFC24:
                                     'D22_value': D22_value,
                                     'D23_value': D23_value,
                                     'D24_value': D24_value,
+                                    'D25_value': D25_value,
+                                    'D26_value': D26_value,
+                                    'D27_value': D27_value,
+                                    'D28_value': D28_value,
+                                    'D29_value': D29_value,
+                                    'D30_value': D30_value,
+                                    'D31_value': D31_value,
+                                    'D32_value': D32_value,
+                                    'D33_value': D33_value,
+                                    'D34_value': D34_value,
+                                    'D35_value': D35_value,
+                                    'D36_value': D36_value,
+                                    'D37_value': D37_value,
+                                    'D38_value': D38_value,
+                                    'D39_value': D39_value,
+                                    'D40_value': D40_value,
                                     }
                 FING_Max_value = max(All_Ders_Dict.values())
                 FING_String = ''
@@ -338,7 +421,10 @@ class Matplot_class_MFC24:
                 All_Ders = [D01_value, D02_value, D03_value, D04_value, D05_value, D06_value,
                                D07_value, D08_value, D09_value, D10_value, D11_value, D12_value,
                                D13_value, D14_value, D15_value, D16_value, D17_value, D18_value,
-                               D19_value, D20_value, D21_value, D22_value, D23_value, D24_value]
+                               D19_value, D20_value, D21_value, D22_value, D23_value, D24_value,
+                               D25_value, D26_value, D27_value, D28_value, D29_value, D30_value,
+                               D31_value, D32_value, D33_value, D34_value, D35_value, D36_value,
+                               D37_value, D38_value, D39_value, D40_value]
                 All_Ders_Dict = {'D01_value': D01_value,
                                     'D02_value': D02_value,
                                     'D03_value': D03_value,
@@ -363,6 +449,22 @@ class Matplot_class_MFC24:
                                     'D22_value': D22_value,
                                     'D23_value': D23_value,
                                     'D24_value': D24_value,
+                                    'D25_value': D25_value,
+                                    'D26_value': D26_value,
+                                    'D27_value': D27_value,
+                                    'D28_value': D28_value,
+                                    'D29_value': D29_value,
+                                    'D30_value': D30_value,
+                                    'D31_value': D31_value,
+                                    'D32_value': D32_value,
+                                    'D33_value': D33_value,
+                                    'D34_value': D34_value,
+                                    'D35_value': D35_value,
+                                    'D36_value': D36_value,
+                                    'D37_value': D37_value,
+                                    'D38_value': D38_value,
+                                    'D39_value': D39_value,
+                                    'D40_value': D40_value,
                                     }
                 FING_Min_value = min(All_Ders_Dict.values())
                 FING_String = ''
@@ -416,7 +518,7 @@ class Matplot_class_MFC24:
 
             self.fig2 = plt.figure('截面图')
             # 设置下面所需要的参数
-            barSlices1 = 24
+            barSlices1 = 40
             barSlices2 = 100
 
             # theta指每个标记所在射线与极径的夹角，下面表示均分角度
@@ -428,7 +530,10 @@ class Matplot_class_MFC24:
             r = [D01_value, D02_value, D03_value, D04_value, D05_value, D06_value,
                    D07_value, D08_value, D09_value, D10_value, D11_value, D12_value,
                    D13_value, D14_value, D15_value, D16_value, D17_value, D18_value,
-                   D19_value, D20_value, D21_value, D22_value, D23_value, D24_value]
+                   D19_value, D20_value, D21_value, D22_value, D23_value, D24_value,
+                   D25_value, D26_value, D27_value, D28_value, D29_value, D30_value,
+                   D31_value, D32_value, D33_value, D34_value, D35_value, D36_value,
+                   D37_value, D38_value, D39_value, D40_value]
 
             # 网上搜的方法，不知道怎么就可以闭合了(黑人问号)
             r = np.concatenate((r, [r[0]]))  # 闭合

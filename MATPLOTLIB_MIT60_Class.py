@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (QApplication, QFileDialog, QMainWindow,
                              QTableWidgetItem)
 
 
-class Matplot_class_MIT60:
+class MATPLOTLIB_MIT60:
     def __init__(self, fileDir):
         self.damage_Tag = ''
         self.lines = []  # 生成的成果list

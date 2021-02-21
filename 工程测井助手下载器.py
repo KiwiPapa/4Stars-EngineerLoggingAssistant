@@ -1,7 +1,7 @@
 # coding=utf-8
 import shutil
 import os
-from FTP_Up_Down import myFTP
+from FTP_Up_Down_Class import MyFTP
 
 
 # 清理所有非空文件夹和文件
@@ -18,7 +18,7 @@ def clean_dir_of_all(path):
         pass
 
 if __name__ == "__main__":
-    ftp = myFTP('10.132.203.206')
+    ftp = MyFTP('10.132.203.206')
     ftp.Login('zonghs', 'zonghs123')
     local_path = './工程测井助手(自动更新)'
     # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'

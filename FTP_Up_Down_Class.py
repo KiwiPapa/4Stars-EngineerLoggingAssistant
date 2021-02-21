@@ -6,7 +6,7 @@ import socket
 import time
 
 
-class myFTP:
+class MyFTP:
     ftp = ftplib.FTP()
 
     def __init__(self, host, port=21):
@@ -31,15 +31,15 @@ class myFTP:
         return True
 
     def DownLoadFileTree(self, LocalDir, RemoteDir):  # 下载整个目录下的文件
-        print("remoteDir:", RemoteDir)
+        # print("remoteDir:", RemoteDir)
         if not os.path.exists(LocalDir):
             os.makedirs(LocalDir)
         self.ftp.cwd(RemoteDir)
         RemoteNames = self.ftp.nlst()
-        print("RemoteNames", RemoteNames)
+        # print("RemoteNames", RemoteNames)
         for file in RemoteNames:
             Local = os.path.join(LocalDir, file)
-            print(self.ftp.nlst(file))
+            # print(self.ftp.nlst(file))
             if self.ftp.nlst(file) == []: # 空文件夹情况
                 if not os.path.exists(Local):
                     os.makedirs(Local)
@@ -70,10 +70,10 @@ class myFTP:
     def UpLoadFileTree(self, LocalDir, RemoteDir):
         if os.path.isdir(LocalDir) == False:
             return False
-        print("LocalDir:", LocalDir)
+        # print("LocalDir:", LocalDir)
         LocalNames = os.listdir(LocalDir)
-        print("list:", LocalNames)
-        print(RemoteDir)
+        # print("list:", LocalNames)
+        # print(RemoteDir)
         self.ftp.cwd(RemoteDir)
         for Local in LocalNames:
             src = os.path.join(LocalDir, Local)
@@ -107,7 +107,7 @@ def clean_dir_of_all(path):
         pass
 
 if __name__ == "__main__":
-    ftp = myFTP('10.132.203.206')
+    ftp = MyFTP('10.132.203.206')
     ftp.Login('zonghs', 'zonghs123')
     local_path = './WorkSpace'
     # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     myaddr = myaddr.replace('.', '-')
     timeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     timeStr = timeStr.replace(':', '-').replace(' ', '-')
-    print(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
+    # print(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
     ftp.Mkd(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
 
     ftp.UpLoadFileTree(local_path, remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)

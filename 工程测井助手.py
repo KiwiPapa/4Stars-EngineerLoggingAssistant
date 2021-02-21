@@ -1,15 +1,12 @@
 # coding=utf-8
 import os
 import random
-import smtplib
 import shutil
 import socket
 import sys
 import threading
 import time
 from datetime import datetime, timedelta
-from email.header import Header
-from email.mime.text import MIMEText
 
 import numpy as np
 import openpyxl
@@ -33,22 +30,13 @@ from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QMessageBox, QPushButton, QRadioButton,
                              QTableWidgetItem, QTextEdit, QWidget)
 from WELL_INTEGRITY_UI import Ui_MainWindow
-from MATPLOTLIB_MFC40 import Matplot_class_MFC40
-from MATPLOTLIB_MIT24 import Matplot_class_MIT24
-from MATPLOTLIB_MIT60 import Matplot_class_MIT60
-from MATPLOTLIB_MFC24 import Matplot_class_MFC24
-from FTP_Up_Down import myFTP
-
-
-class EmittingStr(QtCore.QObject):
-    textWritten = QtCore.pyqtSignal(str)  # 定义一个发送str的信号
-
-    def write(self, text):
-        self.textWritten.emit(str(text))
-
-    def flush(self):
-        pass
-
+from MATPLOTLIB_MFC40_Class import MATPLOTLIB_MFC40
+from MATPLOTLIB_MIT24_Class import MATPLOTLIB_MIT24
+from MATPLOTLIB_MIT60_Class import MATPLOTLIB_MIT60
+from MATPLOTLIB_MFC24_Class import MATPLOTLIB_MFC24
+from FTP_Up_Down_Class import MyFTP
+from EmittingStr_Class import EmittingStr
+from Supervisor_by_Email_Class import Supervisor
 
 class Main_window(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -92,7 +80,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         if self.run_on_net == True:
             try:
-                self.usage_supervisor()
+                Supervisor.usage_supervisor()
                 error = False
             except:
                 error = True
@@ -124,245 +112,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         else:
             self.main_initialization()
             pass
-
-    # 全局运行监视
-    def usage_supervisor(self):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('.\\resources\\license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('Well integrity software is running', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(10000000, 100000000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' Well integrity software is running')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
-        print('网络成功连接')
-
-    # 加载原始记录登记表模块运行监视
-    def load_raw_table_usage_supervisor(self, well_Name):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('.\\resources\\license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('Raw table info is loading', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(500, 1000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' ' + well_Name + ' raw table info is loading')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
-
-    # 生成LEAD TXT模块运行监视
-    def lead_txt_usage_supervisor(self):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('.\\resources\\license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('LEAD TXT is creating', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(500, 1000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' LEAD TXT is creating')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
-
-    # 生成水泥胶结报告模块运行监视
-    def generate_report_usage_supervisor(self):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('.\\resources\\license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('CBL/VDL report is creating', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(500, 1000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' CBL/VDL report is creating')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
-
-    # 生成快速解释结论模块运行监视
-    def generate_CHL_result_usage_supervisor(self):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('.\\resources\\license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('CHL fast report is creating', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(500, 1000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' CHL fast report is creating')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
-
-    # 生成签名模块运行监视
-    def generate_signature_usage_supervisor_100(self):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('.\\resources\\license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('Signature on 100 pixel map is creating', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(500, 1000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' Signature on 100 pixel map is creating')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
-
-    # 生成签名模块运行监视
-    def generate_signature_usage_supervisor_150(self):
-        # 发信方的信息：发信邮箱，QQ 邮箱授权码
-        from_addr = 'kiwifruitloves123@qq.com'
-        with open('license.txt', "r") as f:
-            license_str = f.read()
-        password = license_str
-
-        # 收信方邮箱
-        to_addr = '978030836@qq.com'
-
-        # 发信服务器
-        smtp_server = 'smtp.qq.com'
-
-        # 邮箱正文内容，第一个参数为内容，第二个参数为格式(plain 为纯文本)，第三个参数为编码
-        msg = MIMEText('Signature on 150 pixel map is creating', 'plain', 'utf-8')
-
-        # 邮件头信息
-        random_num = random.randint(500, 1000)
-        random_num = str(random_num)
-        msg['From'] = Header(from_addr)
-        msg['To'] = Header(to_addr)
-        msg['Subject'] = Header(random_num + ' Signature on 150 pixel map is creating')
-
-        # 开启发信服务，这里使用的是加密传输
-        server = smtplib.SMTP_SSL('smtp.qq.com')
-        server.connect(smtp_server, port=465)
-        # 登录发信邮箱
-        server.login(from_addr, password)
-        # 发送邮件
-        server.sendmail(from_addr, to_addr, msg.as_string())
-        # 关闭服务器
-        server.quit()
 
     def main_initialization(self):
         # 防止上传Github不能保存空文件夹的bug
@@ -588,7 +337,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.comboBox_10.currentIndexChanged.connect(self.mail_Addresses_Update)
 
     def auto_upload_to_FTP(self):
-        ftp = myFTP('10.132.203.206')
+        ftp = MyFTP('10.132.203.206')
         ftp.Login('zonghs', 'zonghs123')
         local_path = './WorkSpace'
         # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
@@ -600,7 +349,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         myaddr = myaddr.replace('.', '-')
         timeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         timeStr = timeStr.replace(':', '-').replace(' ', '-')
-        print(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
+        # print(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
         ftp.Mkd(remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
 
         ftp.UpLoadFileTree(local_path, remote_path + '/' + timeStr + '_' + myaddr + '_' + myname)
@@ -1347,7 +1096,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
     def add_signature_on_pic_100(self):
         if self.run_on_net == True:
-            self.generate_signature_usage_supervisor_100()
+            Supervisor.generate_signature_usage_supervisor_100()
         else:
             pass
         fileDir = self.lineEdit_56.text()
@@ -1361,7 +1110,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
     def add_signature_on_pic_150(self):
         if self.run_on_net == True:
-            self.generate_signature_usage_supervisor_150()
+            Supervisor.generate_signature_usage_supervisor_150()
         else:
             pass
         fileDir = self.lineEdit_56.text()
@@ -1404,7 +1153,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         well_Name = well_Name_Raw.replace(' ', '').replace('井', '')
         self.lineEdit.setText(well_Name)
         if self.run_on_net == True:
-            self.load_raw_table_usage_supervisor(well_Name)  # 监控加载
+            Supervisor.load_raw_table_usage_supervisor(well_Name)  # 监控加载
         else:
             pass
 
@@ -2487,7 +2236,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
     def generate_txt_file(self):
         if self.run_on_net == True:
-            self.lead_txt_usage_supervisor()
+            Supervisor.lead_txt_usage_supervisor()
         else:
             pass
 
@@ -3358,7 +3107,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
     def generate_report(self):
         if self.run_on_net == True:
-            self.generate_report_usage_supervisor()
+            Supervisor.generate_report_usage_supervisor()
         else:
             pass
         self.lock.acquire()  # 上锁
@@ -4706,7 +4455,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
     ########################################################################################套损评价相关函数
     def generate_fast_report(self):
         if self.run_on_net == True:
-            self.generate_CHL_result_usage_supervisor()
+            Supervisor.generate_CHL_result_usage_supervisor()
         else:
             pass
 
@@ -5451,13 +5200,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # log = las.LASReader(u'ning209H19-4_resample_jz.LAS', null_subs=np.nan)
         # log = las.LASReader(fileDir, null_subs=np.nan)
         if self.checkBox_6.checkState() == Qt.Checked:
-            self.mat_view = Matplot_class_MIT24(fileDir)  # 关键一步，创建Matplot_class类对象
+            self.mat_view = MATPLOTLIB_MIT24(fileDir)  # 关键一步，创建Matplot_class类对象
         elif self.checkBox_7.checkState() == Qt.Checked:
-            self.mat_view = Matplot_class_MIT60(fileDir)
+            self.mat_view = MATPLOTLIB_MIT60(fileDir)
         elif self.checkBox_8.checkState() == Qt.Checked:
-            self.mat_view = Matplot_class_MFC40(fileDir)
+            self.mat_view = MATPLOTLIB_MFC40(fileDir)
         elif self.checkBox_12.checkState() == Qt.Checked:
-            self.mat_view = Matplot_class_MFC24(fileDir)
+            self.mat_view = MATPLOTLIB_MFC24(fileDir)
 
     def table_casing(self):
         self.tableWidget_5.setColumnCount(5)
