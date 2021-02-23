@@ -2225,7 +2225,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 fileDir = PATH + "\\" + fileName
                 try:
                     # 表格表头字段规范
-                    self.xls_formatting_first_layer(self, fileDir)
+                    self.xls_formatting_first_layer(fileDir)
                 finally:
                     pass
                 workbook = xlrd.open_workbook(fileDir)
@@ -3183,7 +3183,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 fileDir = PATH + "\\" + fileName
                 try:
                     # 表格表头字段规范
-                    self.xls_formatting_first_layer(self, fileDir)
+                    self.xls_formatting_first_layer(fileDir)
                 finally:
                     pass
                 workbook = xlrd.open_workbook(fileDir)
@@ -3207,7 +3207,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 fileDir = PATH + "\\" + fileName
                 try:
                     # 表格表头字段规范
-                    self.xls_formatting_second_layer(self, fileDir)
+                    self.xls_formatting_second_layer(fileDir)
                 finally:
                     pass
                 workbook = xlrd.open_workbook(fileDir)
