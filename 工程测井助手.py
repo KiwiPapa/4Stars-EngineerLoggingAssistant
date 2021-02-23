@@ -52,8 +52,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
-        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -274,30 +274,15 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.pushButton_32.clicked.connect(self.convert_picture_to_pdf)
         ###################################################
 
-        # 成果表の小工具集
+        # 表格拼接和分段统计模块初始化
         ###################################################
         self.radioButton.toggled.connect(lambda: self.btnstate_table(self.radioButton))
         self.radioButton_2.toggled.connect(lambda: self.btnstate_table(self.radioButton_2))
 
         self.pushButton_9.clicked.connect(self.open_file1)
         self.pushButton_10.clicked.connect(self.open_file2)
-        self.pushButton_54.clicked.connect(self.open_file3)
-        self.pushButton_55.clicked.connect(self.open_file4)
-        self.pushButton_59.clicked.connect(self.open_file5)
-        self.pushButton_60.clicked.connect(self.open_file6)
-
         self.pushButton_29.clicked.connect(self.reset_table_process)
         self.pushButton_52.clicked.connect(self.open_table_process_directory)  # 打开合并统计工区文件夹
-        self.pushButton_56.clicked.connect(self.open_table_fusion_directory)  # 打开综合评价工区文件夹
-
-        # 规范化2
-        self.pushButton_57.clicked.connect(self.table_process3)
-        self.pushButton_58.clicked.connect(self.table_fusion_reaction)
-
-        self.action.triggered.connect(self.menubar_simple_instruction)
-        self.action_2.triggered.connect(self.menubar_author_info)
-
-        self.pushButton_61.clicked.connect(self.search_for_statistic_result)
         ###################################################
 
         # list文件拼接模块初始化
@@ -350,14 +335,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.comboBox_10.addItems(self.mail_Addresses)
         self.comboBox_10.setCurrentText('?')
         self.comboBox_10.currentIndexChanged.connect(self.mail_Addresses_Update)
-
-    # 在textBrowser中显示程序运行状态
-    def outputWritten(self, text):
-        cursor = self.textBrowser.textCursor()
-        cursor.movePosition(QtGui.QTextCursor.End)
-        cursor.insertText(text)
-        self.textBrowser.setTextCursor(cursor)
-        self.textBrowser.ensureCursorVisible()
 
     def auto_upload_to_FTP(self):
         ftp = MyFTP('10.132.203.206')
@@ -517,6 +494,14 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     self.textEdit_10.append(item)
         else:
             pass
+
+    # 在textBrowser中显示程序运行状态
+    def outputWritten(self, text):
+        cursor = self.textBrowser.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(text)
+        self.textBrowser.setTextCursor(cursor)
+        self.textBrowser.ensureCursorVisible()
 
     def menubar_simple_instruction(self):
         QMessageBox.information(self, "简单介绍", "工程测井工作助手主要针对工程所生产过程中的LEAD固井质量处理、套损检测中的工作实现自动化的实现，能够有效地提升生产效率和规范报告图件")
@@ -2931,6 +2916,42 @@ class Main_window(QMainWindow, Ui_MainWindow):
         return ratio_Series, evaluation_of_formation
 
     ################################################################################
+    def xls_formatting_first_layer(self, path):  # 用于一界面表格表头文字规范
+        # 打开想要更改的excel文件
+        old_excel = xlrd.open_workbook(path, formatting_info=True)
+        # 将操作文件对象拷贝，变成可写的workbook对象
+        new_excel = copy(old_excel)
+        # 获得第一个sheet的对象
+        ws = new_excel.get_sheet(0)
+        # 写入数据
+        ws.write(2, 0, '解释序号')
+        ws.write(2, 1, '井段(m)')
+        ws.write(2, 2, '厚度(m)')
+        ws.write(2, 3, '最大声幅(%)')
+        ws.write(2, 4, '最小声幅(%)')
+        ws.write(2, 5, '平均声幅(%)')
+        ws.write(2, 6, '结论')
+        # 另存为excel文件，并将文件命名
+        new_excel.save(path)
+
+    def xls_formatting_second_layer(self, path):  # 用于二界面表格表头文字规范
+        # 打开想要更改的excel文件
+        old_excel = xlrd.open_workbook(path, formatting_info=True)
+        # 将操作文件对象拷贝，变成可写的workbook对象
+        new_excel = copy(old_excel)
+        # 获得第一个sheet的对象
+        ws = new_excel.get_sheet(0)
+        # 写入数据
+        ws.write(2, 0, '解释序号')
+        ws.write(2, 1, '井段(m)')
+        ws.write(2, 2, '厚度(m)')
+        ws.write(2, 3, '最大指数')
+        ws.write(2, 4, '最小指数')
+        ws.write(2, 5, '平均指数')
+        ws.write(2, 6, '结论')
+        # 另存为excel文件，并将文件命名
+        new_excel.save(path)
+
     # 清理所有非空文件夹和文件
     def clean_dir_of_all(self, path):
         list = os.listdir(path)
@@ -5759,186 +5780,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # 生成描述建议
         self.textEdit_3.setText(text_all)
 
-    def now(self):
-        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-
-    def open_list_file1(self):
-        fnames = QFileDialog.getOpenFileNames(self, '打开第一个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_112.setText(fname)
-
-    def open_list_file2(self):
-        fnames = QFileDialog.getOpenFileNames(self, '打开第二个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_114.setText(fname)
-
-    def assemble_list_together(self):
-
-        fileDir1 = self.lineEdit_112.text()
-        fileDir2 = self.lineEdit_114.text()
-        assembled_point = float(self.lineEdit_113.text())
-
-        with open(fileDir1, "r") as f:  # 打开文件
-            data1 = f.readlines()  # 读取文件
-
-        with open(fileDir2, "r") as f:  # 打开文件
-            data2 = f.readlines()  # 读取文件
-
-        for item in data1[2:]:
-            if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
-                item_number1 = int(item.split(',')[0])
-                data1 = data1[0:(item_number1 + 2)]
-                break
-            else:
-                pass
-        print(item_number1)
-        print(data1)
-
-        for item in data2[2:]:
-            if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
-                item_number2 = int(item.split(',')[0])
-                data2 = data2[(item_number2 + 1):]
-                break
-            else:
-                pass
-        print(item_number2)
-        print(data2)
-
-        count = 0
-        data3 = []
-        for item in data2:
-            item = ','.join(
-                [str(item_number1 + count), item.split(',')[1], item.split(',')[2], item.split(',')[3],
-                 item.split(',')[4],
-                 item.split(',')[5], item.split(',')[6]])
-            count = count + 1
-            data3.append(item)
-
-        print(data3)
-        first = data3[0].split(',')[0]
-        second = ''.join([data1[-1].split(',')[1].split('-')[0], '-', data3[0].split(',')[1].split('-')[1]])
-        third = round(float(data3[0].split(',')[1].split('-')[1]) - float(data1[-1].split(',')[1].split('-')[0]), 2)
-        fouth = max(float(data1[-1].split(',')[3]), float(data3[0].split(',')[3]))
-        fifth = min(float(data1[-1].split(',')[4]), float(data3[0].split(',')[4]))
-        sixth = round((float(data1[-1].split(',')[5]) + float(data3[0].split(',')[5])) / 2, 2)
-        seventh = data3[0].split(',')[6]
-        data3[0] = ','.join([first, str(second), str(third), str(fouth), str(fifth), str(sixth), seventh])
-
-        temp = fileDir1.split('/')[-1]
-        path = fileDir1.replace(temp, '')
-        f = open(path + '组合后的数据.list', 'w', encoding='UTF-8')
-        for item1 in data1[0:-1]:
-            f.write(item1)
-        for item3 in data3:
-            f.write(item3)
-        f.close()
-
-        with open(path + "组合后的数据.list", "r", encoding='UTF-8') as f:  # 打开文件
-            data4 = f.read()  # 读取文件
-        print(data4)
-        QMessageBox.information(self, "提示", "list文件拼接完毕，请在源数据同级目录查看")
-        
-    ##############################
-    # 成果表工具集
-    ##############################
-    # 单层评价表拼接和分段统计界面
-    def open_file1(self):
-        fnames = QFileDialog.getOpenFileNames(None, '打开第一个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_48.setText(fname)
-
-    def open_file2(self):
-        fnames = QFileDialog.getOpenFileNames(None, '打开第二个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_52.setText(fname)
-
-    # 固井质量综合评价界面
-    def open_file3(self):
-        fnames = QFileDialog.getOpenFileNames(None, '打开第一个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_75.setText(fname)
-
-    def open_file4(self):
-        fnames = QFileDialog.getOpenFileNames(None, '打开第二个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_73.setText(fname)
-
-    # 查询优中差比例界面
-    def open_file5(self):
-        fnames = QFileDialog.getOpenFileNames(None, '打开第一个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_77.setText(fname)
-
-    def open_file6(self):
-        fnames = QFileDialog.getOpenFileNames(None, '打开第二个文件', './')  # 注意这里返回值是元组
-        if fnames[0]:
-            for fname in fnames[0]:
-                self.lineEdit_76.setText(fname)
-    ##############################
-
-    # 规范化1
-    ##############################
-    def xls_formatting_first_layer(self, path):  # 用于一界面表格表头文字规范
-        # 打开想要更改的excel文件
-        old_excel = xlrd.open_workbook(path, formatting_info=True)
-        # 将操作文件对象拷贝，变成可写的workbook对象
-        new_excel = copy(old_excel)
-        # 获得第一个sheet的对象
-        ws = new_excel.get_sheet(0)
-        # 写入数据
-        ws.write(2, 0, '解释序号')
-        ws.write(2, 1, '井段(m)')
-        ws.write(2, 2, '厚度(m)')
-        ws.write(2, 3, '最大声幅(%)')
-        ws.write(2, 4, '最小声幅(%)')
-        ws.write(2, 5, '平均声幅(%)')
-        ws.write(2, 6, '结论')
-        # 另存为excel文件，并将文件命名
-        new_excel.save(path)
-
-    def xls_formatting_second_layer(self, path):  # 用于二界面表格表头文字规范
-        # 打开想要更改的excel文件
-        old_excel = xlrd.open_workbook(path, formatting_info=True)
-        # 将操作文件对象拷贝，变成可写的workbook对象
-        new_excel = copy(old_excel)
-        # 获得第一个sheet的对象
-        ws = new_excel.get_sheet(0)
-        # 写入数据
-        ws.write(2, 0, '解释序号')
-        ws.write(2, 1, '井段(m)')
-        ws.write(2, 2, '厚度(m)')
-        ws.write(2, 3, '最大指数')
-        ws.write(2, 4, '最小指数')
-        ws.write(2, 5, '平均指数')
-        ws.write(2, 6, '结论')
-        # 另存为excel文件，并将文件命名
-        new_excel.save(path)
-
-    def btnstate_table(self, btn):
-        # 输出按钮1与按钮2的状态，选中还是没选中
-        if btn.text() == '一界面':
-            if btn.isChecked() == True:
-                print(btn.text() + " 被选中")
-                self.pushButton_14.clicked.connect(self.calculate_for_first_layer)
-                self.pushButton_27.clicked.connect(self.table_process1)
-            else:
-                pass
-
-        if btn.text() == "二界面":
-            if btn.isChecked() == True:
-                print(btn.text() + " 被选中")
-                self.pushButton_14.clicked.connect(self.calculate_for_second_layer)
-                self.pushButton_27.clicked.connect(self.table_process2)
-            else:
-                pass
-
+    ################################################################################################################ 表格拼接和分段统计模块
     def reset_table_process(self):
         try:
             self.radioButton.toggled.disconnect(lambda: self.btnstate_table(self.radioButton))
@@ -5984,6 +5826,36 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.radioButton.toggled.connect(lambda: self.btnstate_table(self.radioButton))
         self.radioButton_2.toggled.connect(lambda: self.btnstate_table(self.radioButton_2))
 
+    def btnstate_table(self, btn):
+        # 输出按钮1与按钮2的状态，选中还是没选中
+        if btn.text() == '一界面':
+            if btn.isChecked() == True:
+                print(btn.text() + " 被选中")
+                self.pushButton_14.clicked.connect(self.calculate_for_first_layer)
+                self.pushButton_27.clicked.connect(self.table_process1)
+            else:
+                pass
+
+        if btn.text() == "二界面":
+            if btn.isChecked() == True:
+                print(btn.text() + " 被选中")
+                self.pushButton_14.clicked.connect(self.calculate_for_second_layer)
+                self.pushButton_27.clicked.connect(self.table_process2)
+            else:
+                pass
+
+    def open_file1(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开第一个文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_48.setText(fname)
+
+    def open_file2(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开第二个文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_52.setText(fname)
+
     def table_process1(self):
         fileDir1 = self.lineEdit_48.text()
         fileDir2 = self.lineEdit_52.text()
@@ -5999,25 +5871,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         if fileDir1 != fileDir2:
             self.xls_formatting_second_layer(fileDir2)
         QMessageBox.information(self, "提示", "二界面表格数据规范化完毕")
-    ##############################
-
-    # 规范化2
-    ##############################
-    def table_process3(self):
-        if self.lineEdit_75.text() != '' and self.lineEdit_73.text() == '':
-            fileDir1 = self.lineEdit_75.text()
-            self.xls_formatting_first_layer(fileDir1)
-            QMessageBox.information(self, "提示", "一界面表格数据规范化完毕")
-        elif self.lineEdit_73.text() != '' and self.lineEdit_75.text() == '':
-            fileDir2 = self.lineEdit_73.text()
-            self.xls_formatting_second_layer(fileDir2)
-            QMessageBox.information(self, "提示", "二界面表格数据规范化完毕")
-        elif self.lineEdit_73.text() != '' and self.lineEdit_75.text() != '':
-            fileDir1 = self.lineEdit_75.text()
-            self.xls_formatting_first_layer(fileDir1)
-            fileDir2 = self.lineEdit_73.text()
-            self.xls_formatting_second_layer(fileDir2)
-            QMessageBox.information(self, "提示", "一二界面表格数据都规范化完毕")
 
     def calculate_for_first_layer(self):
         splicing_Depth = float(self.lineEdit_45.text())
@@ -6397,225 +6250,92 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
     def open_table_process_directory(self):
         path = '.\\WorkSpace\\合并统计工区'
-        if not os.path.exists(path):
-            os.makedirs(path)
-            print(path, ' has been created.')
         os.startfile(path)
 
-    def open_table_fusion_directory(self):
-        path = '.\\WorkSpace\\综合评价工区'
-        if not os.path.exists(path):
-            os.makedirs(path)
-            print(path, ' has been created.')
-        os.startfile(path)
+    def now(self):
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    def table_fusion_reaction(self):
-        fileDir1 = self.lineEdit_75.text()
-        fileDir2 = self.lineEdit_73.text()
+    def open_list_file1(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开第一个文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_112.setText(fname)
 
-        # 获取一界面单层评价表的深度界限
-        df1 = pd.read_excel(fileDir1, header=2)
-        df1.drop([0], inplace=True)
-        df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
-        df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
-        # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
-        #     df1.drop([len(df1)], inplace=True)
-        df1['井段Start'] = df1['井段(m)'].map(lambda x: x.split("-")[0])
-        df1['井段End'] = df1['井段(m)'].map(lambda x: x.split("-")[1])
-        # 表格数据清洗
-        df1.loc[:, "井段Start"] = df1["井段Start"].str.replace(" ", "").astype('float')
-        df1.loc[:, "井段End"] = df1["井段End"].str.replace(" ", "").astype('float')
+    def open_list_file2(self):
+        fnames = QFileDialog.getOpenFileNames(self, '打开第二个文件', './')  # 注意这里返回值是元组
+        if fnames[0]:
+            for fname in fnames[0]:
+                self.lineEdit_114.setText(fname)
 
-        # 获取二界面单层评价表的深度界限
-        df2 = pd.read_excel(fileDir2, header=2)
-        df2.drop([0], inplace=True)
-        # if df2.loc[1, '结论'] == '不确定':
-        #     df2.drop([1], inplace=True)
-        df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
-        df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
-        # if len(df2) % 2 == 0:#如果len(df2)为偶数需要删除最后一行NaN，一行的情况不用删
-        #     df2.drop([len(df2)], inplace=True)
-        df2['井段Start'] = df2['井段(m)'].map(lambda x: x.split("-")[0])
-        df2['井段End'] = df2['井段(m)'].map(lambda x: x.split("-")[1])
-        # 表格数据清洗
-        df2.loc[:, "井段Start"] = df2["井段Start"].str.replace(" ", "").astype('float')
-        df2.loc[:, "井段End"] = df2["井段End"].str.replace(" ", "").astype('float')
+    def assemble_list_together(self):
 
-        list1 = df1['井段Start'].values.tolist()
-        list2 = df1['井段End'].values.tolist()
-        list3 = df2['井段Start'].values.tolist()
-        list4 = df2['井段End'].values.tolist()
-        # list合并并去重
-        for item in list2:
-            if item not in list1:
-                list1.append(item)
-        for item in list3:
-            if item not in list1:
-                list1.append(item)
-        for item in list4:
-            if item not in list1:
-                list1.append(item)
-        list1.sort(key=lambda x: float(x))
-        print(list1)
-        data = pd.DataFrame()
-        for i in range(0, len(list1) - 1):
-            j = i + 1
-            evaluation_of_formation1 = self.layer_evaluation1(df1, list1[i], list1[j])[1]  # 调取一界面评价函数
-            evaluation_of_formation2 = self.layer_evaluation2(df2, list1[i], list1[j])[1]  # 调取二界面评价函数
-            if evaluation_of_formation1 == '好' and evaluation_of_formation2 in['好', '中', '不确定']:
-                evaluation_of_formation = '优'
-            elif evaluation_of_formation1 == '中' and evaluation_of_formation2 =='好':
-                evaluation_of_formation = '优'
-            elif evaluation_of_formation1 == '中' and evaluation_of_formation2 in ['中', '不确定']:
-                evaluation_of_formation = '中等'
-            elif evaluation_of_formation1 == '差' or evaluation_of_formation2 =='差':
-                evaluation_of_formation = '差'
-            thickness = round(list1[j] - list1[i], 2)
-            interval = '-'.join([('%.2f' % list1[i]), ('%.2f' % list1[j])])
-            print(interval, thickness, evaluation_of_formation1, evaluation_of_formation2, evaluation_of_formation, '\n')
-            series = pd.Series({"井段(m)": interval, "厚度(m)": thickness, "一界面评价": evaluation_of_formation1, "二界面评价": evaluation_of_formation2, "综合评价": evaluation_of_formation}, name=i+1)
-            data = data.append(series)
-        # dataframe排序
-        data = data[['井段(m)', '厚度(m)', '一界面评价', '二界面评价', '综合评价']]
-        print(data)
+        fileDir1 = self.lineEdit_112.text()
+        fileDir2 = self.lineEdit_114.text()
+        assembled_point = float(self.lineEdit_113.text())
 
-        # 保存为excel
-        writer = pd.ExcelWriter('.\\WorkSpace\\综合评价工区\\综合评价表.xlsx')
-        data.to_excel(writer, 'Sheet1')
-        writer.save()
-        QMessageBox.information(self, "提示", "运行完毕，请查看工区")
+        with open(fileDir1, "r") as f:  # 打开文件
+            data1 = f.readlines()  # 读取文件
 
-    def search_for_statistic_result(self):
-        start_depth = float(self.lineEdit_78.text())
-        end_depth = float(self.lineEdit_79.text())
+        with open(fileDir2, "r") as f:  # 打开文件
+            data2 = f.readlines()  # 读取文件
 
-        if self.lineEdit_77.text() != '' and self.lineEdit_76.text() != '':
-            QMessageBox.information(self, "提示", "暂不支持两个评价表同时统计，请删除一个后重试")
-        elif self.lineEdit_77.text() != '':
-            fileDir1 = self.lineEdit_77.text()
-
-            # 获取一界面单层评价表的深度界限
-            df1 = pd.read_excel(fileDir1, header=2)
-            df1.drop([0], inplace=True)
-            df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
-            df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
-            # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
-            #     df1.drop([len(df1)], inplace=True)
-            df1['井段Start'] = df1['井段(m)'].map(lambda x: x.split("-")[0])
-            df1['井段End'] = df1['井段(m)'].map(lambda x: x.split("-")[1])
-            # 表格数据清洗
-            df1.loc[:, "井段Start"] = df1["井段Start"].str.replace(" ", "").astype('float')
-            df1.loc[:, "井段End"] = df1["井段End"].str.replace(" ", "").astype('float')
-            evaluation_of_formation1 = self.layer_evaluation1(df1, start_depth, end_depth)[0]  # 调取一界面评价函数
-            self.lineEdit_83.setText(('%.2f' % evaluation_of_formation1['好']))
-            self.lineEdit_81.setText(('%.2f' % evaluation_of_formation1['中']))
-            self.lineEdit_80.setText(('%.2f' % evaluation_of_formation1['差']))
-            not_sure = 100 - evaluation_of_formation1['好'] - evaluation_of_formation1['中'] - evaluation_of_formation1['差']
-            self.lineEdit_82.setText(('%.2f' % not_sure))
-
-        elif self.lineEdit_76.text() != '':
-            fileDir2 = self.lineEdit_76.text()
-
-            # 获取一界面单层评价表的深度界限
-            df1 = pd.read_excel(fileDir2, header=2)
-            df1.drop([0], inplace=True)
-            df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
-            df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
-            # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
-            #     df1.drop([len(df1)], inplace=True)
-            df1['井段Start'] = df1['井段(m)'].map(lambda x: x.split("-")[0])
-            df1['井段End'] = df1['井段(m)'].map(lambda x: x.split("-")[1])
-            # 表格数据清洗
-            df1.loc[:, "井段Start"] = df1["井段Start"].str.replace(" ", "").astype('float')
-            df1.loc[:, "井段End"] = df1["井段End"].str.replace(" ", "").astype('float')
-            evaluation_of_formation2 = self.layer_evaluation2(df1, start_depth, end_depth)[0]  # 调取二界面评价函数
-            self.lineEdit_83.setText(('%.2f' % evaluation_of_formation2['好']))
-            self.lineEdit_81.setText(('%.2f' % evaluation_of_formation2['中']))
-            self.lineEdit_80.setText(('%.2f' % evaluation_of_formation2['差']))
-            not_sure = 100 - evaluation_of_formation2['好'] - evaluation_of_formation2['中'] - evaluation_of_formation2['差']
-            self.lineEdit_82.setText(('%.2f' % not_sure))
-
-# 清理所有非空文件夹和文件
-def clean_dir_of_all(path):
-    list = os.listdir(path)
-    if len(list) != 0:
-        for i in range(0, len(list)):
-            path_to_clean = os.path.join(path, list[i])
-            if '工程测井助手' in list[i]: # 不删除主exe
-                pass
+        for item in data1[2:]:
+            if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
+                item_number1 = int(item.split(',')[0])
+                data1 = data1[0:(item_number1 + 2)]
+                break
             else:
-                if '.' not in list[i]:
-                    shutil.rmtree(path_to_clean)  # 清理文件夹，可非空
-                else:
-                    os.remove(path_to_clean)  # 清理文件
-    else:
-        pass
+                pass
+        print(item_number1)
+        print(data1)
+
+        for item in data2[2:]:
+            if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
+                item_number2 = int(item.split(',')[0])
+                data2 = data2[(item_number2 + 1):]
+                break
+            else:
+                pass
+        print(item_number2)
+        print(data2)
+
+        count = 0
+        data3 = []
+        for item in data2:
+            item = ','.join(
+                [str(item_number1 + count), item.split(',')[1], item.split(',')[2], item.split(',')[3],
+                 item.split(',')[4],
+                 item.split(',')[5], item.split(',')[6]])
+            count = count + 1
+            data3.append(item)
+
+        print(data3)
+        first = data3[0].split(',')[0]
+        second = ''.join([data1[-1].split(',')[1].split('-')[0], '-', data3[0].split(',')[1].split('-')[1]])
+        third = round(float(data3[0].split(',')[1].split('-')[1]) - float(data1[-1].split(',')[1].split('-')[0]), 2)
+        fouth = max(float(data1[-1].split(',')[3]), float(data3[0].split(',')[3]))
+        fifth = min(float(data1[-1].split(',')[4]), float(data3[0].split(',')[4]))
+        sixth = round((float(data1[-1].split(',')[5]) + float(data3[0].split(',')[5])) / 2, 2)
+        seventh = data3[0].split(',')[6]
+        data3[0] = ','.join([first, str(second), str(third), str(fouth), str(fifth), str(sixth), seventh])
+
+        temp = fileDir1.split('/')[-1]
+        path = fileDir1.replace(temp, '')
+        f = open(path + '组合后的数据.list', 'w', encoding='UTF-8')
+        for item1 in data1[0:-1]:
+            f.write(item1)
+        for item3 in data3:
+            f.write(item3)
+        f.close()
+
+        with open(path + "组合后的数据.list", "r", encoding='UTF-8') as f:  # 打开文件
+            data4 = f.read()  # 读取文件
+        print(data4)
+        QMessageBox.information(self, "提示", "list文件拼接完毕，请在源数据同级目录查看")
+
 
 if __name__ == "__main__":
-
-    # 先检查更新
-    PATH = ".\\"
-    listdir = []
-
-    for fileName in os.listdir(PATH):
-        listdir.append(fileName.split('.')[-1])
-
-    # 当前目录有py文件说明为源代码，不更新
-    if 'py' not in listdir:
-        ftp = MyFTP('10.132.203.206')
-        ftp.Login('zonghs', 'zonghs123')
-        local_path = './'
-        # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
-        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本'
-
-        # 打开本地版本号
-        try:
-            with open(local_path + '/版本号.txt', "r") as f:
-                license_str = f.read()
-            local_license_date = int(license_str)
-
-            # 打开服务器版本号
-            ftp.Cwd(remote_path)
-            filenames = ftp.Nlst()
-            filename = '版本号.txt'
-            LocalFile = local_path + '/temp/版本号.txt'
-            RemoteFile = filename
-
-            # 接收服务器上文件并写入本地文件
-            if not os.path.exists(local_path + '/temp'):
-                os.makedirs(local_path + '/temp')
-            ftp.DownLoadFile(LocalFile, RemoteFile)
-
-            with open(local_path + '/temp/版本号.txt', "r") as f:
-                license_str = f.read()
-            remote_license_date = int(license_str)
-
-            if local_license_date < remote_license_date:
-                try:  # 先重命名，然后利用异常开始清理目录和下载，这个解决方案有点小聪明
-                    os.rename(".\\工程测井助手.exe", ".\\工程测井助手old.exe")
-                    # clean_dir_of_all(local_path)
-                    # ftp.DownLoadFileTree(local_path, remote_path)
-                except:
-                    print('请再次运行工程测井助手old.exe')
-                    clean_dir_of_all(local_path)
-                    ftp.DownLoadFileTree(local_path, remote_path)
-                print("更新完毕。")
-                # QMessageBox.information(None, "提示", "更新完毕。")
-            elif local_license_date >= remote_license_date:
-                print("本地软件版本已经是最新，无需更新。")
-                # QMessageBox.information(None, "提示", "本地软件版本已经是最新，无需更新。")
-                # 运行主程序
-                app = QApplication(sys.argv)
-                main = Main_window()
-                main.show()
-                sys.exit(app.exec_())
-        except:
-            ftp.DownLoadFileTree(local_path, remote_path)
-            print("下载完毕。")
-            # QMessageBox.information(None, "提示", "下载完毕。")
-    else:
-        # 运行主程序
-        app = QApplication(sys.argv)
-        main = Main_window()
-        main.show()
-        sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    main = Main_window()
+    main.show()
+    sys.exit(app.exec_())

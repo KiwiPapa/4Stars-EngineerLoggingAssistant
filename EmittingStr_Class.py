@@ -1,6 +1,5 @@
 # coding=utf-8
-from PyQt5 import QtCore, QtGui
-
+from PyQt5 import QtCore
 
 class EmittingStr(QtCore.QObject):
     textWritten = QtCore.pyqtSignal(str)  # 定义一个发送str的信号
