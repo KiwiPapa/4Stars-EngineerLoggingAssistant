@@ -235,6 +235,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.pushButton_21.clicked.connect(self.delete_line_for_tableWidget_4)
         self.pushButton_22.clicked.connect(self.generate_results_from_tableWidget_4)
 
+        # 增加空行
+        self.pushButton_64.clicked.connect(self.add_blank_line_for_tableWidget_2)
+        self.pushButton_63.clicked.connect(self.add_blank_line_for_tableWidget_3)
+        self.pushButton_62.clicked.connect(self.add_blank_line_for_tableWidget_4)
+
         # 填写确认生成本地Excel文件
         self.pushButton_35.clicked.connect(self.add_line_for_tableWidget_5)
         self.pushButton_36.clicked.connect(self.delete_line_for_tableWidget_5)
@@ -5265,6 +5270,45 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # self.tableWidget_2.verticalHeader().setVisible(False)  # 隐藏垂直表头
         # self.tableWidget_2.horizontalHeader().setVisible(False)  # 隐藏水平表头
 
+    def add_blank_line_for_tableWidget_2(self):
+        self.row_tableWidget_2 = self.tableWidget_2.rowCount()
+        self.tableWidget_2.setRowCount(self.row_tableWidget_2 + 1)
+        # 添加表格数据
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 0, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 1, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 2, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 3, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 4, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 5, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 6, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 7, QTableWidgetItem(''))
+        self.tableWidget_2.setItem(self.row_tableWidget_2, 8, QTableWidgetItem(''))
+
+    def add_blank_line_for_tableWidget_3(self):
+        self.row_tableWidget_3 = self.tableWidget_3.rowCount()
+        self.tableWidget_3.setRowCount(self.row_tableWidget_3 + 1)
+        # 添加表格数据
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 0, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 1, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 2, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 3, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 4, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 5, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 6, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 7, QTableWidgetItem(''))
+        self.tableWidget_3.setItem(self.row_tableWidget_3, 8, QTableWidgetItem(''))
+
+    def add_blank_line_for_tableWidget_4(self):
+        self.row_tableWidget_4 = self.tableWidget_4.rowCount()
+        self.tableWidget_4.setRowCount(self.row_tableWidget_4 + 1)
+        # 添加表格数据
+        self.tableWidget_4.setItem(self.row_tableWidget_4, 0, QTableWidgetItem(''))
+        self.tableWidget_4.setItem(self.row_tableWidget_4, 1, QTableWidgetItem(''))
+        self.tableWidget_4.setItem(self.row_tableWidget_4, 2, QTableWidgetItem(''))
+        self.tableWidget_4.setItem(self.row_tableWidget_4, 3, QTableWidgetItem(''))
+        self.tableWidget_4.setItem(self.row_tableWidget_4, 4, QTableWidgetItem(''))
+        self.tableWidget_4.setItem(self.row_tableWidget_4, 5, QTableWidgetItem(''))
+
     def add_line_for_tableWidget_2(self):
         # 读取文件中的数值
         data = pd.read_excel('Penetration.xlsx', index=False)
@@ -5565,7 +5609,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                                               '结垢级别': str(projection_describe)},
                                              index=[1])
             data = pd.concat([data, data_single_layer], ignore_index=True)
-            text = ''.join(['井段', well_interval, 'm，存在套管损伤，最大结垢点深度为', self.tableWidget_3.item(row, 2).text(), 'm，第', \
+            text = ''.join(['井段', well_interval, 'm，存在套管结垢，最大结垢点深度为', self.tableWidget_3.item(row, 2).text(), 'm，第', \
                             self.tableWidget_3.item(row, 3).text(), '号臂测得的最小值为',
                             self.tableWidget_3.item(row, 4).text(), \
                             'mm，该臂在正常段的测量值为', self.tableWidget_3.item(row, 5).text(), 'mm，在最大结垢点深度处测量得到的最小内径为', \

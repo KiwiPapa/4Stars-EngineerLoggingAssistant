@@ -4875,15 +4875,22 @@ color: rgb(0, 0, 255)</string>
          <rect>
           <x>200</x>
           <y>40</y>
-          <width>239</width>
+          <width>320</width>
           <height>29</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
+          <widget class="QPushButton" name="pushButton_64">
+           <property name="text">
+            <string>增加空行</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="pushButton_11">
            <property name="text">
-            <string>增加一行</string>
+            <string>传入数据</string>
            </property>
           </widget>
          </item>
@@ -4965,15 +4972,22 @@ color: rgb(0, 0, 255)</string>
          <rect>
           <x>200</x>
           <y>40</y>
-          <width>239</width>
+          <width>320</width>
           <height>29</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
+          <widget class="QPushButton" name="pushButton_63">
+           <property name="text">
+            <string>增加空行</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="pushButton_17">
            <property name="text">
-            <string>增加一行</string>
+            <string>传入数据</string>
            </property>
           </widget>
          </item>
@@ -5055,15 +5069,22 @@ color: rgb(0, 0, 255)</string>
          <rect>
           <x>200</x>
           <y>40</y>
-          <width>239</width>
+          <width>320</width>
           <height>29</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
+          <widget class="QPushButton" name="pushButton_62">
+           <property name="text">
+            <string>增加空行</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="pushButton_20">
            <property name="text">
-            <string>增加一行</string>
+            <string>传入数据</string>
            </property>
           </widget>
          </item>
