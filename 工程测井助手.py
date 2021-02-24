@@ -30,13 +30,13 @@ from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QMessageBox, QPushButton, QRadioButton,
                              QTableWidgetItem, QTextEdit, QWidget)
 from WELL_INTEGRITY_UI import Ui_MainWindow
-from MATPLOTLIB_MFC40_Class import MATPLOTLIB_MFC40
-from MATPLOTLIB_MIT24_Class import MATPLOTLIB_MIT24
-from MATPLOTLIB_MIT60_Class import MATPLOTLIB_MIT60
-from MATPLOTLIB_MFC24_Class import MATPLOTLIB_MFC24
-from FTP_Up_Down_Class import MyFTP
-from EmittingStr_Class import EmittingStr
-from Supervisor_by_Email_Class import Supervisor
+from MATPLOTLIB_MFC40_CLASS import MATPLOTLIB_MFC40
+from MATPLOTLIB_MIT24_CLASS import MATPLOTLIB_MIT24
+from MATPLOTLIB_MIT60_CLASS import MATPLOTLIB_MIT60
+from MATPLOTLIB_MFC24_CLASS import MATPLOTLIB_MFC24
+from FTP_UP_DOWN_CLASS import MyFTP
+from EMITTINGSTR_CLASS import EmittingStr
+from SUPERVISOR_BY_EMAIL_CLASS import Supervisor
 
 class Main_window(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -52,8 +52,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
-        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -6635,28 +6635,25 @@ if __name__ == "__main__":
             remote_license_date = int(license_str)
 
             if local_license_date < remote_license_date:
-                try:  # 先重命名，然后利用异常开始清理目录和下载，这个解决方案有点小聪明
-                    os.rename(".\\工程测井助手.exe", ".\\工程测井助手old.exe")
-                    # clean_dir_of_all(local_path)
-                    # ftp.DownLoadFileTree(local_path, remote_path)
+                try:  # 重命名为提示更新
+                    os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
                 except:
-                    print('请再次运行工程测井助手old.exe')
-                    clean_dir_of_all(local_path)
-                    ftp.DownLoadFileTree(local_path, remote_path)
-                print("更新完毕。")
-                # QMessageBox.information(None, "提示", "更新完毕。")
+                    print("请运行下载器更新。")
             elif local_license_date >= remote_license_date:
                 print("本地软件版本已经是最新，无需更新。")
-                # QMessageBox.information(None, "提示", "本地软件版本已经是最新，无需更新。")
                 # 运行主程序
                 app = QApplication(sys.argv)
                 main = Main_window()
                 main.show()
                 sys.exit(app.exec_())
         except:
-            ftp.DownLoadFileTree(local_path, remote_path)
-            print("下载完毕。")
-            # QMessageBox.information(None, "提示", "下载完毕。")
+            print('在更新检测异常的情况下继续使用工程测井助手')
+            app = QApplication(sys.argv)
+            main = Main_window()
+            main.show()
+            sys.exit(app.exec_())
+
+    # 根目录中有py文件，推测为源代码，直接运行
     else:
         # 运行主程序
         app = QApplication(sys.argv)

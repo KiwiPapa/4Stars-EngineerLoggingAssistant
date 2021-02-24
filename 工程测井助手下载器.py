@@ -1,7 +1,7 @@
 # coding=utf-8
 import shutil
 import os
-from FTP_Up_Down_Class import MyFTP
+from FTP_UP_DOWN_CLASS import MyFTP
 
 
 # 清理所有非空文件夹和文件
@@ -10,17 +10,31 @@ def clean_dir_of_all(path):
     if len(list) != 0:
         for i in range(0, len(list)):
             path_to_clean = os.path.join(path, list[i])
-            if '.' not in list[i]:
-                shutil.rmtree(path_to_clean)  # 清理文件夹，可非空
+            if '工程测井助手' in list[i]: # 不删除主exe
+                pass
+            elif 'python' in list[i]: # 删除同一目录下的文件时会调取当前目录的python3.dll，导致删除错误，因此跳过是最好的选择
+                pass
+            elif list[i] in ['.vs', '.git', '.idea']:
+                pass
             else:
-                os.remove(path_to_clean)  # 清理文件
+                if '.' not in list[i]:
+                    shutil.rmtree(path_to_clean)  # 清理文件夹，可非空
+                else:
+                    os.remove(path_to_clean)  # 清理文件
     else:
         pass
 
 if __name__ == "__main__":
+    # 先检查更新
+    PATH = ".\\"
+    listdir = []
+
+    for fileName in os.listdir(PATH):
+        listdir.append(fileName.split('.')[-1])
+
     ftp = MyFTP('10.132.203.206')
     ftp.Login('zonghs', 'zonghs123')
-    local_path = './工程测井助手(自动更新)'
+    local_path = './'
     # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
     remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本'
 
@@ -47,13 +61,15 @@ if __name__ == "__main__":
         remote_license_date = int(license_str)
 
         if local_license_date < remote_license_date:
-            clean_dir_of_all(local_path)
-            ftp.DownLoadFileTree(local_path, remote_path)
-            print("更新完毕。")
+            try:
+                clean_dir_of_all(local_path)
+                # ftp.DownLoadFileTree(local_path, remote_path)
+            except:
+                clean_dir_of_all(local_path)
+                # ftp.DownLoadFileTree(local_path, remote_path)
         elif local_license_date >= remote_license_date:
             print("本地软件版本已经是最新，无需更新。")
     except:
-        ftp.DownLoadFileTree(local_path, remote_path)
-        print("下载完毕。")
+        print('获取版本信息异常。')
 
     input('按回车键退出')
