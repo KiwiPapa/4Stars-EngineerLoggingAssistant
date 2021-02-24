@@ -29,6 +29,7 @@ from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QFontDialog, QLabel, QLineEdit, QMainWindow,
                              QMessageBox, QPushButton, QRadioButton,
                              QTableWidgetItem, QTextEdit, QWidget)
+import easygui as g
 from WELL_INTEGRITY_UI import Ui_MainWindow
 from MATPLOTLIB_MFC40_CLASS import MATPLOTLIB_MFC40
 from MATPLOTLIB_MIT24_CLASS import MATPLOTLIB_MIT24
@@ -6610,7 +6611,7 @@ if __name__ == "__main__":
         ftp.Login('zonghs', 'zonghs123')
         local_path = './'
         # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
-        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本'
+        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
 
         # 打开本地版本号
         try:
@@ -6636,18 +6637,21 @@ if __name__ == "__main__":
 
             if local_license_date < remote_license_date:
                 try:  # 重命名为提示更新
+                    msg = g.msgbox("软件需要升级，请运行下载器更新。")
                     os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
                 except:
-                    print("请运行下载器更新。")
+                    msg = g.msgbox("点错了，是点击下载器更新。")
             elif local_license_date >= remote_license_date:
-                print("本地软件版本已经是最新，无需更新。")
+                msg = g.msgbox("本地软件版本已经是最新。")
                 # 运行主程序
                 app = QApplication(sys.argv)
                 main = Main_window()
                 main.show()
                 sys.exit(app.exec_())
         except:
-            print('在更新检测异常的情况下继续使用工程测井助手')
+            pass
+        finally:
+            # msg = g.msgbox("软件更新异常，是否继续运行本地程序？")
             app = QApplication(sys.argv)
             main = Main_window()
             main.show()
