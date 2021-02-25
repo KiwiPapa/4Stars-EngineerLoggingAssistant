@@ -6605,60 +6605,42 @@ if __name__ == "__main__":
     for fileName in os.listdir(PATH):
         listdir.append(fileName.split('.')[-1])
 
-    # 当前目录有py文件说明为源代码，不更新
-    if 'py' not in listdir:
-        ftp = MyFTP('10.132.203.206')
-        ftp.Login('zonghs', 'zonghs123')
-        local_path = './'
-        # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
-        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
+    ftp = MyFTP('10.132.203.206')
+    ftp.Login('zonghs', 'zonghs123')
+    local_path = './'
+    # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
+    remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
 
-        # 打开本地版本号
-        try:
-            with open(local_path + '/版本号.txt', "r") as f:
-                license_str = f.read()
-            local_license_date = int(license_str)
+    # 打开本地版本号
+    with open(local_path + '/版本号.txt', "r") as f:
+        license_str = f.read()
+    local_license_date = int(license_str)
 
-            # 打开服务器版本号
-            ftp.Cwd(remote_path)
-            filenames = ftp.Nlst()
-            filename = '版本号.txt'
-            LocalFile = local_path + '/temp/版本号.txt'
-            RemoteFile = filename
+    # 打开服务器版本号
+    ftp.Cwd(remote_path)
+    filenames = ftp.Nlst()
+    filename = '版本号.txt'
+    LocalFile = local_path + '/temp/版本号.txt'
+    RemoteFile = filename
 
-            # 接收服务器上文件并写入本地文件
-            if not os.path.exists(local_path + '/temp'):
-                os.makedirs(local_path + '/temp')
-            ftp.DownLoadFile(LocalFile, RemoteFile)
+    # 接收服务器上文件并写入本地文件
+    if not os.path.exists(local_path + '/temp'):
+        os.makedirs(local_path + '/temp')
+    ftp.DownLoadFile(LocalFile, RemoteFile)
 
-            with open(local_path + '/temp/版本号.txt', "r") as f:
-                license_str = f.read()
-            remote_license_date = int(license_str)
+    with open(local_path + '/temp/版本号.txt', "r") as f:
+        license_str = f.read()
+    remote_license_date = int(license_str)
 
-            if local_license_date < remote_license_date:
-                try:  # 重命名为提示更新
-                    msg = g.msgbox("软件需要升级，请运行下载器更新。")
-                    os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
-                except:
-                    msg = g.msgbox("点错了，是点击下载器更新。")
-            elif local_license_date >= remote_license_date:
-                msg = g.msgbox("本地软件版本已经是最新。")
-                # 运行主程序
-                app = QApplication(sys.argv)
-                main = Main_window()
-                main.show()
-                sys.exit(app.exec_())
+    # 比较版本号信息
+    if local_license_date < remote_license_date:
+        try:  # 重命名为提示更新
+            msg = g.msgbox("软件需要升级，请运行下载器更新。")
+            # os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
         except:
-            pass
-        finally:
-            # msg = g.msgbox("软件更新异常，是否继续运行本地程序？")
-            app = QApplication(sys.argv)
-            main = Main_window()
-            main.show()
-            sys.exit(app.exec_())
-
-    # 根目录中有py文件，推测为源代码，直接运行
-    else:
+            msg = g.msgbox("请点击下载器更新。")
+    elif local_license_date >= remote_license_date:
+        msg = g.msgbox("本地软件版本已经是最新。")
         # 运行主程序
         app = QApplication(sys.argv)
         main = Main_window()
