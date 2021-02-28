@@ -1,0 +1,10 @@
+1、xlwings模块 _xlwindows.py
+
+self._xl = COMRetryObjectWrapper(DispatchEx('Excel.Application'))
+改为：self._xl = COMRetryObjectWrapper(DispatchEx('KET.Application'))
+
+否则报错:pywintypes.com_error: (-2147221005, ‘无效的类字符串‘, None, None)
+
+
+2、python自带的模块ftplib.py 中 coding = 'latin-1' 需要改为 encoding = "GB2312"
+否则会出中文编码问题。
