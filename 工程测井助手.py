@@ -2235,7 +2235,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     self.xls_formatting_first_layer(fileDir)
                 finally:
                     pass
-                fileDir = ''.join([fileDir.replace('.' + fileDir.split('.')[-1], ''), '(已规范化).xls'])
+                # fileDir = ''.join([fileDir.replace('.' + fileDir.split('.')[-1], ''), '(已规范化).xls'])
                 workbook = xlrd.open_workbook(fileDir)
 
         if fileName != '':
@@ -3194,7 +3194,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     self.xls_formatting_first_layer(fileDir)
                 finally:
                     pass
-                fileDir = ''.join([fileDir.replace('.' + fileDir.split('.')[-1], ''), '(已规范化).xls'])
+                # fileDir = ''.join([fileDir.replace('.' + fileDir.split('.')[-1], ''), '(已规范化).xls'])
                 workbook = xlrd.open_workbook(fileDir)
 
         sheet = workbook.sheets()[0]
@@ -5934,7 +5934,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
     # 规范化1
     ##############################
     def xls_formatting_first_layer(self, path1):  # 用于一界面表格表头文字规范
-        path2 = ''.join([path1.replace('.' + path1.split('.')[-1], ''), '(已规范化).xls'])
+        # path2 = ''.join([path1.replace('.' + path1.split('.')[-1], ''), '(已规范化).xls'])
+        path2 = path1
         old_excel = xlrd.open_workbook(path1, formatting_info=True)
         row_num = old_excel.sheets()[0].nrows
         col_num = old_excel.sheets()[0].ncols
@@ -6034,12 +6035,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
             load_wb.close()
             app.quit()
 
-            if os.path.exists(path1):
-                # 删除文件，可使用以下两种方法
-                os.remove(path1)
-                # os.unlink(my_file)
-            else:
-                print('no such file:%s' % path1)
+            # if os.path.exists(path1):
+            #     # 删除文件，可使用以下两种方法
+            #     os.remove(path1)
+            #     # os.unlink(my_file)
+            # else:
+            #     print('no such file:%s' % path1)
 
         ############################################### 若为一大列则进行直接进行规范化
         elif int(col_num) < 10:
@@ -6117,7 +6118,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             pass
 
     def xls_formatting_second_layer(self, path1):  # 用于二界面表格表头文字规范
-        path2 = ''.join([path1.replace('.' + path1.split('.')[-1], ''), '(已规范化).xls'])
+        # path2 = ''.join([path1.replace('.' + path1.split('.')[-1], ''), '(已规范化).xls'])
+        path2 = path1
         old_excel = xlrd.open_workbook(path1, formatting_info=True)
         row_num = old_excel.sheets()[0].nrows
         col_num = old_excel.sheets()[0].ncols
@@ -6216,12 +6218,12 @@ class Main_window(QMainWindow, Ui_MainWindow):
             load_wb.close()
             app.quit()
 
-            if os.path.exists(path1):
-                # 删除文件，可使用以下两种方法
-                os.remove(path1)
-                # os.unlink(my_file)
-            else:
-                print('no such file:%s' % path1)
+            # if os.path.exists(path1):
+            #     # 删除文件，可使用以下两种方法
+            #     os.remove(path1)
+            #     # os.unlink(my_file)
+            # else:
+            #     print('no such file:%s' % path1)
 
         ############################################### 若为一大列则进行直接进行规范化
         elif int(col_num) < 10:
