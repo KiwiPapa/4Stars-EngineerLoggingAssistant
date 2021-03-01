@@ -5977,14 +5977,15 @@ class Main_window(QMainWindow, Ui_MainWindow):
             load_wb = app.books.open(path2)
             load_ws = load_wb.sheets.active
             # 处理列，将指定列从大到小删除（避免先删除小列导致后续列号变动）
-            load_ws.api.columns('O').delete
-            load_ws.api.columns('N').delete
-            load_ws.api.columns('M').delete
-            load_ws.api.columns('L').delete
-            load_ws.api.columns('K').delete
-            load_ws.api.columns('J').delete
-            load_ws.api.columns('I').delete
-            load_ws.api.columns('H').delete
+            # load_ws.api.columns('O').delete 这样会报错，不要用
+            load_ws.range('O1').api.EntireColumn.Delete()
+            load_ws.range('N1').api.EntireColumn.Delete()
+            load_ws.range('M1').api.EntireColumn.Delete()
+            load_ws.range('L1').api.EntireColumn.Delete()
+            load_ws.range('K1').api.EntireColumn.Delete()
+            load_ws.range('J1').api.EntireColumn.Delete()
+            load_ws.range('I1').api.EntireColumn.Delete()
+            load_ws.range('H1').api.EntireColumn.Delete()
 
             # 获取行数
             info = load_ws.used_range
@@ -6159,14 +6160,14 @@ class Main_window(QMainWindow, Ui_MainWindow):
             load_wb = app.books.open(path2)
             load_ws = load_wb.sheets.active
             # 处理列，将指定列从大到小删除（避免先删除小列导致后续列号变动）
-            load_ws.api.columns('O').delete
-            load_ws.api.columns('N').delete
-            load_ws.api.columns('M').delete
-            load_ws.api.columns('L').delete
-            load_ws.api.columns('K').delete
-            load_ws.api.columns('J').delete
-            load_ws.api.columns('I').delete
-            load_ws.api.columns('H').delete
+            load_ws.range('O1').api.EntireColumn.Delete()
+            load_ws.range('N1').api.EntireColumn.Delete()
+            load_ws.range('M1').api.EntireColumn.Delete()
+            load_ws.range('L1').api.EntireColumn.Delete()
+            load_ws.range('K1').api.EntireColumn.Delete()
+            load_ws.range('J1').api.EntireColumn.Delete()
+            load_ws.range('I1').api.EntireColumn.Delete()
+            load_ws.range('H1').api.EntireColumn.Delete()
 
             # 获取行数
             info = load_ws.used_range
