@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.tabWidget_2.setIconSize(QtCore.QSize(20, 20))
         self.tabWidget_2.setElideMode(QtCore.Qt.ElideMiddle)
         self.tabWidget_2.setDocumentMode(True)
-        self.tabWidget_2.setTabsClosable(True)
+        self.tabWidget_2.setTabsClosable(False)
         self.tabWidget_2.setMovable(True)
         self.tabWidget_2.setTabBarAutoHide(True)
         self.tabWidget_2.setObjectName("tabWidget_2")

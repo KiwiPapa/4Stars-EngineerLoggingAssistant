@@ -29,7 +29,7 @@ from PyQt5.QtPrintSupport import QPageSetupDialog, QPrintDialog, QPrinter
 from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QFontDialog, QLabel, QLineEdit, QMainWindow,
                              QMessageBox, QPushButton, QRadioButton,
-                             QTableWidgetItem, QTextEdit, QWidget)
+                             QTableWidgetItem, QTextEdit, QWidget, QStyleFactory)
 import easygui as g
 from WELL_INTEGRITY_UI import Ui_MainWindow
 from MATPLOTLIB_MFC40_CLASS import MATPLOTLIB_MFC40
@@ -6932,56 +6932,49 @@ def clean_dir_of_all(path):
 
 if __name__ == "__main__":
 
-    try:
-        # 先检查更新
-        PATH = ".\\"
-        listdir = []
+    # 先检查更新
+    PATH = ".\\"
+    listdir = []
 
-        ftp = MyFTP('10.132.203.206')
-        ftp.Login('zonghs', 'zonghs123')
-        local_path = './'
-        # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
-        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
+    ftp = MyFTP('10.132.203.206')
+    ftp.Login('zonghs', 'zonghs123')
+    local_path = './'
+    # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
+    remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
 
-        # 打开本地版本号
-        with open(local_path + '/版本号.txt', "r") as f:
-            license_str = f.read()
-        local_license_date = int(license_str)
+    # 打开本地版本号
+    with open(local_path + '/版本号.txt', "r") as f:
+        license_str = f.read()
+    local_license_date = int(license_str)
 
-        # 打开服务器版本号
-        ftp.Cwd(remote_path)
-        filenames = ftp.Nlst()
-        filename = '版本号.txt'
-        LocalFile = local_path + '/temp/版本号.txt'
-        RemoteFile = filename
+    # 打开服务器版本号
+    ftp.Cwd(remote_path)
+    filenames = ftp.Nlst()
+    filename = '版本号.txt'
+    LocalFile = local_path + '/temp/版本号.txt'
+    RemoteFile = filename
 
-        # 接收服务器上文件并写入本地文件
-        if not os.path.exists(local_path + '/temp'):
-            os.makedirs(local_path + '/temp')
-        ftp.DownLoadFile(LocalFile, RemoteFile)
+    # 接收服务器上文件并写入本地文件
+    if not os.path.exists(local_path + '/temp'):
+        os.makedirs(local_path + '/temp')
+    ftp.DownLoadFile(LocalFile, RemoteFile)
 
-        with open(local_path + '/temp/版本号.txt', "r") as f:
-            license_str = f.read()
-        remote_license_date = int(license_str)
+    with open(local_path + '/temp/版本号.txt', "r") as f:
+        license_str = f.read()
+    remote_license_date = int(license_str)
 
-        # 比较版本号信息
-        if local_license_date < remote_license_date:
-            try:  # 重命名为提示更新
-                msg = g.msgbox("软件需要升级，请运行下载器更新。")
-                # os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
-            except:
-                msg = g.msgbox("请点击下载器更新。")
-        elif local_license_date >= remote_license_date:
-            msg = g.msgbox("本地软件版本已经是最新。")
-            # 运行主程序
-            app = QApplication(sys.argv)
-            main = Main_window()
-            main.show()
-            sys.exit(app.exec_())
-    except:
-        msg = g.msgbox("未能成功进行更新检查。")
+    # 比较版本号信息
+    if local_license_date < remote_license_date:
+        try:  # 重命名为提示更新
+            msg = g.msgbox("软件需要升级，请运行下载器更新。")
+            # os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
+        except:
+            msg = g.msgbox("请点击下载器更新。")
+    elif local_license_date >= remote_license_date:
+        msg = g.msgbox("本地软件版本已经是最新。")
         # 运行主程序
         app = QApplication(sys.argv)
+        QApplication.setStyle(QStyleFactory.create("Dusion"))
         main = Main_window()
         main.show()
         sys.exit(app.exec_())
