@@ -54,8 +54,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
-        sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -1167,7 +1167,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_103.setText('?')
         self.lineEdit_105.setText('?')
         self.lineEdit_106.setText('?')
-        self.lineEdit_139.setText('/')
 
         document = Document(fileDir1)
         ######################################################################## 井名
@@ -2597,22 +2596,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
     # 文档替换主程序
     def document_replace(self):
-        # 判断是否有储层
-        PATH = ".\\WorkSpace\\报告生成工区\\储层表\\"
-        formation_be_or_not = ''
-        if os.listdir(PATH) != []:
-            for fileName in os.listdir(PATH):
-                fileName = fileName
-        else:
-            fileName = ''
-
-        f_path = PATH + fileName
-
-        if os.path.isdir(f_path):
-            formation_be_or_not = '无储层'
-        else:
-            formation_be_or_not = '有储层'
-
         # 补充信息
         well_Name = self.lineEdit.text()
         casing_Goal = self.lineEdit_108.text()
@@ -2631,10 +2614,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         TEMPLATE_PATH = '.\\resources\\模板\\'
         newFile = PATH + well_Name + '_' + year + month + \
                   day + '_(' + casing_Goal + 'mm套,' + first_Pro_Interval + 'm)固井报告' + '.docx'
-        if formation_be_or_not == '有储层':
-            document = Document(TEMPLATE_PATH + 'template-with-formation.docx')
-        else:
-            document = Document(TEMPLATE_PATH + 'template-without-formation.docx')
+        document = Document(TEMPLATE_PATH + 'template-of-cbl-vdl-report.docx')
         if self.checkBox_9.isChecked():
             document = self.check(document)  # 调用替换函数
         else:
@@ -3240,7 +3220,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         ################################################################################
         # 判断是否有储层
         PATH = ".\\WorkSpace\\报告生成工区\\储层表\\"
-        formation_be_or_not = ''
         if os.listdir(PATH) != []:
             for fileName in os.listdir(PATH):
                 fileName = fileName
@@ -3462,11 +3441,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         evaluation_Bottom = self.lineEdit_105.text()
         casing_head = self.comboBox_8.currentText()
         casing_bottom = self.comboBox_9.currentText()
-        oil_gas_upper_interval = self.lineEdit_139.text()
-        if casing_bottom == '/':
-            instructions = '因未测到套管底100m，故不做评价。'
-        else:
-            instructions = '/'
 
         TEMPLATE_PATH = ".\\resources\\模板"
         PATH = "."
@@ -3539,8 +3513,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "fluid_Height": fluid_Height,
             "casing_head": casing_head,
             "casing_bottom": casing_bottom,
-            "oil_gas_upper_interval": oil_gas_upper_interval,
-            "instructions": instructions,
             "second_Start": second_Start,
             "evaluation_Bottom": evaluation_Bottom,
             "evaluation_Start": evaluation_Start
@@ -3616,14 +3588,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
             pass
 
         document = Document(newFile)
-        document.styles['Normal'].font.size = Pt(9)  # 小五
+        document.styles['Normal'].font.size = Pt(10)  # 五号
         document.styles['Normal'].font.name = u'Times New Roman'
         document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
 
-        if formation_be_or_not == '有储层':
-            table = document.tables[9]
-        else:
-            table = document.tables[8]
+        table = document.tables[10]
         table.autofit = True
         for num in range(nrow - 4):
             table.add_row()
@@ -3683,14 +3652,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         ncol = sheet.ncols
 
         document = Document(newFile)
-        document.styles['Normal'].font.size = Pt(9)  # 小五
+        document.styles['Normal'].font.size = Pt(10)  # 五号
         document.styles['Normal'].font.name = u'Times New Roman'
         document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
 
-        if formation_be_or_not == '有储层':
-            table = document.tables[10]
-        else:
-            table = document.tables[9]
+        table = document.tables[11]
         table.autofit = True
         for num in range(nrow - 4):
             table.add_row()
@@ -3752,7 +3718,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         p = document.add_paragraph()
         p.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
         p.paragraph_format.line_spacing = Pt(24)
-        run = p.add_run(u"3．储层段固井质量分析")
+        run = p.add_run(u"5．储层段固井质量分析")
         run.font.name = 'Times New Roman'  # 英文字体
         run.element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')  # 中文字体
         run.font.size = Pt(14)
@@ -6974,7 +6940,7 @@ if __name__ == "__main__":
         msg = g.msgbox("本地软件版本已经是最新。")
         # 运行主程序
         app = QApplication(sys.argv)
-        QApplication.setStyle(QStyleFactory.create("Dusion"))
+        QApplication.setStyle(QStyleFactory.create("Fusion"))
         main = Main_window()
         main.show()
         sys.exit(app.exec_())
