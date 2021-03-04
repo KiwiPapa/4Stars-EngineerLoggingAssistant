@@ -549,7 +549,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         progressbar_action.start()
 
     def progressbar_action(self):
-        print("启动生成解释报告程序")
         if self.timer.isActive():
             self.pushButton_4.setText('请等待...')
             self.pushButton_4.setEnabled(False)
@@ -748,7 +747,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         well_Times_Name = ''.join([well_Name, '_VDL_', logging_Date, '(', start_Evaluation, '-', end_Evaluation, ')'])
         self.lineEdit_3.setText(well_Times_Name)
 
-        self.lineEdit_107.setText(start_Evaluation_1_digits)
+        # self.lineEdit_107.setText(start_Evaluation_1_digits)
         self.lineEdit_103.setText(start_Evaluation_2_digits)
         self.lineEdit_105.setText(end_Evaluation_2_digits)
 
@@ -1769,13 +1768,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
             design_Depth = design_Depth.replace(' ', '')
             design_Depth = design_Depth.replace('m', '')
             if design_Depth == ['井口', '地面']:
-                design_Depth = '0.0'
+                design_Depth = '0'
         except:
             QMessageBox.information(self, "提示", "请检查design_Depth（水泥设计返高）是否为空")
             design_Depth = '-99999'
         self.lineEdit_69.setText(design_Depth)
         if design_Depth == '':
-            self.lineEdit_69.setText('0.0')
+            self.lineEdit_69.setText('0')
 
         ######################################################################## 水泥实际返高actual_Depth
         try:
@@ -1791,14 +1790,20 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 actual_Depth = actual_Depth
             else:
                 if actual_Depth != '':
-                    actual_Depth = ''.join([actual_Depth, '.00'])
+                    actual_Depth = ''.join([actual_Depth, '.0'])
                 else:
                     actual_Depth = ''
         except:
             QMessageBox.information(self, "提示", "请检查actual_Depth（水泥实际返高）是否为空")
             actual_Depth = '-99999'
         self.lineEdit_70.setText(actual_Depth)
-        self.lineEdit_107.setText(actual_Depth)
+        try:
+            if int(actual_Depth) < 100:
+                self.lineEdit_107.setText('地面')
+            else:
+                pass
+        except:
+            pass
 
         ######################################################################## 套管数据
         # 套管外径
@@ -2244,7 +2249,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             nrow = sheet.nrows
             ncol = sheet.ncols
             # 处理评价井段
-            start_Evaluation = str(sheet.cell_value(4, 1)).strip()
+            start_Evaluation = str(sheet.cell_value(3, 1)).strip()
             start_Evaluation = start_Evaluation.split('-')[0]
             end_Evaluation = str(sheet.cell_value(nrow - 1, 1)).strip('')
             end_Evaluation = ''.join(end_Evaluation.split())  # 去除所有空格
@@ -2360,7 +2365,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         else:
             pass
 
-        DICT = {
+        DICT_TXT = {
             "井名": well_Name,
             "井别": well_Category,
             "井型": well_Type,
@@ -2466,7 +2471,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         temp2 = self.lineEdit_5.text().replace(temp, '')
 
         f = open(temp2 + well_Name + '-井信息(LEAD4.0).txt', 'w', encoding='UTF-8')
-        for key, value in DICT.items():
+        for key, value in DICT_TXT.items():
             f.write(key + '=' + str(value) + '\n')
         f.close()
         QMessageBox.information(self, "提示", "井信息文件已生成，和原始资料登记表在同一目录")
@@ -3183,7 +3188,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         nrow = sheet.nrows
         ncol = sheet.ncols
         # 处理评价井段
-        start_Evaluation = str(sheet.cell_value(4, 1)).strip()
+        start_Evaluation = str(sheet.cell_value(3, 1)).strip()
         start_Evaluation = start_Evaluation.split('-')[0]
         end_Evaluation = str(sheet.cell_value(nrow - 1, 1)).strip('')
         end_Evaluation = ''.join(end_Evaluation.split())  # 去除所有空格
@@ -3207,7 +3212,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         nrow = sheet.nrows
         ncol = sheet.ncols
         # 处理评价井段
-        start_Evaluation = str(sheet.cell_value(4, 1)).strip()
+        start_Evaluation = str(sheet.cell_value(3, 1)).strip()
         start_Evaluation = start_Evaluation.split('-')[0]
         end_Evaluation = str(sheet.cell_value(nrow - 1, 1)).strip('')
         end_Evaluation = ''.join(end_Evaluation.split())  # 去除所有空格
@@ -3252,7 +3257,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 formation_Number = '[待确定]'
             print('储层表解析完成')
         else:
-            print('未发现可供解析的储层表')
+            print('未发现储层表')
         ################################################################################
         # 储层表和单层统计表的联动数据分析
         all_evaluation_of_formation1 = []
@@ -3545,7 +3550,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             nrow = sheet.nrows
             ncol = sheet.ncols
 
-            formation_table = document.tables[6]
+            formation_table = document.tables[7]
             for num in range(eval(formation_Number) - 1):
                 row_cells = formation_table.add_row()
 
@@ -3609,7 +3614,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 self.view_bar(row, len(table.rows) - 1)
                 print(' @第', str(row), '行')
                 for col in range(len(table.columns)):
-                    table.cell(row, col).text = str(sheet.cell_value(row + 3, col))
+                    table.cell(row, col).text = str(sheet.cell_value(row + 2, col))
                     table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
             table.cell(0, 0).text = '序号'
 
@@ -3673,7 +3678,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 self.view_bar(row, len(table.rows) - 1)
                 print(' @第', str(row), '行')
                 for col in range(len(table.columns)):
-                    table.cell(row, col).text = str(sheet.cell_value(row + 3, col))
+                    table.cell(row, col).text = str(sheet.cell_value(row + 2, col))
                     table.cell(row, 0).text = str(row)  # 因为序号带小数，重新赋值
             table.cell(0, 0).text = '序号'
 
@@ -5807,8 +5812,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 break
             else:
                 pass
-        print(item_number1)
-        print(data1)
+        # print(item_number1)
+        # print(data1)
 
         for item in data2[2:]:
             if float(item.split(',')[1].split('-')[0]) <= assembled_point <= float(item.split(',')[1].split('-')[1]):
@@ -5817,8 +5822,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 break
             else:
                 pass
-        print(item_number2)
-        print(data2)
+        # print(item_number2)
+        # print(data2)
 
         count = 0
         data3 = []
@@ -5830,7 +5835,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             count = count + 1
             data3.append(item)
 
-        print(data3)
+        # print(data3)
         first = data3[0].split(',')[0]
         second = ''.join([data1[-1].split(',')[1].split('-')[0], '-', data3[0].split(',')[1].split('-')[1]])
         third = round(float(data3[0].split(',')[1].split('-')[1]) - float(data1[-1].split(',')[1].split('-')[0]), 2)
@@ -5851,7 +5856,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         with open(path + "组合后的数据.list", "r", encoding='UTF-8') as f:  # 打开文件
             data4 = f.read()  # 读取文件
-        print(data4)
+        # print(data4)
         QMessageBox.information(self, "提示", "list文件拼接完毕，请在源数据同级目录查看")
         
     ##############################
@@ -5905,7 +5910,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         old_excel = xlrd.open_workbook(path1, formatting_info=True)
         row_num = old_excel.sheets()[0].nrows
         col_num = old_excel.sheets()[0].ncols
-        print(row_num, ' ', col_num)
+        # print(row_num, ' ', col_num)
 
         ############################################### 若为两大列则进行单列规范化
         if int(col_num) > 10:
@@ -5964,7 +5969,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                           24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
-            print(last_row, ' ', last_column)
+            # print(last_row, ' ', last_column)
 
             # 删除最后的空行，单数行情况
             last_row_value = load_ws.range(last_row, last_column_num).value
@@ -6043,7 +6048,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                           24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
-            print(last_row, ' ', last_column)
+            # print(last_row, ' ', last_column)
 
             # 删除最后的空行，单数行情况
             last_row_value = load_ws.range(last_row, last_column_num).value
@@ -6089,7 +6094,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         old_excel = xlrd.open_workbook(path1, formatting_info=True)
         row_num = old_excel.sheets()[0].nrows
         col_num = old_excel.sheets()[0].ncols
-        print(row_num, ' ', col_num)
+        # print(row_num, ' ', col_num)
 
         ############################################### 若为两大列则进行单列规范化
         if int(col_num) > 10:
@@ -6147,7 +6152,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                           24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
-            print(last_row, ' ', last_column)
+            # print(last_row, ' ', last_column)
 
             # 删除最后的空行，单数行情况
             last_row_value = load_ws.range(last_row, last_column_num).value
@@ -6226,7 +6231,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                           24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
-            print(last_row, ' ', last_column)
+            # print(last_row, ' ', last_column)
 
             # 删除最后的空行，单数行情况
             last_row_value = load_ws.range(last_row, last_column_num).value
