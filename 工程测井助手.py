@@ -5963,10 +5963,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             info = load_ws.used_range
             last_row = info.last_cell.row
             alpha_dict = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K',
-                          12: 'L',
-                          13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V',
-                          23: 'W',
-                          24: 'X', 25: 'Y', 26: 'Z'}
+                          12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U',
+                          22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
             # print(last_row, ' ', last_column)
@@ -6042,10 +6040,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             info = load_ws.used_range
             last_row = info.last_cell.row
             alpha_dict = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K',
-                          12: 'L',
-                          13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V',
-                          23: 'W',
-                          24: 'X', 25: 'Y', 26: 'Z'}
+                          12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U',
+                          22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
             # print(last_row, ' ', last_column)
@@ -6146,10 +6142,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             info = load_ws.used_range
             last_row = info.last_cell.row
             alpha_dict = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K',
-                          12: 'L',
-                          13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V',
-                          23: 'W',
-                          24: 'X', 25: 'Y', 26: 'Z'}
+                          12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U',
+                          22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
             # print(last_row, ' ', last_column)
@@ -6225,10 +6219,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             info = load_ws.used_range
             last_row = info.last_cell.row
             alpha_dict = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K',
-                          12: 'L',
-                          13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V',
-                          23: 'W',
-                          24: 'X', 25: 'Y', 26: 'Z'}
+                          12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T', 21: 'U',
+                          22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'}
             last_column_num = info.last_cell.column
             last_column = alpha_dict[last_column_num]
             # print(last_row, ' ', last_column)
@@ -6379,7 +6371,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
-        # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
+        # if len(df1) % 2 == 0: # 如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
         #     df1.drop([len(df1)], inplace=True)
         df1['井段Start'] = df1['井段(m)'].map(lambda x: x.split("-")[0])
         df1['井段End'] = df1['井段(m)'].map(lambda x: x.split("-")[1])
