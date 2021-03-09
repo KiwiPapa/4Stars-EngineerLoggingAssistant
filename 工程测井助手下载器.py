@@ -1,7 +1,7 @@
 # coding=utf-8
 import shutil
 import os
-from FTP_UP_DOWN_CLASS import MyFTP
+from CLASSES.FTP_UP_DOWN_CLASS import MyFTP
 import easygui as g
 
 # 清理所有非空文件夹和文件
@@ -41,23 +41,23 @@ if __name__ == "__main__":
 
     # 打开本地版本号
     try:
-        with open(local_path + '/版本号.txt', "r") as f:
+        with open(local_path + 'resources/版本号.txt', "r") as f:
             license_str = f.read()
         local_license_date = int(license_str)
 
         # 打开服务器版本号
         ftp.Cwd(remote_path)
         filenames = ftp.Nlst()
-        filename = '版本号.txt'
-        LocalFile = local_path + '/temp/版本号.txt'
+        filename = 'resources/版本号.txt'
+        LocalFile = local_path + 'temp/版本号.txt'
         RemoteFile = filename
 
         # 接收服务器上文件并写入本地文件
-        if not os.path.exists(local_path + '/temp'):
-            os.makedirs(local_path + '/temp')
+        if not os.path.exists(local_path + 'temp'):
+            os.makedirs(local_path + 'temp')
         ftp.DownLoadFile(LocalFile, RemoteFile)
 
-        with open(local_path + '/temp/版本号.txt', "r") as f:
+        with open(local_path + 'temp/版本号.txt', "r") as f:
             license_str = f.read()
         remote_license_date = int(license_str)
 

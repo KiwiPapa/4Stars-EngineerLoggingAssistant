@@ -31,20 +31,35 @@ from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QMessageBox, QPushButton, QRadioButton,
                              QTableWidgetItem, QTextEdit, QWidget, QStyleFactory)
 import easygui as g
-from WELL_INTEGRITY_UI import Ui_MainWindow
-from MATPLOTLIB_MFC40_CLASS import MATPLOTLIB_MFC40
-from MATPLOTLIB_MIT24_CLASS import MATPLOTLIB_MIT24
-from MATPLOTLIB_MIT60_CLASS import MATPLOTLIB_MIT60
-from MATPLOTLIB_MFC24_CLASS import MATPLOTLIB_MFC24
-from FTP_UP_DOWN_CLASS import MyFTP
-from EMITTINGSTR_CLASS import EmittingStr
-from SUPERVISOR_BY_EMAIL_CLASS import Supervisor
+from CLASSES.PROCESSING_CHAIN import Ui_Form
+from CLASSES.ENGINEER_LOGGING_UI import Ui_MainWindow
+from CLASSES.MATPLOTLIB_MFC40_CLASS import MATPLOTLIB_MFC40
+from CLASSES.MATPLOTLIB_MIT24_CLASS import MATPLOTLIB_MIT24
+from CLASSES.MATPLOTLIB_MIT60_CLASS import MATPLOTLIB_MIT60
+from CLASSES.MATPLOTLIB_MFC24_CLASS import MATPLOTLIB_MFC24
+from CLASSES.FTP_UP_DOWN_CLASS import MyFTP
+from CLASSES.EMITTINGSTR_CLASS import EmittingStr
+from CLASSES.SUPERVISOR_BY_EMAIL_CLASS import Supervisor
+
+class ChainPane(QWidget, Ui_Form):
+    def __init__(self):
+        super(ChainPane, self).__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(Main_window_show)
+
+def Main_window_show():
+        main.show()
 
 class Main_window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(Main_window, self).__init__()
         self.setupUi(self)
+        self.statusBar().showMessage('Ready')
         self.setWindowOpacity(0.98)
+        self.setObjectName("mainWindow")
+        # qss = "QMainWindow#mainWindow{background-color:black;}"
+        qss = "QMainWindow#mainWindow{border-image:url(./resources/image/rainbow.jpg);}"
+        self.setStyleSheet(qss)
         self.lock = threading.Lock()  # 数据锁
         try: # 将工区备份至FTP
             self.auto_upload_to_FTP()
@@ -54,8 +69,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
-        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -89,15 +104,16 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 QMessageBox.information(self, "提示", "网络连接失败，请确认网络是否连接正常")
                 input('网络连接失败，请确认网络是否连接正常')
 
-            with open('.\\resources\\延期码.txt', "r") as f:
-                license_str = f.read()
-            if reply == QMessageBox.Yes:  # 网络正式版
-                end_license_time = '3000-01-01 12:00:00'
-            elif reply == QMessageBox.No:  # 非网络试用版
-                if 'yang' in license_str:
-                    end_license_time = '2021-05-01 12:00:00'
-                else:
-                    end_license_time = '2020-10-31 12:00:00'
+            # with open('.\\resources\\延期码.txt', "r") as f:
+            #     license_str = f.read()
+            # if reply == QMessageBox.Yes:  # 网络正式版
+            #     end_license_time = '3000-01-01 12:00:00'
+            # elif reply == QMessageBox.No:  # 非网络试用版
+            #     if 'yang' in license_str:
+            #         end_license_time = '2021-05-01 12:00:00'
+            #     else:
+            #         end_license_time = '2020-10-31 12:00:00'
+            end_license_time = '3000-01-01 12:00:00'
             print(self.now() + '\n' + end_license_time)
             if self.now() > end_license_time and error == True:
                 print('模块需要升级，请联系软件开发人员')
@@ -2521,11 +2537,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.headers = ['内径', '外径', '壁厚', '终深', '深度段']
         self.tableWidget_7.setHorizontalHeaderLabels(self.headers)
 
-        self.tableWidget_7.setColumnWidth(0, 50)
-        self.tableWidget_7.setColumnWidth(1, 50)
-        self.tableWidget_7.setColumnWidth(2, 50)
-        self.tableWidget_7.setColumnWidth(3, 50)
-        self.tableWidget_7.setColumnWidth(4, 80)
+        self.tableWidget_7.setColumnWidth(0, 60)
+        self.tableWidget_7.setColumnWidth(1, 60)
+        self.tableWidget_7.setColumnWidth(2, 60)
+        self.tableWidget_7.setColumnWidth(3, 60)
+        self.tableWidget_7.setColumnWidth(4, 100)
 
         self.tableWidget_7.setRowHeight(0, 20)
         self.tableWidget_7.setRowHeight(1, 20)
@@ -6047,6 +6063,15 @@ class Main_window(QMainWindow, Ui_MainWindow):
             # print(last_row, ' ', last_column)
 
             # 删除最后的空行，单数行情况
+            '''
+            last_row_value = load_ws.range(last_row, last_column_num).value
+            if last_row_value in [None, '']:
+                while (last_row_value in [None, '']):
+                    # load_ws.api.rows(last_row).delete
+                    load_ws.range(f'{last_column}{last_row}').api.EntireRow.Delete()
+                    last_row = str(int(last_row) - 1)
+                    last_row_value = load_ws.range(last_row, last_column_num).value
+            '''
             last_row_value = load_ws.range(last_row, last_column_num).value
             if last_row_value == None:
                 # load_ws.api.rows(last_row).delete
@@ -6906,23 +6931,23 @@ if __name__ == "__main__":
     remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
 
     # 打开本地版本号
-    with open(local_path + '/版本号.txt', "r") as f:
+    with open(local_path + 'resources/版本号.txt', "r") as f:
         license_str = f.read()
     local_license_date = int(license_str)
 
     # 打开服务器版本号
     ftp.Cwd(remote_path)
     filenames = ftp.Nlst()
-    filename = '版本号.txt'
-    LocalFile = local_path + '/temp/版本号.txt'
+    filename = 'resources/版本号.txt'
+    LocalFile = local_path + 'temp/版本号.txt'
     RemoteFile = filename
 
     # 接收服务器上文件并写入本地文件
-    if not os.path.exists(local_path + '/temp'):
-        os.makedirs(local_path + '/temp')
+    if not os.path.exists(local_path + 'temp'):
+        os.makedirs(local_path + 'temp')
     ftp.DownLoadFile(LocalFile, RemoteFile)
 
-    with open(local_path + '/temp/版本号.txt', "r") as f:
+    with open(local_path + 'temp/版本号.txt', "r") as f:
         license_str = f.read()
     remote_license_date = int(license_str)
 
@@ -6939,5 +6964,7 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
         QApplication.setStyle(QStyleFactory.create("Fusion"))
         main = Main_window()
-        main.show()
+        Chain = ChainPane()
+        # main.show()
+        Chain.show()
         sys.exit(app.exec_())
