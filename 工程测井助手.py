@@ -30,7 +30,6 @@ from PyQt5.QtWidgets import (QApplication, QColorDialog, QDialog, QFileDialog,
                              QFontDialog, QLabel, QLineEdit, QMainWindow,
                              QMessageBox, QPushButton, QRadioButton,
                              QTableWidgetItem, QTextEdit, QWidget, QStyleFactory)
-import easygui as g
 from CLASSES.PROCESSING_CHAIN import Ui_Form
 from CLASSES.ENGINEER_LOGGING_UI import Ui_MainWindow
 from CLASSES.MATPLOTLIB_MFC40_CLASS import MATPLOTLIB_MFC40
@@ -41,14 +40,15 @@ from CLASSES.FTP_UP_DOWN_CLASS import MyFTP
 from CLASSES.EMITTINGSTR_CLASS import EmittingStr
 from CLASSES.SUPERVISOR_BY_EMAIL_CLASS import Supervisor
 
-class ChainPane(QWidget, Ui_Form):
-    def __init__(self):
-        super(ChainPane, self).__init__()
-        self.setupUi(self)
-        self.pushButton.clicked.connect(Main_window_show)
 
 def Main_window_show():
-        main.show()
+    main.show()
+
+class Chain_Pane(QWidget, Ui_Form):
+    def __init__(self):
+        super(Chain_Pane, self).__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(Main_window_show)
 
 class Main_window(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -58,19 +58,30 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.setWindowOpacity(0.98)
         self.setObjectName("mainWindow")
         # qss = "QMainWindow#mainWindow{background-color:black;}"
-        qss = "QMainWindow#mainWindow{border-image:url(./resources/image/rainbow.jpg);}"
-        self.setStyleSheet(qss)
+
+        randon_num = random.randint(1, 100)
+        if 1 <= randon_num < 10:
+            qss = "QMainWindow#mainWindow{border-image:url(./resources/image/mountain.jpg);}"
+            self.setStyleSheet(qss)
+        elif 10 <= randon_num < 20:
+            qss = "QMainWindow#mainWindow{border-image:url(./resources/image/rainbow.jpg);}"
+            self.setStyleSheet(qss)
+        elif 20 <= randon_num < 30:
+            qss = "QMainWindow#mainWindow{border-image:url(./resources/image/sea.jpg);}"
+            self.setStyleSheet(qss)
+        else:
+            pass
         self.lock = threading.Lock()  # 数据锁
         try: # 将工区备份至FTP
             self.auto_upload_to_FTP()
         except:
-            print('faild to connect to oracle_data')
+            print('Faild to connect to oracle_data')
 
         # Release OR Debug 版本切换控制
         # TODO
         # 将控制台输出重定向到textBrowser中
-        sys.stdout = EmittingStr(textWritten=self.outputWritten)
-        sys.stderr = EmittingStr(textWritten=self.outputWritten)
+        # sys.stdout = EmittingStr(textWritten=self.outputWritten)
+        # sys.stderr = EmittingStr(textWritten=self.outputWritten)
 
         # 网络版开关
         '''
@@ -171,11 +182,17 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.bit_info_table()
         self.casing_info_table()
 
-        self.comboBox_8.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
+        self.comboBox_8.addItems(['合格', '无连续25m', '不确定', '/'])
         self.comboBox_8.setCurrentText('/')
 
-        self.comboBox_9.addItems(['好', '中', '差', '好到中', '中到差', '好到中到差', '/'])
+        self.comboBox_9.addItems(['合格', '无连续25m', '不确定', '/'])
         self.comboBox_9.setCurrentText('/')
+
+        self.comboBox_11.addItems(['合格', '无连续25m', '不确定', '/'])
+        self.comboBox_11.setCurrentText('/')
+
+        self.comboBox_12.addItems(['合格', '无连续25m', '不确定', '/'])
+        self.comboBox_12.setCurrentText('/')
 
         choices_list1 = ["李海军", "陈海祥", "杨艺", "朱莉", "何强", "罗文", "王昌德", "周政英", "孙路路", '?']
         self.comboBox_2.addItems(choices_list1)
@@ -760,6 +777,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         start_Evaluation = start_Evaluation.replace('.00', '').replace('.0', '').replace('.50', '.5')
         end_Evaluation = end_Evaluation.replace('.00', '').replace('.0', '').replace('.50', '.5')
+        # 新规定，起始评价深度从0米开始
+        # TODO
+        if float(start_Evaluation) < 200:
+            start_Evaluation = '0'
         well_Times_Name = ''.join([well_Name, '_VDL_', logging_Date, '(', start_Evaluation, '-', end_Evaluation, ')'])
         self.lineEdit_3.setText(well_Times_Name)
 
@@ -1140,8 +1161,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         try:
             oriImg = Image.open(fileDir)
             self.addImg_100(oriImg)
-            QMessageBox.information(self, "提示", "签名成功，即将打开图片")
-            oriImg.show()
+            QMessageBox.information(self, "提示", "签名成功")
+            # oriImg.show()
         except IOError:
             QMessageBox.information(self, "提示", "不能打开，请确认路径是否正确")
 
@@ -1154,8 +1175,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         try:
             oriImg = Image.open(fileDir)
             self.addImg_150(oriImg)
-            QMessageBox.information(self, "提示", "签名成功，即将打开图片")
-            oriImg.show()
+            QMessageBox.information(self, "提示", "签名成功")
+            # oriImg.show()
         except IOError:
             QMessageBox.information(self, "提示", "不能打开，请确认路径是否正确")
 
@@ -1219,7 +1240,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         ######################################################################## X坐标
         x_Coordinate = document.tables[0].cell(5, 2).text.replace(' ', '').replace('（X）', '').replace('横', '').replace(
-            '纵', '').replace('m', '').replace(':', '').replace('：', '').replace('(X)', '')
+            '纵', '').replace('m', '').replace(':', '').replace('：', '').replace('(X)', '').replace('（Y）', '').replace('(Y)', '')
         if x_Coordinate == '':
             x_Coordinate = '-99999'
         self.lineEdit_9.setText(x_Coordinate)
@@ -1227,7 +1248,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         ######################################################################## Y坐标
         y_Coordinate = document.tables[0].cell(5, 4).text.replace(' ', '').replace('（Y）', '').replace('横', '').replace(
-            '纵', '').replace('m', '').replace(':', '').replace('：', '').replace('(Y)', '')
+            '纵', '').replace('m', '').replace(':', '').replace('：', '').replace('(Y)', '').replace('（X）', '').replace('(X)', '')
         if y_Coordinate == '':
             y_Coordinate = '-99999'
         self.lineEdit_10.setText(y_Coordinate)
@@ -1261,23 +1282,25 @@ class Main_window(QMainWindow, Ui_MainWindow):
         self.lineEdit_17.setText(oil_Field)
         ######################################################################## 钻井单位
         drilling_Unit = document.tables[0].cell(15, 2).text.replace(' ', '')
-        if drilling_Unit == '':
-            drilling_Unit = '-99999'
+        # if drilling_Unit == '':
+        #     drilling_Unit = '-99999'
         self.lineEdit_74.setText(drilling_Unit)
         ######################################################################## 通过钻井单位推断固井单位
         cement_Unit = ''
         if '川' in drilling_Unit:
-            cement_Unit = '川庆井下'
+            cement_Unit = '川庆钻探'
         elif '中原' in drilling_Unit:
             cement_Unit = '中原钻井'
         elif '长城' in drilling_Unit:
             cement_Unit = '长城钻探'
         elif '大庆' in drilling_Unit:
             cement_Unit = '大庆钻探'
+        elif '渤' in drilling_Unit:
+            cement_Unit = '渤海钻探'
         else:
             cement_Unit == ''
-        if cement_Unit == '':
-            cement_Unit = '-99999'
+        # if cement_Unit == '':
+        #     cement_Unit = '-99999'
         self.lineEdit_25.setText(cement_Unit)
         ######################################################################## 开钻日期
         spud_Date = document.tables[0].cell(16, 2).text
@@ -1289,7 +1312,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             spud_Date3 = spud_Date.split('月')[1].split('日')[0]
             spud_Date = '-'.join([spud_Date1, spud_Date2, spud_Date3])
             if spud_Date1 == '' and spud_Date2 == '' and spud_Date3 == '':
-                spud_Date = '1900-01-01'
+                spud_Date = '' # '1900-01-01'
             try:
                 spud_Date = datetime.strptime(spud_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
@@ -1300,7 +1323,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             spud_Date3 = spud_Date.split('-')[2]
             spud_Date = '-'.join([spud_Date1, spud_Date2, spud_Date3])
             if spud_Date1 == '' and spud_Date2 == '' and spud_Date3 == '':
-                spud_Date = '1900-01-01'
+                spud_Date = '' # '1900-01-01'
             try:
                 spud_Date = datetime.strptime(spud_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
@@ -1311,13 +1334,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
             spud_Date3 = spud_Date.split('.')[2]
             spud_Date = '-'.join([spud_Date1, spud_Date2, spud_Date3])
             if spud_Date1 == '' and spud_Date2 == '' and spud_Date3 == '':
-                spud_Date = '1900-01-01'
+                spud_Date = '' # '1900-01-01'
             try:
                 spud_Date = datetime.strptime(spud_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
                 QMessageBox.information(self, "提示", "请检查spud_Date（开钻日期）是否为空")
         if spud_Date == '':
-            spud_Date = '1900-01-01'
+            spud_Date = '' # '1900-01-01'
         self.lineEdit_20.setText(spud_Date)
         ######################################################################## 完钻日期
         end_Drilling_Date = document.tables[0].cell(17, 2).text
@@ -1329,7 +1352,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             end_Drilling_Date3 = end_Drilling_Date.split('月')[1].split('日')[0]
             end_Drilling_Date = '-'.join([end_Drilling_Date1, end_Drilling_Date2, end_Drilling_Date3])
             if end_Drilling_Date1 == '' and end_Drilling_Date2 == '' and end_Drilling_Date3 == '':
-                end_Drilling_Date = '1900-01-01'
+                end_Drilling_Date = '' # '1900-01-01'
             try:
                 end_Drilling_Date = datetime.strptime(end_Drilling_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
@@ -1340,7 +1363,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             end_Drilling_Date3 = end_Drilling_Date.split('-')[2]
             end_Drilling_Date = '-'.join([end_Drilling_Date1, end_Drilling_Date2, end_Drilling_Date3])
             if end_Drilling_Date1 == '' and end_Drilling_Date2 == '' and end_Drilling_Date3 == '':
-                end_Drilling_Date = '1900-01-01'
+                end_Drilling_Date = '' # '1900-01-01'
             try:
                 end_Drilling_Date = datetime.strptime(end_Drilling_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
@@ -1351,13 +1374,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
             end_Drilling_Date3 = end_Drilling_Date.split('.')[2]
             end_Drilling_Date = '-'.join([end_Drilling_Date1, end_Drilling_Date2, end_Drilling_Date3])
             if end_Drilling_Date1 == '' and end_Drilling_Date2 == '' and end_Drilling_Date3 == '':
-                end_Drilling_Date = '1900-01-01'
+                end_Drilling_Date = '' # '1900-01-01'
             try:
                 end_Drilling_Date = datetime.strptime(end_Drilling_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
                 QMessageBox.information(self, "提示", "请检查end_Drilling_Date（完钻日期）是否为空")
         if end_Drilling_Date == '':
-            end_Drilling_Date = '1900-01-01'
+            end_Drilling_Date = '' # '1900-01-01'
         self.lineEdit_21.setText(end_Drilling_Date)
         ######################################################################## 完井日期
         completion_Date = document.tables[0].cell(18, 2).text
@@ -1369,7 +1392,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             completion_Date3 = completion_Date.split('月')[1].split('日')[0].replace(' ', '')
             completion_Date = '-'.join([completion_Date1, completion_Date2, completion_Date3])
             if completion_Date1 == '' and completion_Date2 == '' and completion_Date3 == '':
-                completion_Date = '1900-01-01'
+                completion_Date = '' # '1900-01-01'
             try:
                 completion_Date = datetime.strptime(completion_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
@@ -1380,7 +1403,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             completion_Date3 = completion_Date.split('-')[2]
             completion_Date = '-'.join([completion_Date1, completion_Date2, completion_Date3])
             if completion_Date1 == '' and completion_Date2 == '' and completion_Date3 == '':
-                completion_Date = '1900-01-01'
+                completion_Date = '' # '1900-01-01'
             try:
                 completion_Date = datetime.strptime(completion_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
@@ -1391,13 +1414,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
             completion_Date3 = completion_Date.split('.')[2]
             completion_Date = '-'.join([completion_Date1, completion_Date2, completion_Date3])
             if completion_Date1 == '' and completion_Date2 == '' and completion_Date3 == '':
-                completion_Date = '1900-01-01'
+                completion_Date = '' # '1900-01-01'
             try:
                 completion_Date = datetime.strptime(completion_Date, '%Y-%m-%d').strftime("%Y-%m-%d")
             except:
                 QMessageBox.information(self, "提示", "请检查completion_Date（完井日期）是否为空")
         if completion_Date == '':
-            completion_Date = '1900-01-01'
+            completion_Date = '' # '1900-01-01'
         self.lineEdit_39.setText(completion_Date)
         ######################################################################## 钻头数据
         bit1_Diameter = document.tables[0].cell(20, 2).text.strip()
@@ -1582,6 +1605,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
             elif '黄草峡' in stru_Position:
                 stru_Position = '黄草峡'
         self.lineEdit_18.setText(stru_Position)
+        # 目的层层位goal_layer_name
+        goal_layer_name = document.tables[0].cell(32, 2).text.replace(' ', '')
+        self.lineEdit_118.setText(goal_layer_name)
+
         ######################################################################## 任务单号
         task_Number = document.tables[1].cell(1, 3).text.strip()
         self.lineEdit_19.setText(task_Number)
@@ -1648,7 +1675,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             except:
                 QMessageBox.information(self, "提示", "格式化cement_End_Time时报错")
         else:
-            cement_End_Date = '1900-01-01'
+            cement_End_Date = '' # '1900-01-01'
         self.lineEdit_101.setText(cement_End_Time)
         self.lineEdit_22.setText(cement_End_Date)
 
@@ -1682,485 +1709,1019 @@ class Main_window(QMainWindow, Ui_MainWindow):
             interpretation_Complete_Time = logging_End_Time + one_day  # 加一天
             interpretation_Complete_Date = interpretation_Complete_Time.strftime("%Y-%m-%d")
         else:
-            interpretation_Complete_Date = '1900-01-01'
+            interpretation_Complete_Date = '' # '1900-01-01'
         self.lineEdit_55.setText(interpretation_Complete_Date)
 
-        ######################################################################## 最大井斜斜度
-        try:
-            max_Well_Deviation = document.tables[2].cell(1, 2).text
-            max_Well_Deviation = max_Well_Deviation.replace(' ', '').replace('°', '')
-            max_Well_Deviation = round(float(max_Well_Deviation), 2)
-            max_Well_Deviation = str(max_Well_Deviation)
-        except:
-            # QMessageBox.information(self, "提示", "请检查max_Well_Deviation（最大井斜）是否为空")
-            max_Well_Deviation = '-99999'
-        self.lineEdit_28.setText(max_Well_Deviation)
+        #############################################################################
+        # 主要为了考虑document.tables[2]表格的多种格式的冗长代码
+        # TODO
+        #############################################################################
+        if '井次基本信息' in document.tables[2].cell(0, 11).text:
+            ######################################################################## 最大井斜斜度
+            try:
+                max_Well_Deviation = document.tables[2].cell(1, 2).text
+                max_Well_Deviation = max_Well_Deviation.replace(' ', '').replace('°', '')
+                max_Well_Deviation = round(float(max_Well_Deviation), 2)
+                max_Well_Deviation = str(max_Well_Deviation)
+            except:
+                # QMessageBox.information(self, "提示", "请检查max_Well_Deviation（最大井斜）是否为空")
+                max_Well_Deviation = '-99999'
+            self.lineEdit_28.setText(max_Well_Deviation)
 
-        ######################################################################## 最大井斜深度
-        try:
-            max_Well_Deviation_Depth = document.tables[2].cell(1, 7).text
-            max_Well_Deviation_Depth = max_Well_Deviation_Depth.replace(' ', '').replace('m', '')
-            max_Well_Deviation_Depth = round(float(max_Well_Deviation_Depth), 2)
-            max_Well_Deviation_Depth = str(max_Well_Deviation_Depth)
-        except:
-            # QMessageBox.information(self, "提示", "请检查max_Well_Deviation_Depth（最大井斜深度）是否为空")
-            max_Well_Deviation_Depth = '-99999'
-        self.lineEdit_24.setText(max_Well_Deviation_Depth)
+            ######################################################################## 最大井斜深度
+            try:
+                max_Well_Deviation_Depth = document.tables[2].cell(1, 11).text
+                max_Well_Deviation_Depth = max_Well_Deviation_Depth.replace(' ', '').replace('m', '')
+                max_Well_Deviation_Depth = round(float(max_Well_Deviation_Depth), 2)
+                max_Well_Deviation_Depth = str(max_Well_Deviation_Depth)
+            except:
+                # QMessageBox.information(self, "提示", "请检查max_Well_Deviation_Depth（最大井斜深度）是否为空")
+                max_Well_Deviation_Depth = '-99999'
+            self.lineEdit_24.setText(max_Well_Deviation_Depth)
 
-        if max_Well_Deviation != '' and max_Well_Deviation_Depth != '' and max_Well_Deviation != '-99999' and max_Well_Deviation_Depth != '-99999':
-            dev_Depth_Ratio = ''.join([max_Well_Deviation, '/', max_Well_Deviation_Depth])
+            if max_Well_Deviation != '' and max_Well_Deviation_Depth != '' and max_Well_Deviation != '-99999' and max_Well_Deviation_Depth != '-99999':
+                dev_Depth_Ratio = ''.join([max_Well_Deviation, '/', max_Well_Deviation_Depth])
+            else:
+                dev_Depth_Ratio = ''
+            self.lineEdit_26.setText(dev_Depth_Ratio)
+
+            ######################################################################## 人工井底arti_Bottom
+            try:
+                artificial_Bottom_of_Well = document.tables[2].cell(2, 2).text.strip()
+                artificial_Bottom_of_Well = artificial_Bottom_of_Well.replace(' ', '')
+                artificial_Bottom_of_Well = artificial_Bottom_of_Well.replace('m', '')
+                artificial_Bottom_of_Well = round(float(artificial_Bottom_of_Well), 2)
+                artificial_Bottom_of_Well = str(artificial_Bottom_of_Well)
+                # 确保整数后面也有小数，为了好看
+                if '.' in artificial_Bottom_of_Well:
+                    arti_Bottom = artificial_Bottom_of_Well
+                else:
+                    if artificial_Bottom_of_Well != '':
+                        arti_Bottom = ''.join([artificial_Bottom_of_Well, '.00'])
+                    else:
+                        arti_Bottom = ''
+            except:
+                # QMessageBox.information(self, "提示", "请检查arti_Bottom（人工井底）是否为空")
+                arti_Bottom = '-99999'
+            self.lineEdit_65.setText(arti_Bottom)
+            ######################################################################## 已注入水泥量cement_Quantity
+            try:
+                cement_Quantity = document.tables[2].cell(3, 11).text
+                cement_Quantity = cement_Quantity.replace(' ', '')
+                cement_Quantity = cement_Quantity.replace('T', '')
+                cement_Quantity = cement_Quantity.replace('t', '')
+                cement_Quantity = cement_Quantity.replace('m3', '')
+                cement_Quantity = round(float(cement_Quantity), 2)
+                cement_Quantity = str(cement_Quantity)
+            except:
+                QMessageBox.information(self, "提示", "请检查cement_Quantity（水泥量）是否为空")
+                cement_Quantity = '-99999'
+            self.lineEdit_71.setText(cement_Quantity)
+
+            ######################################################################## 水泥密度cement_Density
+            cement_Density = ''
+            slow_Cement_Density = document.tables[2].cell(7, 11).text.strip()
+            fast_Cement_Density = document.tables[2].cell(8, 11).text.strip()
+            if slow_Cement_Density == '':
+                cement_Density = fast_Cement_Density
+            elif fast_Cement_Density == '':
+                cement_Density = slow_Cement_Density
+            elif eval(str(slow_Cement_Density)) == eval(str(fast_Cement_Density)):
+                cement_Density = fast_Cement_Density
+            elif eval(str(slow_Cement_Density)) > eval(str(fast_Cement_Density)):
+                cement_Density = ''.join([fast_Cement_Density, '~', slow_Cement_Density])
+            elif eval(str(slow_Cement_Density)) < eval(str(fast_Cement_Density)):
+                cement_Density = ''.join([slow_Cement_Density, '~', fast_Cement_Density])
+            other_Cement_Density = document.tables[2].cell(9, 7).text.strip()
+            if other_Cement_Density != '' and cement_Density == '':
+                cement_Density = other_Cement_Density
+            self.lineEdit_72.setText(cement_Density)
+
+            # 密度大于1.75产生警告
+            try:
+                if slow_Cement_Density != '':
+                    slow_Density = float(slow_Cement_Density)
+                if fast_Cement_Density != '':
+                    fast_Density = float(fast_Cement_Density)
+                if slow_Density >= 1.75 or fast_Density >= 1.75:
+                    self.label_134.setText('注意要按照15/30标准处理')
+                    self.label_134.setStyleSheet("font: 12pt")
+                    self.label_134.setStyleSheet("color: rgb(255, 0, 0)")
+                else:
+                    pass
+            except:
+                pass
+
+            ######################################################################## 水泥设计返高design_Depth
+            try:
+                design_Depth = document.tables[2].cell(5, 2).text.strip()
+                design_Depth = design_Depth.replace(' ', '')
+                design_Depth = design_Depth.replace('m', '').replace('.0', '').replace('.00', '')
+                if design_Depth in ['井口', '地面']:
+                    design_Depth = '0'
+            except:
+                QMessageBox.information(self, "提示", "请检查design_Depth（水泥设计返高）是否为空")
+                design_Depth = '-99999'
+            self.lineEdit_69.setText(design_Depth)
+            if design_Depth == '':
+                self.lineEdit_69.setText('0')
+
+            ######################################################################## 水泥实际返高actual_Depth
+            try:
+                actual_Depth = document.tables[2].cell(5, 11).text.strip()
+                actual_Depth = actual_Depth.replace(' ', '')
+                actual_Depth = actual_Depth.replace('m', '')
+                actual_Depth = actual_Depth.replace('以上', '')
+                actual_Depth = actual_Depth.replace('（', '')
+                actual_Depth = actual_Depth.replace('）', '')
+                actual_Depth = actual_Depth.replace('(', '')
+                actual_Depth = actual_Depth.replace(')', '')
+                actual_Depth = actual_Depth.replace('地面', '0')
+                actual_Depth = actual_Depth.replace('井口', '0')
+                actual_Depth = actual_Depth.replace('.00', '.0')
+                if '.' in actual_Depth:
+                    actual_Depth = actual_Depth
+                else:
+                    if actual_Depth == '0':
+                        actual_Depth = actual_Depth
+                    elif actual_Depth != '':
+                        actual_Depth = ''.join([actual_Depth, '.0'])
+                    else:
+                        actual_Depth = ''
+            except:
+                QMessageBox.information(self, "提示", "请检查actual_Depth（水泥实际返高）是否为空")
+                actual_Depth = '-99999'
+            self.lineEdit_70.setText(actual_Depth)
+            try:
+                if int(actual_Depth) < 200:
+                    self.lineEdit_107.setText('地面')
+                else:
+                    pass
+            except:
+                pass
+
+            # 利用相对定位找寻套管数据起始坐标
+            table = document.tables[2]
+            for row in range(len(table.rows)):
+                for col in range(len(table.columns)):
+                    # table.cell(row, col).text += '({0},{1})'.format(row, col)  # 给文本中的单元格添加表格坐标
+                    if '钢级' in table.cell(row, col).text:
+                        # print('(', str(row), ',', str(col), '):', table.cell(row, col).text)
+                        row_reference = row
+                        ######################################################################## 套管数据
+            # 套管外径
+            casing1_Dia = document.tables[2].cell(row_reference + 1, 5).text.strip()
+            casing2_Dia = document.tables[2].cell(row_reference + 2, 5).text.strip()
+            casing3_Dia = document.tables[2].cell(row_reference + 3, 5).text.strip()
+            casing4_Dia = document.tables[2].cell(row_reference + 4, 5).text.strip()
+            casing5_Dia = document.tables[2].cell(row_reference + 5, 5).text.strip()
+            casing6_Dia = document.tables[2].cell(row_reference + 6, 5).text.strip()
+            casing7_Dia = document.tables[2].cell(row_reference + 7, 5).text.strip()
+            casing8_Dia = document.tables[2].cell(row_reference + 8, 5).text.strip()
+            casing9_Dia = document.tables[2].cell(row_reference + 9, 5).text.strip()
+            casing10_Dia = document.tables[2].cell(row_reference + 10, 5).text.strip()
+            casing11_Dia = document.tables[2].cell(row_reference + 11, 5).text.strip()
+            casing12_Dia = document.tables[2].cell(row_reference + 12, 5).text.strip()
+            self.tableWidget_7.setItem(0, 1, QTableWidgetItem(str(casing1_Dia)))
+            self.tableWidget_7.setItem(1, 1, QTableWidgetItem(str(casing2_Dia)))
+            self.tableWidget_7.setItem(2, 1, QTableWidgetItem(str(casing3_Dia)))
+            self.tableWidget_7.setItem(3, 1, QTableWidgetItem(str(casing4_Dia)))
+            self.tableWidget_7.setItem(4, 1, QTableWidgetItem(str(casing5_Dia)))
+
+            # 套管内径
+            casing1_Inner_Dia = document.tables[2].cell(row_reference + 1, 7).text.strip()
+            casing2_Inner_Dia = document.tables[2].cell(row_reference + 2, 7).text.strip()
+            casing3_Inner_Dia = document.tables[2].cell(row_reference + 3, 7).text.strip()
+            casing4_Inner_Dia = document.tables[2].cell(row_reference + 4, 7).text.strip()
+            casing5_Inner_Dia = document.tables[2].cell(row_reference + 5, 7).text.strip()
+            casing6_Inner_Dia = document.tables[2].cell(row_reference + 6, 7).text.strip()
+            casing7_Inner_Dia = document.tables[2].cell(row_reference + 7, 7).text.strip()
+            casing8_Inner_Dia = document.tables[2].cell(row_reference + 8, 7).text.strip()
+            casing9_Inner_Dia = document.tables[2].cell(row_reference + 9, 7).text.strip()
+            casing10_Inner_Dia = document.tables[2].cell(row_reference + 10, 7).text.strip()
+            casing11_Inner_Dia = document.tables[2].cell(row_reference + 11, 7).text.strip()
+            casing12_Inner_Dia = document.tables[2].cell(row_reference + 12, 7).text.strip()
+            self.tableWidget_7.setItem(0, 0, QTableWidgetItem(str(casing1_Inner_Dia)))
+            self.tableWidget_7.setItem(1, 0, QTableWidgetItem(str(casing2_Inner_Dia)))
+            self.tableWidget_7.setItem(2, 0, QTableWidgetItem(str(casing3_Inner_Dia)))
+            self.tableWidget_7.setItem(3, 0, QTableWidgetItem(str(casing4_Inner_Dia)))
+            self.tableWidget_7.setItem(4, 0, QTableWidgetItem(str(casing5_Inner_Dia)))
+
+            # 套管壁厚
+            casing1_Thickness = document.tables[2].cell(row_reference + 1, 8).text.strip().replace('尺寸（mm）', '')
+            casing2_Thickness = document.tables[2].cell(row_reference + 2, 8).text.strip().replace('尺寸（mm）', '')
+            casing3_Thickness = document.tables[2].cell(row_reference + 3, 8).text.strip().replace('尺寸（mm）', '')
+            casing4_Thickness = document.tables[2].cell(row_reference + 4, 8).text.strip().replace('尺寸（mm）', '')
+            casing5_Thickness = document.tables[2].cell(row_reference + 5, 8).text.strip().replace('尺寸（mm）', '')
+            casing6_Thickness = document.tables[2].cell(row_reference + 6, 8).text.strip().replace('尺寸（mm）', '')
+            casing7_Thickness = document.tables[2].cell(row_reference + 7, 8).text.strip().replace('尺寸（mm）', '')
+            casing8_Thickness = document.tables[2].cell(row_reference + 8, 8).text.strip().replace('尺寸（mm）', '')
+            casing9_Thickness = document.tables[2].cell(row_reference + 9, 8).text.strip().replace('尺寸（mm）', '')
+            casing10_Thickness = document.tables[2].cell(row_reference + 10, 8).text.strip().replace('尺寸（mm）', '')
+            casing11_Thickness = document.tables[2].cell(row_reference + 11, 8).text.strip().replace('尺寸（mm）', '')
+            casing12_Thickness = document.tables[2].cell(row_reference + 12, 8).text.strip().replace('尺寸（mm）', '')
+            self.tableWidget_7.setItem(0, 2, QTableWidgetItem(str(casing1_Thickness)))
+            self.tableWidget_7.setItem(1, 2, QTableWidgetItem(str(casing2_Thickness)))
+            self.tableWidget_7.setItem(2, 2, QTableWidgetItem(str(casing3_Thickness)))
+            self.tableWidget_7.setItem(3, 2, QTableWidgetItem(str(casing4_Thickness)))
+            self.tableWidget_7.setItem(4, 2, QTableWidgetItem(str(casing5_Thickness)))
+
+            # 避免套管下深井段为单数字而不为井段
+            casing1_bottom = ''
+            casing2_bottom = ''
+            casing3_bottom = ''
+            casing4_bottom = ''
+            casing5_bottom = ''
+            casing6_bottom = ''
+            casing7_bottom = ''
+            casing8_bottom = ''
+            casing9_bottom = ''
+            casing10_bottom = ''
+            casing11_bottom = ''
+            casing12_bottom = ''
+
+            casing1_interval = document.tables[2].cell(row_reference + 1, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing1_interval = casing1_interval.replace(' ', '')
+            casing1_interval = casing1_interval.replace('～', '-')
+            casing1_interval = casing1_interval.replace('~', '-')
+            if '~' not in casing1_interval and '～' not in casing1_interval and \
+                    '-' not in casing1_interval and casing1_interval != '':
+                casing1_interval = ''.join(['0', '-', casing1_interval])
+            if casing1_interval != '':
+                casing1_bottom = casing1_interval.split('-')[1]
+            self.tableWidget_7.setItem(0, 3, QTableWidgetItem(str(casing1_bottom)))
+            self.tableWidget_7.setItem(0, 4, QTableWidgetItem(str(casing1_interval)))
+
+            casing2_interval = document.tables[2].cell(row_reference + 2, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing2_interval = casing2_interval.replace(' ', '')
+            casing2_interval = casing2_interval.replace('～', '-')
+            casing2_interval = casing2_interval.replace('~', '-')
+            if '~' not in casing2_interval and '～' not in casing2_interval and \
+                    '-' not in casing2_interval and casing2_interval != '':
+                casing2_interval = ''.join(['0', '-', casing2_interval])
+            if casing2_interval != '':
+                casing2_bottom = casing2_interval.split('-')[1]
+            self.tableWidget_7.setItem(1, 3, QTableWidgetItem(str(casing2_bottom)))
+            self.tableWidget_7.setItem(1, 4, QTableWidgetItem(str(casing2_interval)))
+
+            casing3_interval = document.tables[2].cell(row_reference + 3, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing3_interval = casing3_interval.replace(' ', '')
+            casing3_interval = casing3_interval.replace('～', '-')
+            casing3_interval = casing3_interval.replace('~', '-')
+            if '~' not in casing3_interval and '～' not in casing3_interval and \
+                    '-' not in casing3_interval and casing3_interval != '':
+                casing3_interval = ''.join(['0', '-', casing3_interval])
+            if casing3_interval != '':
+                casing3_bottom = casing3_interval.split('-')[1]
+            self.tableWidget_7.setItem(2, 3, QTableWidgetItem(str(casing3_bottom)))
+            self.tableWidget_7.setItem(2, 4, QTableWidgetItem(str(casing3_interval)))
+
+            casing4_interval = document.tables[2].cell(row_reference + 4, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing4_interval = casing4_interval.replace(' ', '')
+            casing4_interval = casing4_interval.replace('～', '-')
+            casing4_interval = casing4_interval.replace('~', '-')
+            if '~' not in casing4_interval and '～' not in casing4_interval and \
+                    '-' not in casing4_interval and casing4_interval != '':
+                casing4_interval = ''.join(['0', '-', casing4_interval])
+            if casing4_interval != '':
+                casing4_bottom = casing4_interval.split('-')[1]
+            self.tableWidget_7.setItem(3, 3, QTableWidgetItem(str(casing4_bottom)))
+            self.tableWidget_7.setItem(3, 4, QTableWidgetItem(str(casing4_interval)))
+
+            casing5_interval = document.tables[2].cell(row_reference + 5, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing5_interval = casing5_interval.replace(' ', '')
+            casing5_interval = casing5_interval.replace('～', '-')
+            casing5_interval = casing5_interval.replace('~', '-')
+            if '~' not in casing5_interval and '～' not in casing5_interval and \
+                    '-' not in casing5_interval and casing5_interval != '':
+                casing5_interval = ''.join(['0', '-', casing5_interval])
+            if casing5_interval != '':
+                casing5_bottom = casing5_interval.split('-')[1]
+            self.tableWidget_7.setItem(4, 3, QTableWidgetItem(str(casing5_bottom)))
+            self.tableWidget_7.setItem(4, 4, QTableWidgetItem(str(casing5_interval)))
+
+            casing6_interval = document.tables[2].cell(row_reference + 6, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing6_interval = casing6_interval.replace(' ', '')
+            casing6_interval = casing6_interval.replace('～', '-')
+            casing6_interval = casing6_interval.replace('~', '-')
+            if '~' not in casing6_interval and '～' not in casing6_interval and \
+                    '-' not in casing6_interval and casing6_interval != '':
+                casing6_interval = ''.join(['0', '-', casing6_interval])
+            if casing6_interval != '':
+                casing6_bottom = casing6_interval.split('-')[1]
+
+            casing7_interval = document.tables[2].cell(row_reference + 7, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing7_interval = casing7_interval.replace(' ', '')
+            casing7_interval = casing7_interval.replace('～', '-')
+            casing7_interval = casing7_interval.replace('~', '-')
+            if '~' not in casing7_interval and '～' not in casing7_interval and \
+                    '-' not in casing7_interval and casing7_interval != '':
+                casing7_interval = ''.join(['0', '-', casing7_interval])
+            if casing7_interval != '':
+                casing7_bottom = casing7_interval.split('-')[1]
+
+            casing8_interval = document.tables[2].cell(row_reference + 8, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing8_interval = casing8_interval.replace(' ', '')
+            casing8_interval = casing8_interval.replace('～', '-')
+            casing8_interval = casing8_interval.replace('~', '-')
+            if '~' not in casing8_interval and '～' not in casing8_interval and \
+                    '-' not in casing8_interval and casing8_interval != '':
+                casing8_interval = ''.join(['0', '-', casing8_interval])
+            if casing8_interval != '':
+                casing8_bottom = casing8_interval.split('-')[1]
+
+            casing9_interval = document.tables[2].cell(row_reference + 9, 9).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing9_interval = casing9_interval.replace(' ', '')
+            casing9_interval = casing9_interval.replace('～', '-')
+            casing9_interval = casing9_interval.replace('~', '-')
+            if '~' not in casing9_interval and '～' not in casing9_interval and \
+                    '-' not in casing9_interval and casing9_interval != '':
+                casing9_interval = ''.join(['0', '-', casing9_interval])
+            if casing9_interval != '':
+                casing9_bottom = casing9_interval.split('-')[1]
+
+            casing10_interval = document.tables[2].cell(row_reference + 10, 9).text.strip().replace('测量井段（m）',
+                                                                                                    '').replace('m', '')
+            casing10_interval = casing10_interval.replace(' ', '')
+            casing10_interval = casing10_interval.replace('～', '-')
+            casing10_interval = casing10_interval.replace('~', '-')
+            if '~' not in casing10_interval and '～' not in casing10_interval and \
+                    '-' not in casing10_interval and casing10_interval != '':
+                casing10_interval = ''.join(['0', '-', casing10_interval])
+            if casing10_interval != '':
+                casing10_bottom = casing10_interval.split('-')[1]
+
+            casing11_interval = document.tables[2].cell(row_reference + 11, 9).text.strip().replace('测量井段（m）',
+                                                                                                    '').replace('m', '')
+            casing11_interval = casing11_interval.replace(' ', '')
+            casing11_interval = casing11_interval.replace('～', '-')
+            casing11_interval = casing11_interval.replace('~', '-')
+            if '~' not in casing11_interval and '～' not in casing11_interval and \
+                    '-' not in casing11_interval and casing11_interval != '':
+                casing11_interval = ''.join(['0', '-', casing11_interval])
+            if casing11_interval != '':
+                casing11_bottom = casing11_interval.split('-')[1]
+
+            casing12_interval = document.tables[2].cell(row_reference + 12, 9).text.strip().replace('测量井段（m）',
+                                                                                                    '').replace('m', '')
+            casing12_interval = casing12_interval.replace(' ', '')
+            casing12_interval = casing12_interval.replace('～', '-')
+            casing12_interval = casing12_interval.replace('~', '-')
+            if '~' not in casing12_interval and '～' not in casing12_interval and \
+                    '-' not in casing12_interval and casing12_interval != '':
+                casing12_interval = ''.join(['0', '-', casing12_interval])
+            if casing12_interval != '':
+                casing12_bottom = casing12_interval.split('-')[1]
+
+            # 目标套管尺寸casing_Goal
+            temp_list = ['', '类  型', '弹簧扶正器', '橡胶扶正器', '橡胶', '外径（mm）']
+            if casing12_Dia not in temp_list:
+                casing_Goal = casing12_Dia
+            elif casing11_Dia not in temp_list:
+                casing_Goal = casing11_Dia
+            elif casing10_Dia not in temp_list:
+                casing_Goal = casing10_Dia
+            elif casing9_Dia not in temp_list:
+                casing_Goal = casing9_Dia
+            elif casing8_Dia not in temp_list:
+                casing_Goal = casing8_Dia
+            elif casing7_Dia not in temp_list:
+                casing_Goal = casing7_Dia
+            elif casing6_Dia not in temp_list:
+                casing_Goal = casing6_Dia
+            elif casing5_Dia not in temp_list:
+                casing_Goal = casing5_Dia
+            elif casing4_Dia not in temp_list:
+                casing_Goal = casing4_Dia
+            elif casing3_Dia not in temp_list:
+                casing_Goal = casing3_Dia
+            elif casing2_Dia not in temp_list:
+                casing_Goal = casing2_Dia
+            elif casing1_Dia not in temp_list:
+                casing_Goal = casing1_Dia
+            self.lineEdit_108.setText(casing_Goal)
+
+            ######################################################################## 目标套管下深casing_Goal_Depth
+            if casing12_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 12, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 12, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 12, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 12, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 9).text.strip()
+            elif casing11_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 11, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 11, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 11, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 11, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 9).text.strip()
+            elif casing10_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 10, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 10, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 10, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 10, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 9).text.strip()
+            elif casing9_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 9, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 9, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 9, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 9, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 9).text.strip()
+            elif casing8_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 8, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 8, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 8, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 8, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 9).text.strip()
+            elif casing7_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 7, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 7, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 7, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 7, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 9).text.strip()
+            elif casing6_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 6, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 6, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 6, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 6, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 9).text.strip()
+            elif casing5_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 5, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 5, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 5, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 5, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 9).text.strip()
+            elif casing4_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 4, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 4, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 4, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 4, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 9).text.strip()
+            elif casing3_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 3, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 3, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 3, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 3, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 9).text.strip()
+            elif casing2_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 2, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 2, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 2, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 2, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 9).text.strip()
+            elif casing1_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 1, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 9).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 1, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 9).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 1, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 9).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 1, 9).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 9).text.strip()
+            self.lineEdit_109.setText(casing_Goal_Depth)
         else:
-            dev_Depth_Ratio = ''
-        self.lineEdit_26.setText(dev_Depth_Ratio)
+            ######################################################################## 最大井斜斜度
+            try:
+                max_Well_Deviation = document.tables[2].cell(1, 2).text
+                max_Well_Deviation = max_Well_Deviation.replace(' ', '').replace('°', '')
+                max_Well_Deviation = round(float(max_Well_Deviation), 2)
+                max_Well_Deviation = str(max_Well_Deviation)
+            except:
+                # QMessageBox.information(self, "提示", "请检查max_Well_Deviation（最大井斜）是否为空")
+                max_Well_Deviation = '-99999'
+            self.lineEdit_28.setText(max_Well_Deviation)
 
-        ######################################################################## 人工井底arti_Bottom
-        try:
-            artificial_Bottom_of_Well = document.tables[2].cell(2, 2).text.strip()
-            artificial_Bottom_of_Well = artificial_Bottom_of_Well.replace(' ', '')
-            artificial_Bottom_of_Well = artificial_Bottom_of_Well.replace('m', '')
-            artificial_Bottom_of_Well = round(float(artificial_Bottom_of_Well), 2)
-            artificial_Bottom_of_Well = str(artificial_Bottom_of_Well)
-            # 确保整数后面也有小数，为了好看
-            if '.' in artificial_Bottom_of_Well:
-                arti_Bottom = artificial_Bottom_of_Well
+            ######################################################################## 最大井斜深度
+            try:
+                max_Well_Deviation_Depth = document.tables[2].cell(1, 7).text
+                max_Well_Deviation_Depth = max_Well_Deviation_Depth.replace(' ', '').replace('m', '')
+                max_Well_Deviation_Depth = round(float(max_Well_Deviation_Depth), 2)
+                max_Well_Deviation_Depth = str(max_Well_Deviation_Depth)
+            except:
+                # QMessageBox.information(self, "提示", "请检查max_Well_Deviation_Depth（最大井斜深度）是否为空")
+                max_Well_Deviation_Depth = '-99999'
+            self.lineEdit_24.setText(max_Well_Deviation_Depth)
+
+            if max_Well_Deviation != '' and max_Well_Deviation_Depth != '' and max_Well_Deviation != '-99999' and max_Well_Deviation_Depth != '-99999':
+                dev_Depth_Ratio = ''.join([max_Well_Deviation, '/', max_Well_Deviation_Depth])
             else:
-                if artificial_Bottom_of_Well != '':
-                    arti_Bottom = ''.join([artificial_Bottom_of_Well, '.00'])
+                dev_Depth_Ratio = ''
+            self.lineEdit_26.setText(dev_Depth_Ratio)
+
+            ######################################################################## 人工井底arti_Bottom
+            try:
+                artificial_Bottom_of_Well = document.tables[2].cell(2, 2).text.strip()
+                artificial_Bottom_of_Well = artificial_Bottom_of_Well.replace(' ', '')
+                artificial_Bottom_of_Well = artificial_Bottom_of_Well.replace('m', '')
+                artificial_Bottom_of_Well = round(float(artificial_Bottom_of_Well), 2)
+                artificial_Bottom_of_Well = str(artificial_Bottom_of_Well)
+                # 确保整数后面也有小数，为了好看
+                if '.' in artificial_Bottom_of_Well:
+                    arti_Bottom = artificial_Bottom_of_Well
                 else:
-                    arti_Bottom = ''
-        except:
-            # QMessageBox.information(self, "提示", "请检查arti_Bottom（人工井底）是否为空")
-            arti_Bottom = '-99999'
-        self.lineEdit_65.setText(arti_Bottom)
-        ######################################################################## 已注入水泥量cement_Quantity
-        try:
-            cement_Quantity = document.tables[2].cell(3, 7).text
-            cement_Quantity = cement_Quantity.replace(' ', '')
-            cement_Quantity = cement_Quantity.replace('T', '')
-            cement_Quantity = cement_Quantity.replace('t', '')
-            cement_Quantity = cement_Quantity.replace('m3', '')
-            cement_Quantity = round(float(cement_Quantity), 2)
-            cement_Quantity = str(cement_Quantity)
-        except:
-            QMessageBox.information(self, "提示", "请检查cement_Quantity（水泥量）是否为空")
-            cement_Quantity = '-99999'
-        self.lineEdit_71.setText(cement_Quantity)
+                    if artificial_Bottom_of_Well != '':
+                        arti_Bottom = ''.join([artificial_Bottom_of_Well, '.00'])
+                    else:
+                        arti_Bottom = ''
+            except:
+                # QMessageBox.information(self, "提示", "请检查arti_Bottom（人工井底）是否为空")
+                arti_Bottom = '-99999'
+            self.lineEdit_65.setText(arti_Bottom)
+            ######################################################################## 已注入水泥量cement_Quantity
+            try:
+                cement_Quantity = document.tables[2].cell(3, 7).text
+                cement_Quantity = cement_Quantity.replace(' ', '')
+                cement_Quantity = cement_Quantity.replace('T', '')
+                cement_Quantity = cement_Quantity.replace('t', '')
+                cement_Quantity = cement_Quantity.replace('m3', '')
+                cement_Quantity = round(float(cement_Quantity), 2)
+                cement_Quantity = str(cement_Quantity)
+            except:
+                QMessageBox.information(self, "提示", "请检查cement_Quantity（水泥量）是否为空")
+                cement_Quantity = '-99999'
+            self.lineEdit_71.setText(cement_Quantity)
 
-        ######################################################################## 水泥密度cement_Density
-        cement_Density = ''
-        slow_Cement_Density = document.tables[2].cell(7, 7).text.strip()
-        fast_Cement_Density = document.tables[2].cell(8, 7).text.strip()
-        if slow_Cement_Density == '':
-            cement_Density = fast_Cement_Density
-        elif fast_Cement_Density == '':
-            cement_Density = slow_Cement_Density
-        elif eval(str(slow_Cement_Density)) == eval(str(fast_Cement_Density)):
-            cement_Density = fast_Cement_Density
-        elif eval(str(slow_Cement_Density)) > eval(str(fast_Cement_Density)):
-            cement_Density = ''.join([fast_Cement_Density, '~', slow_Cement_Density])
-        elif eval(str(slow_Cement_Density)) < eval(str(fast_Cement_Density)):
-            cement_Density = ''.join([slow_Cement_Density, '~', fast_Cement_Density])
-        other_Cement_Density = document.tables[2].cell(9, 7).text.strip()
-        if other_Cement_Density != '' and cement_Density == '':
-            cement_Density = other_Cement_Density
-        self.lineEdit_72.setText(cement_Density)
+            ######################################################################## 水泥密度cement_Density
+            cement_Density = ''
+            slow_Cement_Density = document.tables[2].cell(7, 7).text.strip()
+            fast_Cement_Density = document.tables[2].cell(8, 7).text.strip()
+            if slow_Cement_Density == '':
+                cement_Density = fast_Cement_Density
+            elif fast_Cement_Density == '':
+                cement_Density = slow_Cement_Density
+            elif eval(str(slow_Cement_Density)) == eval(str(fast_Cement_Density)):
+                cement_Density = fast_Cement_Density
+            elif eval(str(slow_Cement_Density)) > eval(str(fast_Cement_Density)):
+                cement_Density = ''.join([fast_Cement_Density, '~', slow_Cement_Density])
+            elif eval(str(slow_Cement_Density)) < eval(str(fast_Cement_Density)):
+                cement_Density = ''.join([slow_Cement_Density, '~', fast_Cement_Density])
+            other_Cement_Density = document.tables[2].cell(9, 7).text.strip()
+            if other_Cement_Density != '' and cement_Density == '':
+                cement_Density = other_Cement_Density
+            self.lineEdit_72.setText(cement_Density)
 
-        # 密度大于1.75产生警告
-        try:
-            slow_Density = float(slow_Cement_Density)
-            fast_Density = float(fast_Cement_Density)
-            if slow_Density >= 1.75 or fast_Density >= 1.75:
-                self.label_134.setText('注意要按照15/30标准处理')
-                self.label_134.setStyleSheet("font: 12pt")
-                self.label_134.setStyleSheet("color: rgb(255, 0, 0)")
-            else:
-                pass
-        except:
-            pass
-
-        ######################################################################## 水泥设计返高design_Depth
-        try:
-            design_Depth = document.tables[2].cell(5, 2).text.strip()
-            design_Depth = design_Depth.replace(' ', '')
-            design_Depth = design_Depth.replace('m', '')
-            if design_Depth == ['井口', '地面']:
-                design_Depth = '0'
-        except:
-            QMessageBox.information(self, "提示", "请检查design_Depth（水泥设计返高）是否为空")
-            design_Depth = '-99999'
-        self.lineEdit_69.setText(design_Depth)
-        if design_Depth == '':
-            self.lineEdit_69.setText('0')
-
-        ######################################################################## 水泥实际返高actual_Depth
-        try:
-            actual_Depth = document.tables[2].cell(5, 7).text.strip()
-            actual_Depth = actual_Depth.replace(' ', '')
-            actual_Depth = actual_Depth.replace('m', '')
-            actual_Depth = actual_Depth.replace('以上', '')
-            actual_Depth = actual_Depth.replace('（', '')
-            actual_Depth = actual_Depth.replace('）', '')
-            actual_Depth = actual_Depth.replace('(', '')
-            actual_Depth = actual_Depth.replace(')', '')
-            if '.' in actual_Depth:
-                actual_Depth = actual_Depth
-            else:
-                if actual_Depth != '':
-                    actual_Depth = ''.join([actual_Depth, '.0'])
+            # 密度大于1.75产生警告
+            try:
+                slow_Density = float(slow_Cement_Density)
+                fast_Density = float(fast_Cement_Density)
+                if slow_Density >= 1.75 or fast_Density >= 1.75:
+                    self.label_134.setText('注意要按照15/30标准处理')
+                    self.label_134.setStyleSheet("font: 12pt")
+                    self.label_134.setStyleSheet("color: rgb(255, 0, 0)")
                 else:
-                    actual_Depth = ''
-        except:
-            QMessageBox.information(self, "提示", "请检查actual_Depth（水泥实际返高）是否为空")
-            actual_Depth = '-99999'
-        self.lineEdit_70.setText(actual_Depth)
-        try:
-            if int(actual_Depth) < 100:
-                self.lineEdit_107.setText('地面')
-            else:
+                    pass
+            except:
                 pass
-        except:
-            pass
 
-        ######################################################################## 套管数据
-        # 套管外径
-        casing1_Dia = document.tables[2].cell(14, 3).text.strip()
-        casing2_Dia = document.tables[2].cell(15, 3).text.strip()
-        casing3_Dia = document.tables[2].cell(16, 3).text.strip()
-        casing4_Dia = document.tables[2].cell(17, 3).text.strip()
-        casing5_Dia = document.tables[2].cell(18, 3).text.strip()
-        casing6_Dia = document.tables[2].cell(19, 3).text.strip()
-        casing7_Dia = document.tables[2].cell(20, 3).text.strip()
-        casing8_Dia = document.tables[2].cell(21, 3).text.strip()
-        casing9_Dia = document.tables[2].cell(22, 3).text.strip()
-        casing10_Dia = document.tables[2].cell(23, 3).text.strip()
-        casing11_Dia = document.tables[2].cell(24, 3).text.strip()
-        casing12_Dia = document.tables[2].cell(25, 3).text.strip()
-        self.tableWidget_7.setItem(0, 1, QTableWidgetItem(str(casing1_Dia)))
-        self.tableWidget_7.setItem(1, 1, QTableWidgetItem(str(casing2_Dia)))
-        self.tableWidget_7.setItem(2, 1, QTableWidgetItem(str(casing3_Dia)))
-        self.tableWidget_7.setItem(3, 1, QTableWidgetItem(str(casing4_Dia)))
-        self.tableWidget_7.setItem(4, 1, QTableWidgetItem(str(casing5_Dia)))
+            ######################################################################## 水泥设计返高design_Depth
+            try:
+                design_Depth = document.tables[2].cell(5, 2).text.strip()
+                design_Depth = design_Depth.replace(' ', '')
+                design_Depth = design_Depth.replace('m', '').replace('.0', '').replace('.00', '')
+                if design_Depth in ['井口', '地面']:
+                    design_Depth = '0'
+            except:
+                QMessageBox.information(self, "提示", "请检查design_Depth（水泥设计返高）是否为空")
+                design_Depth = '-99999'
+            self.lineEdit_69.setText(design_Depth)
+            if design_Depth == '':
+                self.lineEdit_69.setText('0')
 
-        # 套管内径
-        casing1_Inner_Dia = document.tables[2].cell(14, 4).text.strip()
-        casing2_Inner_Dia = document.tables[2].cell(15, 4).text.strip()
-        casing3_Inner_Dia = document.tables[2].cell(16, 4).text.strip()
-        casing4_Inner_Dia = document.tables[2].cell(17, 4).text.strip()
-        casing5_Inner_Dia = document.tables[2].cell(18, 4).text.strip()
-        casing6_Inner_Dia = document.tables[2].cell(19, 4).text.strip()
-        casing7_Inner_Dia = document.tables[2].cell(20, 4).text.strip()
-        casing8_Inner_Dia = document.tables[2].cell(21, 4).text.strip()
-        casing9_Inner_Dia = document.tables[2].cell(22, 4).text.strip()
-        casing10_Inner_Dia = document.tables[2].cell(23, 4).text.strip()
-        casing11_Inner_Dia = document.tables[2].cell(24, 4).text.strip()
-        casing12_Inner_Dia = document.tables[2].cell(25, 4).text.strip()
-        self.tableWidget_7.setItem(0, 0, QTableWidgetItem(str(casing1_Inner_Dia)))
-        self.tableWidget_7.setItem(1, 0, QTableWidgetItem(str(casing2_Inner_Dia)))
-        self.tableWidget_7.setItem(2, 0, QTableWidgetItem(str(casing3_Inner_Dia)))
-        self.tableWidget_7.setItem(3, 0, QTableWidgetItem(str(casing4_Inner_Dia)))
-        self.tableWidget_7.setItem(4, 0, QTableWidgetItem(str(casing5_Inner_Dia)))
+            ######################################################################## 水泥实际返高actual_Depth
+            try:
+                actual_Depth = document.tables[2].cell(5, 7).text.strip()
+                actual_Depth = actual_Depth.replace(' ', '')
+                actual_Depth = actual_Depth.replace('m', '')
+                actual_Depth = actual_Depth.replace('以上', '')
+                actual_Depth = actual_Depth.replace('（', '')
+                actual_Depth = actual_Depth.replace('）', '')
+                actual_Depth = actual_Depth.replace('(', '')
+                actual_Depth = actual_Depth.replace(')', '')
+                actual_Depth = actual_Depth.replace('地面', '0')
+                actual_Depth = actual_Depth.replace('井口', '0')
+                actual_Depth = actual_Depth.replace('.00', '.0')
+                if '.' in actual_Depth:
+                    actual_Depth = actual_Depth
+                else:
+                    if actual_Depth == '0':
+                        actual_Depth = actual_Depth
+                    elif actual_Depth != '':
+                        actual_Depth = ''.join([actual_Depth, '.0'])
+                    else:
+                        actual_Depth = ''
+            except:
+                QMessageBox.information(self, "提示", "请检查actual_Depth（水泥实际返高）是否为空")
+                actual_Depth = '-99999'
+            self.lineEdit_70.setText(actual_Depth)
+            try:
+                if int(actual_Depth) < 200:
+                    self.lineEdit_107.setText('地面')
+                else:
+                    pass
+            except:
+                pass
 
-        # 套管壁厚
-        casing1_Thickness = document.tables[2].cell(14, 5).text.strip().replace('尺寸（mm）', '')
-        casing2_Thickness = document.tables[2].cell(15, 5).text.strip().replace('尺寸（mm）', '')
-        casing3_Thickness = document.tables[2].cell(16, 5).text.strip().replace('尺寸（mm）', '')
-        casing4_Thickness = document.tables[2].cell(17, 5).text.strip().replace('尺寸（mm）', '')
-        casing5_Thickness = document.tables[2].cell(18, 5).text.strip().replace('尺寸（mm）', '')
-        casing6_Thickness = document.tables[2].cell(19, 5).text.strip().replace('尺寸（mm）', '')
-        casing7_Thickness = document.tables[2].cell(20, 5).text.strip().replace('尺寸（mm）', '')
-        casing8_Thickness = document.tables[2].cell(21, 5).text.strip().replace('尺寸（mm）', '')
-        casing9_Thickness = document.tables[2].cell(22, 5).text.strip().replace('尺寸（mm）', '')
-        casing10_Thickness = document.tables[2].cell(23, 5).text.strip().replace('尺寸（mm）', '')
-        casing11_Thickness = document.tables[2].cell(24, 5).text.strip().replace('尺寸（mm）', '')
-        casing12_Thickness = document.tables[2].cell(25, 5).text.strip().replace('尺寸（mm）', '')
-        self.tableWidget_7.setItem(0, 2, QTableWidgetItem(str(casing1_Thickness)))
-        self.tableWidget_7.setItem(1, 2, QTableWidgetItem(str(casing2_Thickness)))
-        self.tableWidget_7.setItem(2, 2, QTableWidgetItem(str(casing3_Thickness)))
-        self.tableWidget_7.setItem(3, 2, QTableWidgetItem(str(casing4_Thickness)))
-        self.tableWidget_7.setItem(4, 2, QTableWidgetItem(str(casing5_Thickness)))
+            # 利用相对定位找寻套管数据起始坐标
+            table = document.tables[2]
+            for row in range(len(table.rows)):
+                for col in range(len(table.columns)):
+                    # table.cell(row, col).text += '({0},{1})'.format(row, col)  # 给文本中的单元格添加表格坐标
+                    if '钢级' in table.cell(row, col).text:
+                        # print('(', str(row), ',', str(col), '):', table.cell(row, col).text)
+                        row_reference = row
+                        ######################################################################## 套管数据
+            # 套管外径
+            casing1_Dia = document.tables[2].cell(row_reference + 1, 3).text.strip()
+            casing2_Dia = document.tables[2].cell(row_reference + 2, 3).text.strip()
+            casing3_Dia = document.tables[2].cell(row_reference + 3, 3).text.strip()
+            casing4_Dia = document.tables[2].cell(row_reference + 4, 3).text.strip()
+            casing5_Dia = document.tables[2].cell(row_reference + 5, 3).text.strip()
+            casing6_Dia = document.tables[2].cell(row_reference + 6, 3).text.strip()
+            casing7_Dia = document.tables[2].cell(row_reference + 7, 3).text.strip()
+            casing8_Dia = document.tables[2].cell(row_reference + 8, 3).text.strip()
+            casing9_Dia = document.tables[2].cell(row_reference + 9, 3).text.strip()
+            casing10_Dia = document.tables[2].cell(row_reference + 10, 3).text.strip()
+            casing11_Dia = document.tables[2].cell(row_reference + 11, 3).text.strip()
+            casing12_Dia = document.tables[2].cell(row_reference + 12, 3).text.strip()
+            self.tableWidget_7.setItem(0, 1, QTableWidgetItem(str(casing1_Dia)))
+            self.tableWidget_7.setItem(1, 1, QTableWidgetItem(str(casing2_Dia)))
+            self.tableWidget_7.setItem(2, 1, QTableWidgetItem(str(casing3_Dia)))
+            self.tableWidget_7.setItem(3, 1, QTableWidgetItem(str(casing4_Dia)))
+            self.tableWidget_7.setItem(4, 1, QTableWidgetItem(str(casing5_Dia)))
 
-        # 避免套管下深井段为单数字而不为井段
-        casing1_bottom = ''
-        casing2_bottom = ''
-        casing3_bottom = ''
-        casing4_bottom = ''
-        casing5_bottom = ''
-        casing6_bottom = ''
-        casing7_bottom = ''
-        casing8_bottom = ''
-        casing9_bottom = ''
-        casing10_bottom = ''
-        casing11_bottom = ''
-        casing12_bottom = ''
+            # 套管内径
+            casing1_Inner_Dia = document.tables[2].cell(row_reference + 1, 4).text.strip()
+            casing2_Inner_Dia = document.tables[2].cell(row_reference + 2, 4).text.strip()
+            casing3_Inner_Dia = document.tables[2].cell(row_reference + 3, 4).text.strip()
+            casing4_Inner_Dia = document.tables[2].cell(row_reference + 4, 4).text.strip()
+            casing5_Inner_Dia = document.tables[2].cell(row_reference + 5, 4).text.strip()
+            casing6_Inner_Dia = document.tables[2].cell(row_reference + 6, 4).text.strip()
+            casing7_Inner_Dia = document.tables[2].cell(row_reference + 7, 4).text.strip()
+            casing8_Inner_Dia = document.tables[2].cell(row_reference + 8, 4).text.strip()
+            casing9_Inner_Dia = document.tables[2].cell(row_reference + 9, 4).text.strip()
+            casing10_Inner_Dia = document.tables[2].cell(row_reference + 10, 4).text.strip()
+            casing11_Inner_Dia = document.tables[2].cell(row_reference + 11, 4).text.strip()
+            casing12_Inner_Dia = document.tables[2].cell(row_reference + 12, 4).text.strip()
+            self.tableWidget_7.setItem(0, 0, QTableWidgetItem(str(casing1_Inner_Dia)))
+            self.tableWidget_7.setItem(1, 0, QTableWidgetItem(str(casing2_Inner_Dia)))
+            self.tableWidget_7.setItem(2, 0, QTableWidgetItem(str(casing3_Inner_Dia)))
+            self.tableWidget_7.setItem(3, 0, QTableWidgetItem(str(casing4_Inner_Dia)))
+            self.tableWidget_7.setItem(4, 0, QTableWidgetItem(str(casing5_Inner_Dia)))
 
-        casing1_interval = document.tables[2].cell(14, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing1_interval = casing1_interval.replace(' ', '')
-        casing1_interval = casing1_interval.replace('～', '-')
-        casing1_interval = casing1_interval.replace('~', '-')
-        if '~' not in casing1_interval and '～' not in casing1_interval and \
-                '-' not in casing1_interval and casing1_interval != '':
-            casing1_interval = ''.join(['0', '-', casing1_interval])
-        if casing1_interval != '':
-            casing1_bottom = casing1_interval.split('-')[1]
-        self.tableWidget_7.setItem(0, 3, QTableWidgetItem(str(casing1_bottom)))
-        self.tableWidget_7.setItem(0, 4, QTableWidgetItem(str(casing1_interval)))
+            # 套管壁厚
+            casing1_Thickness = document.tables[2].cell(row_reference + 1, 5).text.strip().replace('尺寸（mm）', '')
+            casing2_Thickness = document.tables[2].cell(row_reference + 2, 5).text.strip().replace('尺寸（mm）', '')
+            casing3_Thickness = document.tables[2].cell(row_reference + 3, 5).text.strip().replace('尺寸（mm）', '')
+            casing4_Thickness = document.tables[2].cell(row_reference + 4, 5).text.strip().replace('尺寸（mm）', '')
+            casing5_Thickness = document.tables[2].cell(row_reference + 5, 5).text.strip().replace('尺寸（mm）', '')
+            casing6_Thickness = document.tables[2].cell(row_reference + 6, 5).text.strip().replace('尺寸（mm）', '')
+            casing7_Thickness = document.tables[2].cell(row_reference + 7, 5).text.strip().replace('尺寸（mm）', '')
+            casing8_Thickness = document.tables[2].cell(row_reference + 8, 5).text.strip().replace('尺寸（mm）', '')
+            casing9_Thickness = document.tables[2].cell(row_reference + 9, 5).text.strip().replace('尺寸（mm）', '')
+            casing10_Thickness = document.tables[2].cell(row_reference + 10, 5).text.strip().replace('尺寸（mm）', '')
+            casing11_Thickness = document.tables[2].cell(row_reference + 11, 5).text.strip().replace('尺寸（mm）', '')
+            casing12_Thickness = document.tables[2].cell(row_reference + 12, 5).text.strip().replace('尺寸（mm）', '')
+            self.tableWidget_7.setItem(0, 2, QTableWidgetItem(str(casing1_Thickness)))
+            self.tableWidget_7.setItem(1, 2, QTableWidgetItem(str(casing2_Thickness)))
+            self.tableWidget_7.setItem(2, 2, QTableWidgetItem(str(casing3_Thickness)))
+            self.tableWidget_7.setItem(3, 2, QTableWidgetItem(str(casing4_Thickness)))
+            self.tableWidget_7.setItem(4, 2, QTableWidgetItem(str(casing5_Thickness)))
 
-        casing2_interval = document.tables[2].cell(15, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing2_interval = casing2_interval.replace(' ', '')
-        casing2_interval = casing2_interval.replace('～', '-')
-        casing2_interval = casing2_interval.replace('~', '-')
-        if '~' not in casing2_interval and '～' not in casing2_interval and \
-                '-' not in casing2_interval and casing2_interval != '':
-            casing2_interval = ''.join(['0', '-', casing2_interval])
-        if casing2_interval != '':
-            casing2_bottom = casing2_interval.split('-')[1]
-        self.tableWidget_7.setItem(1, 3, QTableWidgetItem(str(casing2_bottom)))
-        self.tableWidget_7.setItem(1, 4, QTableWidgetItem(str(casing2_interval)))
+            # 避免套管下深井段为单数字而不为井段
+            casing1_bottom = ''
+            casing2_bottom = ''
+            casing3_bottom = ''
+            casing4_bottom = ''
+            casing5_bottom = ''
+            casing6_bottom = ''
+            casing7_bottom = ''
+            casing8_bottom = ''
+            casing9_bottom = ''
+            casing10_bottom = ''
+            casing11_bottom = ''
+            casing12_bottom = ''
 
-        casing3_interval = document.tables[2].cell(16, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing3_interval = casing3_interval.replace(' ', '')
-        casing3_interval = casing3_interval.replace('～', '-')
-        casing3_interval = casing3_interval.replace('~', '-')
-        if '~' not in casing3_interval and '～' not in casing3_interval and \
-                '-' not in casing3_interval and casing3_interval != '':
-            casing3_interval = ''.join(['0', '-', casing3_interval])
-        if casing3_interval != '':
-            casing3_bottom = casing3_interval.split('-')[1]
-        self.tableWidget_7.setItem(2, 3, QTableWidgetItem(str(casing3_bottom)))
-        self.tableWidget_7.setItem(2, 4, QTableWidgetItem(str(casing3_interval)))
+            casing1_interval = document.tables[2].cell(row_reference + 1, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing1_interval = casing1_interval.replace(' ', '')
+            casing1_interval = casing1_interval.replace('～', '-')
+            casing1_interval = casing1_interval.replace('~', '-')
+            if '~' not in casing1_interval and '～' not in casing1_interval and \
+                    '-' not in casing1_interval and casing1_interval != '':
+                casing1_interval = ''.join(['0', '-', casing1_interval])
+            if casing1_interval != '':
+                casing1_bottom = casing1_interval.split('-')[1]
+            self.tableWidget_7.setItem(0, 3, QTableWidgetItem(str(casing1_bottom)))
+            self.tableWidget_7.setItem(0, 4, QTableWidgetItem(str(casing1_interval)))
 
-        casing4_interval = document.tables[2].cell(17, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing4_interval = casing4_interval.replace(' ', '')
-        casing4_interval = casing4_interval.replace('～', '-')
-        casing4_interval = casing4_interval.replace('~', '-')
-        if '~' not in casing4_interval and '～' not in casing4_interval and \
-                '-' not in casing4_interval and casing4_interval != '':
-            casing4_interval = ''.join(['0', '-', casing4_interval])
-        if casing4_interval != '':
-            casing4_bottom = casing4_interval.split('-')[1]
-        self.tableWidget_7.setItem(3, 3, QTableWidgetItem(str(casing4_bottom)))
-        self.tableWidget_7.setItem(3, 4, QTableWidgetItem(str(casing4_interval)))
+            casing2_interval = document.tables[2].cell(row_reference + 2, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing2_interval = casing2_interval.replace(' ', '')
+            casing2_interval = casing2_interval.replace('～', '-')
+            casing2_interval = casing2_interval.replace('~', '-')
+            if '~' not in casing2_interval and '～' not in casing2_interval and \
+                    '-' not in casing2_interval and casing2_interval != '':
+                casing2_interval = ''.join(['0', '-', casing2_interval])
+            if casing2_interval != '':
+                casing2_bottom = casing2_interval.split('-')[1]
+            self.tableWidget_7.setItem(1, 3, QTableWidgetItem(str(casing2_bottom)))
+            self.tableWidget_7.setItem(1, 4, QTableWidgetItem(str(casing2_interval)))
 
-        casing5_interval = document.tables[2].cell(18, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing5_interval = casing5_interval.replace(' ', '')
-        casing5_interval = casing5_interval.replace('～', '-')
-        casing5_interval = casing5_interval.replace('~', '-')
-        if '~' not in casing5_interval and '～' not in casing5_interval and \
-                '-' not in casing5_interval and casing5_interval != '':
-            casing5_interval = ''.join(['0', '-', casing5_interval])
-        if casing5_interval != '':
-            casing5_bottom = casing5_interval.split('-')[1]
-        self.tableWidget_7.setItem(4, 3, QTableWidgetItem(str(casing5_bottom)))
-        self.tableWidget_7.setItem(4, 4, QTableWidgetItem(str(casing5_interval)))
+            casing3_interval = document.tables[2].cell(row_reference + 3, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing3_interval = casing3_interval.replace(' ', '')
+            casing3_interval = casing3_interval.replace('～', '-')
+            casing3_interval = casing3_interval.replace('~', '-')
+            if '~' not in casing3_interval and '～' not in casing3_interval and \
+                    '-' not in casing3_interval and casing3_interval != '':
+                casing3_interval = ''.join(['0', '-', casing3_interval])
+            if casing3_interval != '':
+                casing3_bottom = casing3_interval.split('-')[1]
+            self.tableWidget_7.setItem(2, 3, QTableWidgetItem(str(casing3_bottom)))
+            self.tableWidget_7.setItem(2, 4, QTableWidgetItem(str(casing3_interval)))
 
-        casing6_interval = document.tables[2].cell(19, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing6_interval = casing6_interval.replace(' ', '')
-        casing6_interval = casing6_interval.replace('～', '-')
-        casing6_interval = casing6_interval.replace('~', '-')
-        if '~' not in casing6_interval and '～' not in casing6_interval and \
-                '-' not in casing6_interval and casing6_interval != '':
-            casing6_interval = ''.join(['0', '-', casing6_interval])
-        if casing6_interval != '':
-            casing6_bottom = casing6_interval.split('-')[1]
+            casing4_interval = document.tables[2].cell(row_reference + 4, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing4_interval = casing4_interval.replace(' ', '')
+            casing4_interval = casing4_interval.replace('～', '-')
+            casing4_interval = casing4_interval.replace('~', '-')
+            if '~' not in casing4_interval and '～' not in casing4_interval and \
+                    '-' not in casing4_interval and casing4_interval != '':
+                casing4_interval = ''.join(['0', '-', casing4_interval])
+            if casing4_interval != '':
+                casing4_bottom = casing4_interval.split('-')[1]
+            self.tableWidget_7.setItem(3, 3, QTableWidgetItem(str(casing4_bottom)))
+            self.tableWidget_7.setItem(3, 4, QTableWidgetItem(str(casing4_interval)))
 
-        casing7_interval = document.tables[2].cell(20, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing7_interval = casing7_interval.replace(' ', '')
-        casing7_interval = casing7_interval.replace('～', '-')
-        casing7_interval = casing7_interval.replace('~', '-')
-        if '~' not in casing7_interval and '～' not in casing7_interval and \
-                '-' not in casing7_interval and casing7_interval != '':
-            casing7_interval = ''.join(['0', '-', casing7_interval])
-        if casing7_interval != '':
-            casing7_bottom = casing7_interval.split('-')[1]
+            casing5_interval = document.tables[2].cell(row_reference + 5, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing5_interval = casing5_interval.replace(' ', '')
+            casing5_interval = casing5_interval.replace('～', '-')
+            casing5_interval = casing5_interval.replace('~', '-')
+            if '~' not in casing5_interval and '～' not in casing5_interval and \
+                    '-' not in casing5_interval and casing5_interval != '':
+                casing5_interval = ''.join(['0', '-', casing5_interval])
+            if casing5_interval != '':
+                casing5_bottom = casing5_interval.split('-')[1]
+            self.tableWidget_7.setItem(4, 3, QTableWidgetItem(str(casing5_bottom)))
+            self.tableWidget_7.setItem(4, 4, QTableWidgetItem(str(casing5_interval)))
 
-        casing8_interval = document.tables[2].cell(21, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing8_interval = casing8_interval.replace(' ', '')
-        casing8_interval = casing8_interval.replace('～', '-')
-        casing8_interval = casing8_interval.replace('~', '-')
-        if '~' not in casing8_interval and '～' not in casing8_interval and \
-                '-' not in casing8_interval and casing8_interval != '':
-            casing8_interval = ''.join(['0', '-', casing8_interval])
-        if casing8_interval != '':
-            casing8_bottom = casing8_interval.split('-')[1]
+            casing6_interval = document.tables[2].cell(row_reference + 6, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing6_interval = casing6_interval.replace(' ', '')
+            casing6_interval = casing6_interval.replace('～', '-')
+            casing6_interval = casing6_interval.replace('~', '-')
+            if '~' not in casing6_interval and '～' not in casing6_interval and \
+                    '-' not in casing6_interval and casing6_interval != '':
+                casing6_interval = ''.join(['0', '-', casing6_interval])
+            if casing6_interval != '':
+                casing6_bottom = casing6_interval.split('-')[1]
 
-        casing9_interval = document.tables[2].cell(22, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing9_interval = casing9_interval.replace(' ', '')
-        casing9_interval = casing9_interval.replace('～', '-')
-        casing9_interval = casing9_interval.replace('~', '-')
-        if '~' not in casing9_interval and '～' not in casing9_interval and \
-                '-' not in casing9_interval and casing9_interval != '':
-            casing9_interval = ''.join(['0', '-', casing9_interval])
-        if casing9_interval != '':
-            casing9_bottom = casing9_interval.split('-')[1]
+            casing7_interval = document.tables[2].cell(row_reference + 7, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing7_interval = casing7_interval.replace(' ', '')
+            casing7_interval = casing7_interval.replace('～', '-')
+            casing7_interval = casing7_interval.replace('~', '-')
+            if '~' not in casing7_interval and '～' not in casing7_interval and \
+                    '-' not in casing7_interval and casing7_interval != '':
+                casing7_interval = ''.join(['0', '-', casing7_interval])
+            if casing7_interval != '':
+                casing7_bottom = casing7_interval.split('-')[1]
 
-        casing10_interval = document.tables[2].cell(23, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing10_interval = casing10_interval.replace(' ', '')
-        casing10_interval = casing10_interval.replace('～', '-')
-        casing10_interval = casing10_interval.replace('~', '-')
-        if '~' not in casing10_interval and '～' not in casing10_interval and \
-                '-' not in casing10_interval and casing10_interval != '':
-            casing10_interval = ''.join(['0', '-', casing10_interval])
-        if casing10_interval != '':
-            casing10_bottom = casing10_interval.split('-')[1]
+            casing8_interval = document.tables[2].cell(row_reference + 8, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing8_interval = casing8_interval.replace(' ', '')
+            casing8_interval = casing8_interval.replace('～', '-')
+            casing8_interval = casing8_interval.replace('~', '-')
+            if '~' not in casing8_interval and '～' not in casing8_interval and \
+                    '-' not in casing8_interval and casing8_interval != '':
+                casing8_interval = ''.join(['0', '-', casing8_interval])
+            if casing8_interval != '':
+                casing8_bottom = casing8_interval.split('-')[1]
 
-        casing11_interval = document.tables[2].cell(24, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing11_interval = casing11_interval.replace(' ', '')
-        casing11_interval = casing11_interval.replace('～', '-')
-        casing11_interval = casing11_interval.replace('~', '-')
-        if '~' not in casing11_interval and '～' not in casing11_interval and \
-                '-' not in casing11_interval and casing11_interval != '':
-            casing11_interval = ''.join(['0', '-', casing11_interval])
-        if casing11_interval != '':
-            casing11_bottom = casing11_interval.split('-')[1]
+            casing9_interval = document.tables[2].cell(row_reference + 9, 6).text.strip().replace('测量井段（m）',
+                                                                                                  '').replace('m', '')
+            casing9_interval = casing9_interval.replace(' ', '')
+            casing9_interval = casing9_interval.replace('～', '-')
+            casing9_interval = casing9_interval.replace('~', '-')
+            if '~' not in casing9_interval and '～' not in casing9_interval and \
+                    '-' not in casing9_interval and casing9_interval != '':
+                casing9_interval = ''.join(['0', '-', casing9_interval])
+            if casing9_interval != '':
+                casing9_bottom = casing9_interval.split('-')[1]
 
-        casing12_interval = document.tables[2].cell(25, 6).text.strip().replace('测量井段（m）', '').replace('m', '')
-        casing12_interval = casing12_interval.replace(' ', '')
-        casing12_interval = casing12_interval.replace('～', '-')
-        casing12_interval = casing12_interval.replace('~', '-')
-        if '~' not in casing12_interval and '～' not in casing12_interval and \
-                '-' not in casing12_interval and casing12_interval != '':
-            casing12_interval = ''.join(['0', '-', casing12_interval])
-        if casing12_interval != '':
-            casing12_bottom = casing12_interval.split('-')[1]
+            casing10_interval = document.tables[2].cell(row_reference + 10, 6).text.strip().replace('测量井段（m）',
+                                                                                                    '').replace('m', '')
+            casing10_interval = casing10_interval.replace(' ', '')
+            casing10_interval = casing10_interval.replace('～', '-')
+            casing10_interval = casing10_interval.replace('~', '-')
+            if '~' not in casing10_interval and '～' not in casing10_interval and \
+                    '-' not in casing10_interval and casing10_interval != '':
+                casing10_interval = ''.join(['0', '-', casing10_interval])
+            if casing10_interval != '':
+                casing10_bottom = casing10_interval.split('-')[1]
 
-        # 目标套管尺寸casing_Goal
-        temp_list = ['', '类  型', '弹簧扶正器', '橡胶扶正器', '橡胶', '外径（mm）']
-        if casing12_Dia not in temp_list:
-            casing_Goal = casing12_Dia
-        elif casing11_Dia not in temp_list:
-            casing_Goal = casing11_Dia
-        elif casing10_Dia not in temp_list:
-            casing_Goal = casing10_Dia
-        elif casing9_Dia not in temp_list:
-            casing_Goal = casing9_Dia
-        elif casing8_Dia not in temp_list:
-            casing_Goal = casing8_Dia
-        elif casing7_Dia not in temp_list:
-            casing_Goal = casing7_Dia
-        elif casing6_Dia not in temp_list:
-            casing_Goal = casing6_Dia
-        elif casing5_Dia not in temp_list:
-            casing_Goal = casing5_Dia
-        elif casing4_Dia not in temp_list:
-            casing_Goal = casing4_Dia
-        elif casing3_Dia not in temp_list:
-            casing_Goal = casing3_Dia
-        elif casing2_Dia not in temp_list:
-            casing_Goal = casing2_Dia
-        elif casing1_Dia not in temp_list:
-            casing_Goal = casing1_Dia
-        self.lineEdit_108.setText(casing_Goal)
+            casing11_interval = document.tables[2].cell(row_reference + 11, 6).text.strip().replace('测量井段（m）',
+                                                                                                    '').replace('m', '')
+            casing11_interval = casing11_interval.replace(' ', '')
+            casing11_interval = casing11_interval.replace('～', '-')
+            casing11_interval = casing11_interval.replace('~', '-')
+            if '~' not in casing11_interval and '～' not in casing11_interval and \
+                    '-' not in casing11_interval and casing11_interval != '':
+                casing11_interval = ''.join(['0', '-', casing11_interval])
+            if casing11_interval != '':
+                casing11_bottom = casing11_interval.split('-')[1]
 
-        ######################################################################## 目标套管下深casing_Goal_Depth
-        if casing12_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(25, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(25, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(25, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(25, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(25, 6).text.strip()
-        elif casing11_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(24, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(24, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(24, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(24, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(24, 6).text.strip()
-        elif casing10_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(23, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(23, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(23, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(23, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(23, 6).text.strip()
-        elif casing9_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(22, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(22, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(22, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(22, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(22, 6).text.strip()
-        elif casing8_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(21, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(21, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(21, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(21, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(21, 6).text.strip()
-        elif casing7_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(20, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(20, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(20, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(20, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(20, 6).text.strip()
-        elif casing6_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(19, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(19, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(19, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(19, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(19, 6).text.strip()
-        elif casing5_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(18, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(18, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(18, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(18, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(18, 6).text.strip()
-        elif casing4_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(17, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(17, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(17, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(17, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(17, 6).text.strip()
-        elif casing3_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(16, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(16, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(16, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(16, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(16, 6).text.strip()
-        elif casing2_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(15, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(15, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(15, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(15, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(15, 6).text.strip()
-        elif casing1_Dia == casing_Goal:
-            if '～' in document.tables[2].cell(14, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip().split('～')[1]
-            elif '~' in document.tables[2].cell(14, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip().split('~')[1]
-            elif '-' in document.tables[2].cell(14, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip().split('-')[1]
-            elif '-' not in document.tables[2].cell(14, 6).text.strip():
-                casing_Goal_Depth = document.tables[2].cell(14, 6).text.strip()
-        self.lineEdit_109.setText(casing_Goal_Depth)
+            casing12_interval = document.tables[2].cell(row_reference + 12, 6).text.strip().replace('测量井段（m）',
+                                                                                                    '').replace('m', '')
+            casing12_interval = casing12_interval.replace(' ', '')
+            casing12_interval = casing12_interval.replace('～', '-')
+            casing12_interval = casing12_interval.replace('~', '-')
+            if '~' not in casing12_interval and '～' not in casing12_interval and \
+                    '-' not in casing12_interval and casing12_interval != '':
+                casing12_interval = ''.join(['0', '-', casing12_interval])
+            if casing12_interval != '':
+                casing12_bottom = casing12_interval.split('-')[1]
+
+            # 目标套管尺寸casing_Goal
+            temp_list = ['', '类  型', '弹簧扶正器', '橡胶扶正器', '橡胶', '外径（mm）', '滑车']
+            if casing12_Dia not in temp_list:
+                casing_Goal = casing12_Dia
+            elif casing11_Dia not in temp_list:
+                casing_Goal = casing11_Dia
+            elif casing10_Dia not in temp_list:
+                casing_Goal = casing10_Dia
+            elif casing9_Dia not in temp_list:
+                casing_Goal = casing9_Dia
+            elif casing8_Dia not in temp_list:
+                casing_Goal = casing8_Dia
+            elif casing7_Dia not in temp_list:
+                casing_Goal = casing7_Dia
+            elif casing6_Dia not in temp_list:
+                casing_Goal = casing6_Dia
+            elif casing5_Dia not in temp_list:
+                casing_Goal = casing5_Dia
+            elif casing4_Dia not in temp_list:
+                casing_Goal = casing4_Dia
+            elif casing3_Dia not in temp_list:
+                casing_Goal = casing3_Dia
+            elif casing2_Dia not in temp_list:
+                casing_Goal = casing2_Dia
+            elif casing1_Dia not in temp_list:
+                casing_Goal = casing1_Dia
+            self.lineEdit_108.setText(casing_Goal)
+
+            ######################################################################## 目标套管下深casing_Goal_Depth
+            if casing12_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 12, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 12, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 12, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 12, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 12, 6).text.strip()
+            elif casing11_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 11, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 11, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 11, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 11, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 11, 6).text.strip()
+            elif casing10_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 10, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 10, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 10, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 10, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 10, 6).text.strip()
+            elif casing9_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 9, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 9, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 9, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 9, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 9, 6).text.strip()
+            elif casing8_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 8, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 8, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 8, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 8, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 8, 6).text.strip()
+            elif casing7_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 7, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 7, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 7, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 7, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 7, 6).text.strip()
+            elif casing6_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 6, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 6, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 6, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 6, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 6, 6).text.strip()
+            elif casing5_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 5, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 5, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 5, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 5, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 5, 6).text.strip()
+            elif casing4_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 4, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 4, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 4, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 4, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 4, 6).text.strip()
+            elif casing3_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 3, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 3, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 3, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 3, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 3, 6).text.strip()
+            elif casing2_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 2, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 2, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 2, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 2, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 2, 6).text.strip()
+            elif casing1_Dia == casing_Goal:
+                if '～' in document.tables[2].cell(row_reference + 1, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 6).text.strip().split('～')[1]
+                elif '~' in document.tables[2].cell(row_reference + 1, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 6).text.strip().split('~')[1]
+                elif '-' in document.tables[2].cell(row_reference + 1, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 6).text.strip().split('-')[1]
+                elif '-' not in document.tables[2].cell(row_reference + 1, 6).text.strip():
+                    casing_Goal_Depth = document.tables[2].cell(row_reference + 1, 6).text.strip()
+            self.lineEdit_109.setText(casing_Goal_Depth)
         ######################################################################## 获取测量井段
         for row in range(3, 26):
             if document.tables[3].cell(row, 5).text.replace(' ', '').replace('点测', '') != '':
@@ -2370,6 +2931,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
         logging_Start_Time = self.lineEdit_104.text()
         logging_Method = self.lineEdit_100.text()
 
+        logging_Company = self.lineEdit_15.text()
+
         # 避免报告中出现'-99999'
         if cement_Quantity == '-99999':
             cement_Quantity = '/'
@@ -2380,6 +2943,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
             arti_Bottom = '/'
         else:
             pass
+
+        # 新规定，起始评价深度从0米开始
+        # if float(evaluation_start_depth) < 200:
+        #     evaluation_start_depth = '0'
 
         DICT_TXT = {
             "井名": well_Name,
@@ -2423,7 +2990,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "测井底部深度": measure_Interval_End_Depth,
             "标准段顶部深度": measure_Interval_Start_Depth,
             "标准段底部深度": measure_Interval_End_Depth,
-            "测井公司": '西南分公司',
+            "测井公司": logging_Company,
             "测井项目": '固井质量检测',
             "测井装备": logging_Equipment,
             "测井仪器": '三组合变密度',
@@ -2630,17 +3197,27 @@ class Main_window(QMainWindow, Ui_MainWindow):
             month = ''
             day = ''
         first_Pro_Interval = ''.join([self.lineEdit_103.text(), '-', self.lineEdit_105.text()])
+        # 新规定，生成一个从0开始的处理深度， 为了多计费
+        # TODO
+        if float(self.lineEdit_103.text()) < 200:
+            measure_start = '0'
+            self.measure_from_Pro = ''.join([measure_start, '-', self.lineEdit_105.text()])
+        else:
+            self.measure_from_Pro = ''.join([self.lineEdit_103.text(), '-', self.lineEdit_105.text()])
 
         PATH = '.\\WorkSpace\\报告生成工区\\'
         TEMPLATE_PATH = '.\\resources\\模板\\'
+        # newFile = PATH + well_Name + '_' + year + month + \
+        #           day + '_(' + casing_Goal + 'mm套,VDL,' + first_Pro_Interval + 'm)固井报告' + '.docx'
         newFile = PATH + well_Name + '_' + year + month + \
-                  day + '_(' + casing_Goal + 'mm套,' + first_Pro_Interval + 'm)固井报告' + '.docx'
+                  day + '_(' + casing_Goal + 'mm套,VDL,' + self.measure_from_Pro + 'm)固井报告' + '.docx'
         document = Document(TEMPLATE_PATH + 'template-of-cbl-vdl-report.docx')
         if self.checkBox_9.isChecked():
             document = self.check(document)  # 调用替换函数
         else:
             pass
         # 全文档表格内容居中
+        '''
         for table in document.tables:
             for row in range(len(table.rows)):
                 for col in range(len(table.columns)):
@@ -2648,6 +3225,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             # 整体设置，未起作用
             # table.style.font.color.rgb = RGBColor(255, 0, 0)
             # table.style.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+        '''
         document.save(newFile)
 
     def check(self, document):
@@ -2683,6 +3261,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
     # 一界面某井段评价函数
     def layer_evaluation1(self, df, start, end):
         df1 = df
+        df1 = df1.reset_index()
         formation_Start = start
         formation_End = end
         # # 越界警告，不用加了，后面有考虑到越界情况
@@ -2692,10 +3271,10 @@ class Main_window(QMainWindow, Ui_MainWindow):
         df_temp = df1.loc[(df1['井段Start'] >= formation_Start) & (df1['井段Start'] <= formation_End), :]
         # 获取起始深度到第一层井段底界的结论
         df_temp_start_to_first_layer = df1.loc[(df1['井段Start'] <= formation_Start), :]
-        if len(df_temp_start_to_first_layer) != 0:  # 若为空dataframe
-            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
-        elif len(df_temp_start_to_first_layer) == 0:  # 若不为空dataframe
-            start_to_upper_result = df1.loc[1, '结论']
+        if len(df_temp_start_to_first_layer) != 0:
+            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer) - 1, '结论']
+        elif len(df_temp_start_to_first_layer) == 0:
+            start_to_upper_result = df1.loc[0, '结论']
         # 获取calculation_Start所在段的声幅值
         df_temp_formation_Start = df1.loc[(df1['井段Start'] <= formation_Start) & (
                 df1['井段End'] >= formation_Start), :]
@@ -2803,15 +3382,16 @@ class Main_window(QMainWindow, Ui_MainWindow):
     # 二界面某井段评价函数
     def layer_evaluation2(self, df, start, end):
         df1 = df
+        df1 = df1.reset_index()
         formation_Start = start
         formation_End = end
         df_temp = df1.loc[(df1['井段Start'] >= formation_Start) & (df1['井段Start'] <= formation_End), :]
         # 获取起始深度到第一层井段底界的结论
         df_temp_start_to_first_layer = df1.loc[(df1['井段Start'] <= formation_Start), :]
-        if len(df_temp_start_to_first_layer) != 0:  # 若为空dataframe
-            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer), '结论']
-        elif len(df_temp_start_to_first_layer) == 0:  # 若不为空dataframe
-            start_to_upper_result = df1.loc[1, '结论']
+        if len(df_temp_start_to_first_layer) != 0:
+            start_to_upper_result = df_temp_start_to_first_layer.loc[len(df_temp_start_to_first_layer) - 1, '结论']
+        elif len(df_temp_start_to_first_layer) == 0:
+            start_to_upper_result = df1.loc[0, '结论']
         # 获取calculation_Start所在段的声幅值
         df_temp_formation_Start = df1.loc[(df1['井段Start'] <= formation_Start) & (
                 df1['井段End'] >= formation_Start), :]
@@ -3210,6 +3790,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
         end_Evaluation = ''.join(end_Evaluation.split())  # 去除所有空格
         end_Evaluation = end_Evaluation.split('-')[1]
         first_Pro_Interval = ''.join([start_Evaluation, '-', end_Evaluation])
+        # 新规定，生成一个从0开始的处理深度， 为了多计费
+        # TODO
+        if float(start_Evaluation) < 200:
+            measure_start = '0'
+            measure_from_Pro = ''.join([measure_start, '-', end_Evaluation])
+        else:
+            measure_from_Pro = ''.join([start_Evaluation, '-', end_Evaluation])
 
         PATH = ".\\WorkSpace\\报告生成工区\\成果表"
         for fileName in os.listdir(PATH):
@@ -3287,13 +3874,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
                 elif '2单' in fileName and '$' not in fileName:
                     fileDir2 = PATH + "\\" + fileName
             df1 = pd.read_excel(fileDir1, header=2)
-            df1.drop([0], inplace=True)
+            # df1.drop([0], inplace=True)
             df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
             df1['井段Start'] = df1['井段(m)'].map(lambda x: x.split("-")[0])
             df1['井段End'] = df1['井段(m)'].map(lambda x: x.split("-")[1])
 
             df2 = pd.read_excel(fileDir2, header=2)
-            df2.drop([0], inplace=True)
+            # df2.drop([0], inplace=True)
             df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
             df2['井段Start'] = df2['井段(m)'].map(lambda x: x.split("-")[0])
             df2['井段End'] = df2['井段(m)'].map(lambda x: x.split("-")[1])
@@ -3349,7 +3936,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     pass
 
         ################################################################################
-        # 基于文本替换方案的文档生成(和生成LEAD txt文件时不同的是，报告水泥返高和图件水泥返高不一样)
+        # 基于文本替换方案的文档生成(和生成LEAD txt文件不同的是，报告水泥返高和图件水泥返高不一样)
         well_Name = self.lineEdit.text()
         well_Category = self.comboBox_7.currentText()
         well_Type = self.comboBox_6.currentText()
@@ -3434,6 +4021,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         casing5_bottom = self.tableWidget_7.item(4, 3).text()
 
         cement_End_Time = self.lineEdit_101.text()
+        cement_End_Date = self.lineEdit_22.text()
         logging_Start_Time = self.lineEdit_104.text()
         logging_Method = self.lineEdit_100.text()
 
@@ -3460,8 +4048,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
         second_Start = self.lineEdit_106.text()
         evaluation_Start = self.lineEdit_103.text()
         evaluation_Bottom = self.lineEdit_105.text()
-        casing_head = self.comboBox_8.currentText()
-        casing_bottom = self.comboBox_9.currentText()
+        liner_overlap_section = self.comboBox_8.currentText()
+        upper_casing_shoe = self.comboBox_9.currentText()
+        goal_layer_name = self.lineEdit_118.text()
+        goal_layer_first = self.comboBox_11.currentText()
+        goal_layer_second = self.comboBox_12.currentText()
 
         TEMPLATE_PATH = ".\\resources\\模板"
         PATH = "."
@@ -3476,6 +4067,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "end_Evaluation": end_Evaluation,
             "measure_Interval": measure_Interval,
             "first_Pro_Interval": first_Pro_Interval,
+            "measure_from_Pro": measure_from_Pro,
             "second_Pro_Interval": second_Pro_Interval,
             "geo_Position": geo_Position,
             "deepest_bit": deepest_bit,
@@ -3498,6 +4090,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "cement_Quantity": cement_Quantity,
             "design_Depth": design_Depth,
             "cement_End_Time": cement_End_Time,
+            "cement_End_Date": cement_End_Date,
             "log_End_Time": log_End_Time,
             "logging_Group": logging_Group,
             "logging_Leader": logging_Leader,
@@ -3521,6 +4114,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "second_BLength": second_BLength,
             "year": year,
             "month": month,
+            "day": day,
             "casing1_interval": casing1_interval,
             "casing2_interval": casing2_interval,
             "casing3_interval": casing3_interval,
@@ -3532,8 +4126,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
             "bit4_Depth": bit4_Depth,
             "bit5_Depth": bit5_Depth,
             "fluid_Height": fluid_Height,
-            "casing_head": casing_head,
-            "casing_bottom": casing_bottom,
+            "liner_overlap_section": liner_overlap_section,
+            "upper_casing_shoe": upper_casing_shoe,
+            "goal_layer_name": goal_layer_name,
+            "goal_layer_first": goal_layer_first,
+            "goal_layer_second": goal_layer_second,
             "second_Start": second_Start,
             "evaluation_Bottom": evaluation_Bottom,
             "evaluation_Start": evaluation_Start
@@ -3551,7 +4148,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         PATH = ".\\WorkSpace\\报告生成工区\\"
         for fileName in os.listdir(PATH):
             newFile = PATH + well_Name + '_' + year + month + \
-                      day + '_(' + casing_Goal + 'mm套,' + first_Pro_Interval + 'm)固井报告' + '.docx'
+                      day + '_(' + casing_Goal + 'mm套,VDL,' + self.measure_from_Pro + 'm)固井报告' + '.docx'
         document = Document(newFile)
 
         if formation_be_or_not == '有储层':
@@ -3566,7 +4163,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             nrow = sheet.nrows
             ncol = sheet.ncols
 
-            formation_table = document.tables[7]
+            formation_table = document.tables[8]
             for num in range(eval(formation_Number) - 1):
                 row_cells = formation_table.add_row()
 
@@ -3602,7 +4199,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         # QMessageBox会导致崩溃，改为label提示的方式
         if nrow > 280:
             # QMessageBox.information(self, '提示', '单层评价表行数较多，表格调整耗时较长，建议取消勾选，自行手动调整:)')
-            self.label_133.setText('单层评价表行数较多，格式优化耗时较长，请取消勾选，自行手动调整:)')
+            self.label_133.setText('单层评价表行数较多，格式优化耗时较长，可取消勾选，自行手动调整:)')
             self.label_133.setStyleSheet("font: 16pt")
             self.label_133.setStyleSheet("color: rgb(255, 0, 0)")
         else:
@@ -3613,9 +4210,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
         document.styles['Normal'].font.name = u'Times New Roman'
         document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
 
-        table = document.tables[10]
+        table = document.tables[11]
         table.autofit = True
-        for num in range(nrow - 4):
+        for num in range(nrow - 3):
             table.add_row()
 
         # 设置整个表格字体属性
@@ -3677,9 +4274,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
         document.styles['Normal'].font.name = u'Times New Roman'
         document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
 
-        table = document.tables[11]
+        table = document.tables[12]
         table.autofit = True
-        for num in range(nrow - 4):
+        for num in range(nrow - 3):
             table.add_row()
 
         # 设置整个表格字体属性
@@ -3726,14 +4323,6 @@ class Main_window(QMainWindow, Ui_MainWindow):
         print('\n二界面单层统计表添加完成')
 
         print('正在添加储层段落，请等待...')
-        ################################################################################
-        # 上部井段固井质量评价表单元格居左
-        upper_interval_table = document.tables[5]
-        for row in range(1, len(upper_interval_table.rows)):
-            for col in range(len(upper_interval_table.columns)):
-                upper_interval_table.cell(row, col).paragraphs[
-                    0].paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
         ################################################################################
         # 储层固井质量评价
         p = document.add_paragraph()
@@ -3805,13 +4394,13 @@ class Main_window(QMainWindow, Ui_MainWindow):
                     elif '2单' in fileName and '$' not in fileName:
                         fileDir2 = PATH + "\\" + fileName
                 df1 = pd.read_excel(fileDir1, header=2)
-                df1.drop([0], inplace=True)
+                # df1.drop([0], inplace=True)
                 df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
                 df1['井段Start'] = df1['井段(m)'].map(lambda x: x.split("-")[0])
                 df1['井段End'] = df1['井段(m)'].map(lambda x: x.split("-")[1])
 
                 df2 = pd.read_excel(fileDir2, header=2)
-                df2.drop([0], inplace=True)
+                # df2.drop([0], inplace=True)
                 df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
                 df2['井段Start'] = df2['井段(m)'].map(lambda x: x.split("-")[0])
                 df2['井段End'] = df2['井段(m)'].map(lambda x: x.split("-")[1])
@@ -4243,7 +4832,8 @@ class Main_window(QMainWindow, Ui_MainWindow):
             p.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
             p.paragraph_format.line_spacing = Pt(24)
             p.paragraph_format.first_line_indent = Cm(0.74)  # 首行缩进0.74厘米，即2个字符
-            r = p.add_run('该次测量井段内无储层解释。')
+            # r = p.add_run('该次测量井段内无储层解释。')
+            r = p.add_run('本次测量井段内无裸眼测井综合解释数据。')
             # r.bold = True
             r.font.name = 'Times New Roman'
             r.element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
@@ -4315,11 +4905,11 @@ class Main_window(QMainWindow, Ui_MainWindow):
             p.paragraph_format.first_line_indent = Cm(0.74)  # 首行缩进0.74厘米，即2个字符
             if bad_number != 0:
                 r = p.add_run(
-                    bad_Start_Ends + '井段声幅值较高，部分套管接箍信号明显，建议采取相应措施（见图' + str(pic_number + 2) + '-' + str(
+                    bad_Start_Ends + '井段声幅值较高，套管接箍信号明显，固井质量较差（见图' + str(pic_number + 2) + '-' + str(
                         pic_number + bad_number + 2) + '）。')
             elif bad_number == 0:
                 r = p.add_run(
-                    bad_Start_Ends + '井段声幅值较高，部分套管接箍信号明显，建议采取相应措施（见图' + str(pic_number + 2) + '）。')
+                    bad_Start_Ends + '井段声幅值较高，套管接箍信号明显，固井质量较差（见图' + str(pic_number + 2) + '）。')
             # r.bold = True
             r.font.name = 'Times New Roman'
             r.element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
@@ -4376,7 +4966,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
             p.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
             p.paragraph_format.line_spacing = Pt(24)
             p.paragraph_format.first_line_indent = Cm(0.74)  # 首行缩进0.74厘米，即2个字符
-            r = p.add_run('测量井段内的固井质量以好为主。')
+            r = p.add_run('本次测量井段内，一、二界面固井水泥胶结质量合格，且以好为主。')
             # r.bold = True
             r.font.name = 'Times New Roman'
             r.element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
@@ -6393,7 +6983,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
         fileDir2 = self.lineEdit_52.text()
 
         df1 = pd.read_excel(fileDir1, header=2)
-        df1.drop([0], inplace=True)
+        # df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df1) % 2 == 0: # 如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6410,7 +7000,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         #####################################################
         df2 = pd.read_excel(fileDir2, header=2)
-        df2.drop([0], inplace=True)
+        # df2.drop([0], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df2) % 2 == 0:#如果len(df2)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6575,9 +7165,9 @@ class Main_window(QMainWindow, Ui_MainWindow):
         fileDir2 = self.lineEdit_52.text()
 
         df1 = pd.read_excel(fileDir1, header=2)
-        df1.drop([0], inplace=True)
-        if df1.loc[1, '结论'] == '不确定':
-            df1.drop([1], inplace=True)
+        # df1.drop([0], inplace=True)
+        # if df1.loc[0, '结论'] == '不确定':
+        #     df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6594,7 +7184,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         #####################################################
         df2 = pd.read_excel(fileDir2, header=2)
-        df2.drop([0], inplace=True)
+        # df2.drop([0], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df2.loc[:, '井段(m)'] = df2['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df2) % 2 == 0:#如果len(df2)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6782,7 +7372,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         # 获取一界面单层评价表的深度界限
         df1 = pd.read_excel(fileDir1, header=2)
-        df1.drop([0], inplace=True)
+        # df1.drop([0], inplace=True)
         df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
         df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
         # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6795,7 +7385,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
         # 获取二界面单层评价表的深度界限
         df2 = pd.read_excel(fileDir2, header=2)
-        df2.drop([0], inplace=True)
+        # df2.drop([0], inplace=True)
         # if df2.loc[1, '结论'] == '不确定':
         #     df2.drop([1], inplace=True)
         df2 = df2.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
@@ -6863,7 +7453,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
             # 获取一界面单层评价表的深度界限
             df1 = pd.read_excel(fileDir1, header=2)
-            df1.drop([0], inplace=True)
+            # df1.drop([0], inplace=True)
             df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
             df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
             # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6885,7 +7475,7 @@ class Main_window(QMainWindow, Ui_MainWindow):
 
             # 获取一界面单层评价表的深度界限
             df1 = pd.read_excel(fileDir2, header=2)
-            df1.drop([0], inplace=True)
+            # df1.drop([0], inplace=True)
             df1 = df1.dropna(axis=0, how='any')  # 删除dataframe里NaN的所有行
             df1.loc[:, '井段(m)'] = df1['井段(m)'].str.replace(' ', '')  # 消除数据中空格
             # if len(df1) % 2 == 0:#如果len(df1)为偶数需要删除最后一行NaN，一行的情况不用删
@@ -6920,51 +7510,60 @@ def clean_dir_of_all(path):
 
 if __name__ == "__main__":
 
-    # 先检查更新
-    PATH = ".\\"
-    listdir = []
+    # 运行主程序
+    app = QApplication(sys.argv)
+    QApplication.setStyle(QStyleFactory.create("Fusion"))
+    Chain = Chain_Pane()
+    # main.show()
+    Chain.show()
+    main = Main_window()
+    Chain.label.setText("检查软件更新中，请稍后...")
 
-    ftp = MyFTP('10.132.203.206')
-    ftp.Login('zonghs', 'zonghs123')
-    local_path = './'
-    # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
-    remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
+    try:
+        # 先检查更新
+        PATH = ".\\"
+        listdir = []
 
-    # 打开本地版本号
-    with open(local_path + 'resources/版本号.txt', "r") as f:
-        license_str = f.read()
-    local_license_date = int(license_str)
+        ftp = MyFTP('10.132.203.206')
+        ftp.Login('zonghs', 'zonghs123')
+        local_path = './'
+        # local_path = r'C:\Users\YANGYI\source\repos\GC_Logging_Helper_Release'
+        remote_path = '/oracle_data9/arc_data/SGI1/2016年油套管检测归档/工程测井助手最新版本(全部更新)'
 
-    # 打开服务器版本号
-    ftp.Cwd(remote_path)
-    filenames = ftp.Nlst()
-    filename = 'resources/版本号.txt'
-    LocalFile = local_path + 'temp/版本号.txt'
-    RemoteFile = filename
+        # 打开本地版本号
+        with open(local_path + 'resources/版本号.txt', "r") as f:
+            license_str = f.read()
+        local_license_date = int(license_str)
 
-    # 接收服务器上文件并写入本地文件
-    if not os.path.exists(local_path + 'temp'):
-        os.makedirs(local_path + 'temp')
-    ftp.DownLoadFile(LocalFile, RemoteFile)
+        # 打开服务器版本号
+        ftp.Cwd(remote_path)
+        filenames = ftp.Nlst()
+        filename = 'resources/版本号.txt'
+        LocalFile = local_path + 'temp/版本号.txt'
+        RemoteFile = filename
 
-    with open(local_path + 'temp/版本号.txt', "r") as f:
-        license_str = f.read()
-    remote_license_date = int(license_str)
+        # 接收服务器上文件并写入本地文件
+        if not os.path.exists(local_path + 'temp'):
+            os.makedirs(local_path + 'temp')
+        ftp.DownLoadFile(LocalFile, RemoteFile)
 
-    # 比较版本号信息
-    if local_license_date < remote_license_date:
-        try:  # 重命名为提示更新
-            msg = g.msgbox("软件需要升级，请运行下载器更新。")
-            # os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
-        except:
-            msg = g.msgbox("请点击下载器更新。")
-    elif local_license_date >= remote_license_date:
-        msg = g.msgbox("本地软件版本已经是最新。")
-        # 运行主程序
-        app = QApplication(sys.argv)
-        QApplication.setStyle(QStyleFactory.create("Fusion"))
-        main = Main_window()
-        Chain = ChainPane()
-        # main.show()
-        Chain.show()
-        sys.exit(app.exec_())
+        with open(local_path + 'temp/版本号.txt', "r") as f:
+            license_str = f.read()
+        remote_license_date = int(license_str)
+
+        # 比较版本号信息
+        if local_license_date < remote_license_date:
+            try:  # 重命名为提示更新
+                Chain.label.setText("软件需要升级，请运行下载器更新。")
+                # os.rename(".\\工程测井助手.exe", ".\\工程测井助手(请运行下载器更新).exe")
+            except:
+                Chain.label.setText("请点击下载器更新。")
+
+        elif local_license_date >= remote_license_date:
+            Chain.label.setText("本地软件版本已经是最新。")
+
+    except:
+        # Chain.label.setText("连接FTP服务器失败，继续运行？")
+        pass
+
+    sys.exit(app.exec_())

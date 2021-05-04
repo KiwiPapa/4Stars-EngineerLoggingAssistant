@@ -1723,7 +1723,7 @@
              <string notr="true">font: 10pt &quot;黑体&quot;;</string>
             </property>
             <property name="text">
-             <string>设计水泥返高</string>
+             <string>水泥返高(设计)</string>
             </property>
            </widget>
           </item>
@@ -1743,7 +1743,7 @@
              <string notr="true">font: 10pt &quot;黑体&quot;;</string>
             </property>
             <property name="text">
-             <string>图头水泥返高</string>
+             <string>水泥返高(图头)</string>
             </property>
            </widget>
           </item>
@@ -1763,7 +1763,7 @@
              <string notr="true">font: 10pt &quot;黑体&quot;;</string>
             </property>
             <property name="text">
-             <string>报告水泥返高</string>
+             <string>水泥返高(报告)</string>
             </property>
            </widget>
           </item>
@@ -2679,9 +2679,9 @@ color: rgb(0, 0, 255)</string>
       <widget class="QFrame" name="frame_19">
        <property name="geometry">
         <rect>
-         <x>40</x>
+         <x>310</x>
          <y>330</y>
-         <width>721</width>
+         <width>451</width>
          <height>171</height>
         </rect>
        </property>
@@ -2720,7 +2720,7 @@ color: rgb(0, 0, 255)</string>
             <string notr="true">font: 10pt &quot;黑体&quot;;</string>
            </property>
            <property name="text">
-            <string>套管顶(井口)评价</string>
+            <string>尾管重合段评价</string>
            </property>
           </widget>
          </item>
@@ -2774,7 +2774,7 @@ color: rgb(0, 0, 255)</string>
             <string notr="true">font: 10pt &quot;黑体&quot;;</string>
            </property>
            <property name="text">
-            <string>套管底(套管鞋)评价</string>
+            <string>上层套管分级箍</string>
            </property>
           </widget>
          </item>
@@ -2793,7 +2793,7 @@ color: rgb(0, 0, 255)</string>
        <widget class="QLabel" name="label_126">
         <property name="geometry">
          <rect>
-          <x>90</x>
+          <x>200</x>
           <y>10</y>
           <width>61</width>
           <height>23</height>
@@ -2806,47 +2806,104 @@ color: rgb(0, 0, 255)</string>
          <string>信息补充</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_5">
+       <widget class="QWidget" name="layoutWidget_23">
         <property name="geometry">
          <rect>
-          <x>280</x>
-          <y>60</y>
-          <width>81</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>裸眼伽马</string>
-        </property>
-       </widget>
-       <widget class="QCheckBox" name="checkBox_13">
-        <property name="geometry">
-         <rect>
-          <x>280</x>
-          <y>90</y>
-          <width>81</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>套管数据</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_147">
-        <property name="geometry">
-         <rect>
-          <x>280</x>
+          <x>230</x>
           <y>30</y>
-          <width>61</width>
-          <height>23</height>
+          <width>211</width>
+          <height>121</height>
          </rect>
         </property>
         <property name="styleSheet">
          <string notr="true">font: 10pt &quot;黑体&quot;;</string>
         </property>
-        <property name="text">
-         <string>校深依据</string>
-        </property>
+        <layout class="QGridLayout" name="gridLayout_49">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_104">
+           <property name="font">
+            <font>
+             <family>黑体</family>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <underline>false</underline>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>目的层一界面评价</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboBox_11">
+           <property name="styleSheet">
+            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_144">
+           <property name="font">
+            <font>
+             <family>黑体</family>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <underline>false</underline>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>目的层层位</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="comboBox_12">
+           <property name="styleSheet">
+            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_145">
+           <property name="font">
+            <font>
+             <family>黑体</family>
+             <pointsize>10</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <underline>false</underline>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>目的层二界面评价</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEdit_118">
+           <property name="styleSheet">
+            <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
       <widget class="QWidget" name="layoutWidget">
@@ -3023,6 +3080,129 @@ color: rgb(0, 0, 255)</string>
        <property name="text">
         <string>Tips</string>
        </property>
+      </widget>
+      <widget class="QFrame" name="frame_25">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>330</y>
+         <width>151</width>
+         <height>171</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QLabel" name="label_146">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>10</y>
+          <width>61</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+        </property>
+        <property name="text">
+         <string>模板选择</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>60</y>
+          <width>109</width>
+          <height>65</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_47">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="checkBox_14">
+           <property name="text">
+            <string>普通模板</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="checkBox_15">
+           <property name="text">
+            <string>重庆气矿模板</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkBox_16">
+           <property name="text">
+            <string>长宁模板</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame_26">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>330</y>
+         <width>101</width>
+         <height>171</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <widget class="QLabel" name="label_147">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>10</y>
+          <width>61</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+        </property>
+        <property name="text">
+         <string>校深依据</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>60</y>
+          <width>81</width>
+          <height>42</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_48">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="checkBox_5">
+           <property name="text">
+            <string>裸眼伽马</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="checkBox_13">
+           <property name="text">
+            <string>套管数据</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </widget>
@@ -3259,19 +3439,19 @@ color: rgb(0, 0, 255)</string>
         </item>
        </layout>
       </widget>
-     </widget>
-     <widget class="QLabel" name="label_125">
-      <property name="geometry">
-       <rect>
-        <x>680</x>
-        <y>40</y>
-        <width>181</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>提示：请确认表格末尾无空行</string>
-      </property>
+      <widget class="QLabel" name="label_125">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>180</y>
+         <width>301</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>统计二界面时注意起始深度输不确定的底界深度</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QFrame" name="frame_22">
       <property name="geometry">
@@ -3342,7 +3522,7 @@ color: rgb(0, 0, 255)</string>
         <rect>
          <x>310</x>
          <y>90</y>
-         <width>211</width>
+         <width>221</width>
          <height>22</height>
         </rect>
        </property>
@@ -3401,7 +3581,7 @@ color: rgb(0, 0, 255)</string>
         <rect>
          <x>310</x>
          <y>70</y>
-         <width>221</width>
+         <width>231</width>
          <height>16</height>
         </rect>
        </property>
@@ -3451,10 +3631,10 @@ color: rgb(0, 0, 255)</string>
       <widget class="QPushButton" name="pushButton_61">
        <property name="geometry">
         <rect>
-         <x>180</x>
-         <y>80</y>
-         <width>75</width>
-         <height>23</height>
+         <x>194</x>
+         <y>72</y>
+         <width>81</width>
+         <height>41</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -4319,9 +4499,9 @@ color: rgb(0, 0, 255)</string>
      <widget class="QFrame" name="frame_21">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>10</x>
         <y>110</y>
-        <width>931</width>
+        <width>1111</width>
         <height>301</height>
        </rect>
       </property>
@@ -4337,9 +4517,9 @@ color: rgb(0, 0, 255)</string>
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>20</x>
          <y>40</y>
-         <width>201</width>
+         <width>231</width>
          <height>90</height>
         </rect>
        </property>
@@ -4411,7 +4591,7 @@ color: rgb(0, 0, 255)</string>
         <rect>
          <x>270</x>
          <y>30</y>
-         <width>621</width>
+         <width>821</width>
          <height>231</height>
         </rect>
        </property>
@@ -4574,16 +4754,6 @@ color: rgb(0, 0, 255)</string>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_40">
-       <item row="0" column="0">
-        <widget class="QLineEdit" name="lineEdit_116">
-         <property name="styleSheet">
-          <string notr="true">font: 10pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>libin2015@petrochina.com.cn</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="QLineEdit" name="lineEdit_117">
          <property name="styleSheet">
@@ -4591,6 +4761,16 @@ color: rgb(0, 0, 255)</string>
          </property>
          <property name="text">
           <string>cdztzjzyb@cnpc.com.cn</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="lineEdit_116">
+         <property name="styleSheet">
+          <string notr="true">font: 10pt &quot;黑体&quot;;</string>
+         </property>
+         <property name="text">
+          <string>libin2015@petrochina.com.cn</string>
          </property>
         </widget>
        </item>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>157</width>
-    <height>112</height>
+    <width>440</width>
+    <height>165</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -22,30 +22,47 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>20</y>
-     <width>81</width>
-     <height>23</height>
+     <y>100</y>
+     <width>361</width>
+     <height>21</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12pt &quot;微软雅黑&quot;;
+color: rgb(0, 85, 255);</string>
+   </property>
    <property name="text">
-    <string>打开主界面</string>
+    <string>Tips</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>50</y>
-     <width>81</width>
-     <height>23</height>
+     <x>224</x>
+     <y>24</y>
+     <width>181</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">
     <string>退出</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>41</x>
+     <y>24</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>打开主界面</string>
    </property>
   </widget>
  </widget>

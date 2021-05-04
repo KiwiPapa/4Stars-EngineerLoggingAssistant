@@ -14,15 +14,20 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(157, 112)
+        Form.resize(440, 165)
         Form.setMinimumSize(QtCore.QSize(0, 0))
         Form.setAutoFillBackground(True)
-        self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(40, 20, 81, 23))
-        self.pushButton.setObjectName("pushButton")
+        self.label = QtWidgets.QLabel(Form)
+        self.label.setGeometry(QtCore.QRect(40, 100, 361, 21))
+        self.label.setStyleSheet("font: 12pt \"微软雅黑\";\n"
+"color: rgb(0, 85, 255);")
+        self.label.setObjectName("label")
         self.pushButton_2 = QtWidgets.QPushButton(Form)
-        self.pushButton_2.setGeometry(QtCore.QRect(40, 50, 81, 23))
+        self.pushButton_2.setGeometry(QtCore.QRect(224, 24, 181, 61))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setGeometry(QtCore.QRect(41, 24, 171, 61))
+        self.pushButton.setObjectName("pushButton")
 
         self.retranslateUi(Form)
         self.pushButton_2.clicked.connect(Form.close)
@@ -31,5 +36,6 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.pushButton.setText(_translate("Form", "打开主界面"))
+        self.label.setText(_translate("Form", "Tips"))
         self.pushButton_2.setText(_translate("Form", "退出"))
+        self.pushButton.setText(_translate("Form", "打开主界面"))

@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['工程测井助手.py'],
-             pathex=['G:\\python-source-codes\\EngineerLoggingAssistant'],
+             pathex=['E:\\python-source-codes\\EngineerLoggingAssistant'],
              binaries=[],
              datas=[],
              hiddenimports=[],
